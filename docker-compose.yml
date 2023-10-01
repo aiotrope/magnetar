@@ -15,7 +15,9 @@ services:
       - 7800:7800
 
   qa-api:
-    build: qa-api
+    build:
+      context: qa-api
+      dockerfile: Dockerfile
     image: qa-api
     restart: "no"
     volumes:
@@ -26,11 +28,14 @@ services:
     depends_on:
       - database
       - flyway
+      - redis
     env_file:
       - project.env
 
   qa-ui:
-    build: qa-ui
+    build:
+      context: qa-ui
+      dockerfile: Dockerfile
     image: qa-ui
     restart: "no"
     volumes:
@@ -42,12 +47,18 @@ services:
       - qa-api
 
   llm-api:
-    build: llm-api
+    build:
+      context: llm-api
+      dockerfile: Dockerfile
     image: llm-api
     restart: "no"
+    volumes:
+      - ./llm-api/:/app
+      - ./app-cache/:/app-cache
+      - "/var/run/docker.sock:/var/run/docker.sock"
     expose:
       - 7000
-
+    
   database:
     container_name: database-server-dab-p2-b7c7d0d1-d2ff-4ef4-9553-e95ea3225629
     image: postgres:14.1
@@ -64,7 +75,15 @@ services:
     command: -connectRetries=60 -baselineOnMigrate=true migrate
     env_file:
       - project.env
-
+  
+  redis:
+    image: redis:latest
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    expose:
+      - 6379
+  
   e2e-playwright:
     entrypoint: "/bin/true"
     build: e2e-playwright

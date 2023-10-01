@@ -1,6 +1,23 @@
-import { serve } from './deps.js';
+import { Application } from "./deps.js";
 
-const handleRequest = async (request) => {
+import { router } from "./routes.js";
+
+const app = new Application();
+
+const port = 7777;
+
+app.use(router.routes());
+
+app.use(router.allowedMethods());
+
+app.listen({ port });
+
+console.log(`Server is running on port ${port}`);
+
+
+
+
+/* const handleRequest = async (request) => {
   const data = await request.json();
 
   const response = await fetch('http://llm-api:7000/', {
@@ -12,7 +29,4 @@ const handleRequest = async (request) => {
   });
 
   return response;
-};
-
-const portConfig = { port: 7777, hostname: '0.0.0.0' };
-serve(handleRequest, portConfig);
+}; */

@@ -1,0 +1,5 @@
+### get courses
+GET http://localhost:7777/courses HTTP/1.1
+
+### get course by id
+GET http://localhost:7777/course?courseId=4 HTTP/1.1
