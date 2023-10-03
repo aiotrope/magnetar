@@ -15,7 +15,5 @@ production-database-data/
 
 .DS_Store
 
-llm-api/
-
-llm-api1/
+llm-api
 
