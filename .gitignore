@@ -1,0 +1,21 @@
+### Deno ###
+/.idea/
+/.vscode/
+
+/node_modules
+
+.env
+*.orig
+*.pyc
+*.swp
+
+app-cache/
+
+production-database-data/
+
+.DS_Store
+
+llm-api/
+
+llm-api1/
+
