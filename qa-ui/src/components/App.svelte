@@ -3,14 +3,17 @@
 
   import courseService from '../services/courseService.js';
   import Courses from './Courses.svelte';
+  import Loader from './Loader.svelte';
 
   let courses = [];
 
+  let isLoading = true;
+
   onMount(async () => {
-    await getAllCourses();
+    await fetchers();
   });
 
-  const getAllCourses = async () => {
+  const fetchers = async () => {
     const interval = setInterval(async () => {
       const allCourses = await courseService.getAll();
 
@@ -19,10 +22,18 @@
 
       if (allCourses.length > 0) {
         clearInterval(interval);
+        isLoading = false;
+        // console.clear()
       }
     }, 1000);
     return () => clearInterval(interval);
   };
 </script>
 
-<Courses {courses} />
+<section>
+  {#if isLoading}
+    <Loader />
+  {:else}
+    <Courses {courses} />
+  {/if}
+</section>

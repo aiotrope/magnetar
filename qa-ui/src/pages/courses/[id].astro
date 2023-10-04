@@ -15,10 +15,13 @@ export const getStaticPaths = () => {
 };
 
 import Layout from '../../layouts/Layout.astro';
+import Course from '../../components/Course.svelte';
 
 const id = Astro.params.id;
+
+let linkId = parseInt(id);
 ---
 
-<Layout>
-  <p>You're in id {id}</p>
+<Layout title={`Course #: ${linkId}`}>
+  <Course courseId={linkId} client:only="svelte" />
 </Layout>

@@ -5,7 +5,7 @@ interface Props {
   heading?: string;
 }
 
-const { title = 'Questions & Answers', heading = 'Home' } = Astro.props;
+const { title = 'Questions & Answers', heading = 'Courses' } = Astro.props;
 ---
 
 <!doctype html>
@@ -16,14 +16,18 @@ const { title = 'Questions & Answers', heading = 'Home' } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <title>{title}</title>
   </head>
   <body>
     <Header client:load />
-    <div class="container mx-auto">
-      <h1>{heading}</h1>
+    <main class="flex justify-center p-2 mt-3">
       <slot />
-    </div>
+    </main>
   </body>
 </html>
 <style is:global>
@@ -55,3 +59,5 @@ const { title = 'Questions & Answers', heading = 'Home' } = Astro.props;
       monospace;
   }
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>

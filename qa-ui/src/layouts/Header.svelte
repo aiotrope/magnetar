@@ -2,15 +2,15 @@
   // import { userUuid } from '../stores/stores.js';
 </script>
 
-<nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+<nav class="border-gray-200 bg-indigo-900">
   <div
-    class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
+    class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 text-white"
   >
-    <a href="#" class="flex items-center">
+    <a href="/" class="flex items-center">
       <img
         src="https://img.logoipsum.com/223.svg"
         class="h-8 mr-3"
-        alt="Flowbite Logo"
+        alt="Generic Logo"
       />
       <span
         class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
@@ -47,29 +47,29 @@
       >
         <li>
           <a
-            href="#"
-            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            href="/"
+            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             aria-current="page">Home</a
           >
         </li>
         <li>
           <a
-            href="#"
-            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            href="/"
+            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Services</a
           >
         </li>
         <li>
           <a
-            href="#"
-            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            href="/"
+            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Pricing</a
           >
         </li>
         <li>
           <a
-            href="#"
-            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            href="/"
+            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Contact</a
           >
         </li>
