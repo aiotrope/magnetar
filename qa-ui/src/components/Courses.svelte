@@ -8,7 +8,7 @@
     <div class="shadow-lg">
       <a href={`/courses/${course.id}`}>
         <img
-          class="object-cover h-150 w-300"
+          class="object-cover h-150 w-500"
           src={course.img}
           alt={`Image for course ${course.title}`}
         />
