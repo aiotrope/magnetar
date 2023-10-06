@@ -5,7 +5,7 @@ import questionController from '../controllers/questionController.js';
 const router = new Router();
 
 router.get('/questions', questionController.handleFindAll);
-router.post('/questions', questionController.handleCreate);
+router.post('/questions/:courseId', questionController.handleCreate);
 router.get('/question', questionController.handleFindById);
 router.get('/questions/user', questionController.handleFindByUser);
 router.get('/questions/course', questionController.handleFindByCourse);

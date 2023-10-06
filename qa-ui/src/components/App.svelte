@@ -1,7 +1,10 @@
 <script>
   import { onMount } from 'svelte';
 
+  import { userUuid } from '../stores/stores.js';
+
   import courseService from '../services/courseService.js';
+  import userService from '../services/userService.js';
   import Courses from './Courses.svelte';
   import Loader from './Loader.svelte';
 
@@ -17,10 +20,14 @@
     const interval = setInterval(async () => {
       const allCourses = await courseService.getAll();
 
+      const setUserId = await userService.getUser();
+
       courses = [...allCourses];
       courses = courses;
 
-      if (allCourses.length > 0) {
+      userUuid.set(setUserId);
+
+      if (allCourses.length > 0 && setUserId !== null) {
         clearInterval(interval);
         isLoading = false;
         // console.clear()
@@ -28,6 +35,10 @@
     }, 1000);
     return () => clearInterval(interval);
   };
+
+  userUuid.subscribe((currentValue) => {
+    localStorage.setItem('userUuid', JSON.stringify(currentValue));
+  });
 </script>
 
 <section>

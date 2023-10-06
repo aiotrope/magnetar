@@ -1,14 +1,15 @@
-/* import questionService from '../services/questionService.js';
+import questionService from '../services/questionService.js';
 import { cacheMethodCalls } from '../util/cacheUtil.js';
 
 const cachedQuestionService = cacheMethodCalls(questionService, ['create']);
 
-const handleCreate = async ({ request, response }) => {
-  const { course_id, created_by, title, details } = await request.body().value;
+const handleCreate = async ({ request, response, params }) => {
+  const courseId = params.courseId
+  const { user_uuid, title, details } = await request.body().value;
 
   const newQuestion = await cachedQuestionService.create(
-    course_id,
-    created_by,
+    courseId,
+    user_uuid,
     title,
     details
   );
@@ -70,12 +71,12 @@ const handleFindByCourse = async ({ request, response }) => {
 
 const handleFindByCourseOwnedByUser = async ({ request, params, response }) => {
   const courseId = params.courseId;
-  const created_by = request.url.searchParams.get('created_by');
-  if (courseId !== undefined && created_by !== undefined) {
+  const user_uuid = request.url.searchParams.get('usr_uuid');
+  if (courseId !== undefined && user_uuid !== undefined) {
     const questions =
       await cachedQuestionService.getQuestionsByCourseOwnedByUser(
         courseId,
-        created_by
+        user_uuid
       );
     response.status = 200;
     response.body = questions;
@@ -97,4 +98,3 @@ const questionController = {
 };
 
 export default questionController;
- */

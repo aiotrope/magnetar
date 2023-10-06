@@ -1,5 +1,5 @@
 <script>
-  // import { userUuid } from '../stores/stores.js';
+  // import { tempUserUuid } from '../stores/stores.js';
 </script>
 
 <nav class="border-gray-200 bg-indigo-900">

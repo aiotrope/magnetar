@@ -1,7 +1,11 @@
 <script>
   import { onMount } from 'svelte';
+  import { userUuid } from '../stores/stores.js';
 
   import courseService from '../services/courseService.js';
+  import questionService from '../services/questionService.js';
+  import userService from '../services/userService.js';
+
   import Loader from './Loader.svelte';
   import AddQuestionForm from './AddQuestionForm.svelte';
 
@@ -10,6 +14,8 @@
   let isLoading = true;
 
   let imgUrl;
+
+  let inputQuestionData = { title: '', details: '' };
 
   export let courseId;
 
@@ -37,6 +43,19 @@
     }, 1000);
     return () => clearInterval(interval);
   };
+
+  /* const addQuestion = async () => {
+    const createQuestion = await questionService.create(
+      courseId,
+      $userUuid,
+      title,
+      details
+    );
+
+    console.log(createQuestion)
+  }; */
+
+  console.log(courseId)
 </script>
 
 <section>
@@ -45,7 +64,9 @@
   {:else}
     <section class="mb-2">
       <div class="mb-5">
-        <h2 class="text-l font-bold leading-7 text-gray-700">{course?.details}</h2>
+        <h2 class="text-l font-bold leading-7 text-gray-700">
+          {course?.details}
+        </h2>
       </div>
       <div class="shadow-lg">
         <a href={`/courses/${course?.id}`}>
@@ -58,7 +79,7 @@
       </div>
     </section>
     <section>
-      <AddQuestionForm {course} />
+      <AddQuestionForm {inputQuestionData} {course} />
     </section>
   {/if}
 </section>
