@@ -1,4 +1,4 @@
-import { Router } from '../deps.js';
+/* import { Router } from '../deps.js';
 
 import answerController from '../controllers/answerController.js';
 
@@ -16,3 +16,4 @@ router.get('/answers/:courseId/:questionId', answerController.handleFindByCourse
 router.post('/automated', answerController.handleLLM)
 
 export default router;
+ */

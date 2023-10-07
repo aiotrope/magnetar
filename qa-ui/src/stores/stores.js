@@ -1,21 +1,14 @@
 import { writable } from 'svelte/store';
-
-// let user = localStorage.getItem('userUuid');
 let user = JSON.parse(localStorage.getItem('userUuid'));
-// let courseList = JSON.parse(localStorage.getItem('courses'));
+let courseList = JSON.parse(localStorage.getItem('courses'));
+let questionList = JSON.parse(localStorage.getItem('questions'));
 
-/* if (!user) {
-  user = crypto.randomUUID().toString();
-  localStorage.setItem('userUuid', user);
-}
- */
 const userUuid = writable(user);
-
-let courseList = []
 
 const courses = writable(courseList);
 
-export {
-  userUuid,
-  courses
-}
+let questions = writable(questionList);
+
+let courseId = writable(0);
+
+export { userUuid, courses, questions, courseId };

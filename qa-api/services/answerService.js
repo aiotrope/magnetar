@@ -1,4 +1,4 @@
-import { sql } from '../database/database.js';
+/* import { sql } from '../database/database.js';
 
 const getAnswers = async () => {
   const answers = await sql`SELECT * FROM answers;`;
@@ -62,3 +62,4 @@ const answerService = {
 };
 
 export default answerService;
+ */

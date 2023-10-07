@@ -161,3 +161,44 @@ $ docker-compose run --entrypoint=npx e2e-playwright playwright test && docker-c
 
 ```
 
+## CLI Postgres
+
+```bash
+# list containers
+$ docker container ls 
+$ docker ps
+
+# entering psql console
+$ docker container ls
+$ docker exec -it <container_id> psql -U <dbUsername> <dbName> 
+
+# show all tables
+$ \dt+
+
+# clear
+$ \! clear
+
+# quit
+$ \q
+
+```
+
+```bash
+# persistent postgres volume
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - '6500:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - ./qa-api/.env
+
+volumes:
+  postgres-data:
+
+
+```
+

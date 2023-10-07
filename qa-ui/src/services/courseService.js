@@ -1,11 +1,16 @@
 const getAll = async () => {
   const response = await fetch('/api/courses');
 
-  return await response.json();
+  const jsonData = await response.json();
+
+  if (jsonData.length > 0 || jsonData !== undefined) {
+    localStorage.setItem('courses', JSON.stringify(jsonData));
+  }
+  return jsonData;
 };
 
 const findById = async (courseId) => {
-  const response = await fetch(`/api/course?courseId=${courseId}`);
+  const response = await fetch(`/api/courses/${courseId}`);
 
   return await response.json();
 };

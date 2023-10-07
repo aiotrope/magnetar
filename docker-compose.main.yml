@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   nginx:
     image: nginx:latest
@@ -8,6 +10,9 @@ services:
       - qa-ui
     ports:
       - 7800:7800
+    networks:
+      - backnet
+      - frontnet
 
   qa-api:
     build:
@@ -26,6 +31,9 @@ services:
       - redis
     env_file:
       - project.env
+    networks:
+      - backnet
+      - frontnet
     deploy:
       replicas: 5
 
@@ -42,6 +50,23 @@ services:
       - 3000
     depends_on:
       - qa-api
+    networks:
+      - backnet
+      - frontnet
+      
+  llm-api:
+    build:
+      context: llm-api
+      dockerfile: Dockerfile
+    image: llm-api
+    restart: 'no'
+    expose:
+      - 7000
+    volumes:
+      - ./llm-api/:/app
+      - ./app-cache/:/app-cache
+    networks:
+      - backnet
 
   database:
     container_name: database-server-dab-p2-b7c7d0d1-d2ff-4ef4-9553-e95ea3225629
@@ -49,6 +74,10 @@ services:
     restart: 'no'
     env_file:
       - project.env
+    networks:
+      - backnet
+    environment:
+      - TZ="Europe/Helsinki"
 
   flyway:
     image: flyway/flyway:9.11.0-alpine
@@ -59,7 +88,32 @@ services:
     command: -connectRetries=60 -baselineOnMigrate=true migrate
     env_file:
       - project.env
-   
+    networks:
+      - backnet
+
+  redis:
+    image: redis:latest
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    expose:
+      - 6379
+    networks:
+      - backnet
+
+  e2e-playwright:
+    entrypoint: '/bin/true'
+    build: e2e-playwright
+    image: e2e-playwright
+    network_mode: host
+    depends_on:
+      - nginx
+    volumes:
+      - ./e2e-playwright/tests:/e2e-playwright/tests
+      
 volumes:
   astro_node_modules:
 
+networks:
+  backnet:
+  frontnet:

@@ -1,29 +1,36 @@
-import { Application } from './deps.js';
+import { Application, cors } from './deps.js';
 
 import courseRoutes from './routes/courseRoutes.js';
-import userRoutes from './routes/userRoutes.js';
+// import userRoutes from './routes/userRoutes.js';
 import questionRoutes from './routes/questionRoutes.js';
-import answerRoutes from './routes/answerRoutes.js'; 
+// import answerRoutes from './routes/answerRoutes.js';
 
 const app = new Application();
 
-const port = 7777
+// const port = 7777;
+
+var corsOptions = {
+  origin: ['http://localhost', 'http://localhost:3000'],
+  optionsSuccessStatus: 200,
+};
+
+// app.use(cors(corsOptions));
 
 app.use(courseRoutes.routes());
 app.use(courseRoutes.allowedMethods());
 
-app.use(userRoutes.routes());
-app.use(userRoutes.allowedMethods());
+/* app.use(userRoutes.routes());
+app.use(userRoutes.allowedMethods()); */
 
 app.use(questionRoutes.routes());
 app.use(questionRoutes.allowedMethods());
 
-app.use(answerRoutes.routes());
-app.use(answerRoutes.allowedMethods()); 
+/* app.use(answerRoutes.routes());
+app.use(answerRoutes.allowedMethods()); */
 
-app.listen({ port });
+await app.listen({ port: 7777 });
 
-console.log(`Server is running on port ${port}`);
+// console.log(`Server is running on port ${port}`);
 
 /* const handleRequest = async (request) => {
   const data = await request.json();

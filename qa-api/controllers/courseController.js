@@ -8,6 +8,7 @@ const handleFindAll = async ({ response }) => {
   const courses = await cachedCourseService.getCourses();
   response.status = 200;
   response.body = courses;
+
 };
 
 const handleFindOne = async ({ request, response }) => {

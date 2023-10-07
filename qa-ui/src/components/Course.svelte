@@ -1,23 +1,19 @@
 <script>
   import { onMount } from 'svelte';
-  import { userUuid } from '../stores/stores.js';
 
+  import { userUuid, courseId } from '../stores/stores.js';
   import courseService from '../services/courseService.js';
-  import questionService from '../services/questionService.js';
-  import userService from '../services/userService.js';
 
-  import Loader from './Loader.svelte';
   import AddQuestionForm from './AddQuestionForm.svelte';
+  import Loader from './Loader.svelte';
 
   let course = {};
 
-  let isLoading = true;
-
   let imgUrl;
 
-  let inputQuestionData = { title: '', details: '' };
+  let isLoading = true;
 
-  export let courseId;
+  let inputQuestionData = { title: '', details: '' };
 
   onMount(async () => {
     await fetchers();
@@ -25,7 +21,7 @@
 
   const fetchers = async () => {
     const interval = setInterval(async () => {
-      const courseById = await courseService.findById(courseId);
+      const courseById = await courseService.findById($courseId);
 
       course = courseById;
       course = course;
@@ -44,18 +40,16 @@
     return () => clearInterval(interval);
   };
 
-  /* const addQuestion = async () => {
+  const addQuestion = async () => {
     const createQuestion = await questionService.create(
-      courseId,
+      $courseId,
       $userUuid,
       title,
       details
     );
 
-    console.log(createQuestion)
-  }; */
-
-  console.log(courseId)
+    console.log(createQuestion);
+  };
 </script>
 
 <section>
@@ -69,17 +63,15 @@
         </h2>
       </div>
       <div class="shadow-lg">
-        <a href={`/courses/${course?.id}`}>
-          <img
-            class="object-cover h-150 w-800"
-            src={imgUrl}
-            alt={`Image for course ${course?.title}`}
-          />
-        </a>
+        <img
+          class="object-cover h-150 w-800"
+          src={imgUrl}
+          alt={`Image for course ${course?.title}`}
+        />
       </div>
     </section>
     <section>
-      <AddQuestionForm {inputQuestionData} {course} />
+      <AddQuestionForm {inputQuestionData} {course} {addQuestion} />
     </section>
   {/if}
 </section>

@@ -1,4 +1,4 @@
-import { Router } from '../deps.js';
+/* import { Router } from '../deps.js';
 
 import userController from '../controllers/userController.js';
 
@@ -8,3 +8,4 @@ router.get('/user/uuid', userController.handleGenerateUuid);
 router.get('/user', userController.handleFindByUuid);
 
 export default router;
+ */

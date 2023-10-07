@@ -1,4 +1,4 @@
-import answerService from '../services/answerService.js';
+/* import answerService from '../services/answerService.js';
 import { cacheMethodCalls } from '../util/cacheUtil.js';
 
 const cachedAnswerService = cacheMethodCalls(answerService, ['create']);
@@ -127,3 +127,4 @@ const answerController = {
 };
 
 export default answerController;
+ */
