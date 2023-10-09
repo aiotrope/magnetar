@@ -1,14 +1,6 @@
-services:
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - qa-api
-      - qa-ui
-    ports:
-      - 7800:7800
+version: "3.4"
 
+services:
   qa-api:
     build:
       context: qa-api
@@ -29,20 +21,6 @@ services:
     deploy:
       replicas: 5
 
-  qa-ui:
-    build:
-      context: qa-ui
-      dockerfile: Dockerfile
-    image: qa-ui
-    restart: 'no'
-    volumes:
-      - ./qa-ui/:/app
-      - astro_node_modules:/app/node_modules
-    expose:
-      - 3000
-    depends_on:
-      - qa-api
-
   database:
     container_name: database-server-dab-p2-b7c7d0d1-d2ff-4ef4-9553-e95ea3225629
     image: postgres:14.1
@@ -59,7 +37,39 @@ services:
     command: -connectRetries=60 -baselineOnMigrate=true migrate
     env_file:
       - project.env
+  
+  redis:
+    image: redis:latest
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    expose:
+      - 6379
+
+  nginx:
+    image: nginx:latest
+    restart: on-failure
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - qa-api
+      - qa-ui
+    ports:
+      - 7800:7800
+
+  qa-ui:
+    build:
+      context: qa-ui
+      dockerfile: Dockerfile
+    image: qa-ui
+    volumes:
+      - ./qa-ui/:/app
+      - astro_node_modules:/app/node_modules
+    restart: 'no'
+    expose:
+      - 3000
+    depends_on:
+      - qa-api
    
 volumes:
   astro_node_modules:
-

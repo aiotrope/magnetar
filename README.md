@@ -133,20 +133,31 @@ $ cd qa-api && docker build -t qa-api .
 $ cd qa-ui && docker build -t qa-ui .
 $ cd e2e-playwright && docker build -t e2e-playwright .
 
+# PROD MODE
 # buid docker images based on docker-compose on production mode; running on port 7800
-# remove app-cache from previous debug mode before proceeding (First build)
+# remove app-cache from previous debug mode before proceeding
 cd magnetar && docker compose -f docker-compose.prod.yml up -d --build
 # to restart on prod mode; running on port 7800
 docker compose -f docker-compose.prod.yml up -d
 
+# DEV MODE
 # buid/rebuild docker images based on docker-compose on debug mode; running on port 7800
 # remove app-cache/ && production-database-data/ from previous production mode before proceeding
-cd magnetar && docker compose up --build # (first build)
+cd magnetar && docker compose up --build 
 # to restart on debug mode on port 7800
-cd escala && docker compose up
+cd magnetar && docker compose up 
+# on detach mode
+docker compose -f docker-compose.dev.yml up -d
 
 # stop running app all modes
-$ docker compose down
+$ docker compose down # dev
+$ docker compose -f docker-compose.prod.yml down # prod
+
+# stop running container
+$ docker stop <container_id>
+
+# run individual image after build
+$ docker run -p <port:port> image_name
 
 # clean slate docker hub; some of the containers, images, volume must be remove manually
 $ docker system prune -a && docker images prune -a && docker volume prune -a

@@ -1,11 +1,18 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
 
-  import { userUuid, courseId } from '../stores/stores.js';
+  import {
+    userUuid,
+    courseId,
+    questionId,
+    questions,
+  } from '../stores/stores.js';
   import courseService from '../services/courseService.js';
+  import questionService from '../services/questionService.js';
 
-  import AddQuestionForm from './AddQuestionForm.svelte';
   import Loader from './Loader.svelte';
+  import Questions from './Questions.svelte';
+  import Question from './Question.svelte';
 
   let course = {};
 
@@ -14,6 +21,8 @@
   let isLoading = true;
 
   let inputQuestionData = { title: '', details: '' };
+
+  let currentQuestionId;
 
   onMount(async () => {
     await fetchers();
@@ -40,16 +49,33 @@
     return () => clearInterval(interval);
   };
 
-  const addQuestion = async () => {
+  const onSubmit = async (event) => {
+    event.preventDefault();
     const createQuestion = await questionService.create(
       $courseId,
       $userUuid,
-      title,
-      details
+      inputQuestionData.title,
+      inputQuestionData.details
     );
 
     console.log(createQuestion);
+
+    $questions = [createQuestion, ...$questions];
   };
+
+  const questionsByCourse = $questions.filter((q) => q.course_id === $courseId);
+
+  questionId.subscribe((currentValue) => {
+    currentQuestionId = currentValue;
+  });
+
+  const unsubscribeQuestionId = questionId.subscribe((currentValue) => {
+    currentQuestionId = currentValue;
+  });
+
+  onDestroy(unsubscribeQuestionId);
+
+  // $: console.log('QUESTION ID', $questionId);
 </script>
 
 <section>
@@ -70,8 +96,51 @@
         />
       </div>
     </section>
-    <section>
-      <AddQuestionForm {inputQuestionData} {course} {addQuestion} />
+    <section class="mb-3">
+      <form on:submit={onSubmit}>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+            Title
+          </label>
+          <input
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            id="title"
+            type="text"
+            placeholder="Enter a question title"
+            bind:value={inputQuestionData.title}
+            required
+          />
+        </div>
+        <div class="mb-4">
+          <label
+            for="details"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Your question related to {course.title}</label
+          >
+        </div>
+        <textarea
+          id="details"
+          name="details"
+          rows="4"
+          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-5"
+          placeholder="Write a question here"
+          bind:value={inputQuestionData.details}
+          required
+        />
+        <button
+          class="bg-indigo-400 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+          type="submit"
+        >
+          ADD QUESTION {course.title}
+        </button>
+      </form>
     </section>
   {/if}
 </section>
+{#if questionsByCourse?.length > 0}
+  <Questions {questionsByCourse} />
+{:else if $questionId > 0}
+  <Question />
+{/if}
+
+<section />

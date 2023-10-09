@@ -10,9 +10,6 @@ services:
       - qa-ui
     ports:
       - 7800:7800
-    networks:
-      - backnet
-      - frontnet
 
   qa-api:
     build:

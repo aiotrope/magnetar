@@ -10,7 +10,7 @@ const getAll = async () => {
 };
 
 const findById = async (courseId) => {
-  const response = await fetch(`/api/courses/${courseId}`);
+  const response = await fetch(`/api/course?courseId=${courseId}`);
 
   return await response.json();
 };

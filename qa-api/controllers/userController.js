@@ -1,12 +1,11 @@
-/* const handleGenerateUuid = async (request) => {
+const handleGenerateUuid = async ({ response }) => {
   const generate = crypto.randomUUID();
   const uuid = generate;
-  return Response.json({ uuid: uuid }, { status: 200 });
+  response.body = { uuid: uuid };
+  return;
 };
-
 const userController = {
   handleGenerateUuid,
 };
 
 export default userController;
- */

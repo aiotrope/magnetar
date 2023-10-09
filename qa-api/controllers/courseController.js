@@ -14,7 +14,7 @@ const handleFindAll = async ({ response }) => {
 const handleFindOne = async ({ request, response }) => {
   const courseId = request.url.searchParams.get('courseId');
   if (courseId !== undefined) {
-    const course = await cachedCourseService.getCourse(courseId);
+    const course = await courseService.getCourse(courseId);
     response.status = 200;
     response.body = course;
   } else {

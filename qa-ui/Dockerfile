@@ -1,6 +1,5 @@
-FROM node:lts-alpine3.17
-
-EXPOSE 3000
+FROM node:lts-bullseye-slim 
+# FROM node:lts-alpine3.17
 
 WORKDIR /app
 
@@ -11,5 +10,7 @@ COPY *.json ./
 RUN npm install
 
 COPY . .
+
+EXPOSE 3000
 
 CMD [ "astro", "dev" ]

@@ -65,7 +65,7 @@
 
   onDestroy(unsubscribeCourseId);
 
-  $: console.log($courseId)
+  //$: console.log($courseId);
 </script>
 
 <section>

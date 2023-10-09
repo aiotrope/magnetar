@@ -1,6 +1,5 @@
 const create = async (course_id, user_uuid, title, details) => {
   const payload = {
-    course_id: course_id,
     user_uuid: user_uuid,
     title: title,
     details: details,
@@ -15,7 +14,7 @@ const create = async (course_id, user_uuid, title, details) => {
     },
   };
 
-  const url = `/api/questions`;
+  const url = `/api/questions/${course_id}`;
 
   const response = await fetch(url, options);
 
@@ -33,9 +32,21 @@ const getAll = async () => {
   return jsonData;
 };
 
+const findById = async (questionId) => {
+  const response = await fetch(`/api/question?question_id=${questionId}`);
+
+  const jsonData = await response.json();
+
+  if (jsonData !== null) {
+    localStorage.setItem('questionById', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
 const questionService = {
   create,
   getAll,
+  findById,
 };
 
 export default questionService;

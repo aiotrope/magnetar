@@ -1,12 +1,18 @@
-import { createClient, connect, load } from '../deps.js';
+import { connect, load } from '../deps.js';
 
 const env = await load();
+
+const redis = await connect({
+  hostname: 'redis',
+  port: 6379,
+});
+
  
-const redis = createClient({
+/* const redis = createClient({
   url: env['REDIS_LAB_URL'],
   pingInterval: 1000,
 });
-await redis.connect();
+await redis.connect(); */
 
 const cacheMethodCalls = (object, methodsToFlushCacheWith = []) => {
   const handler = {
