@@ -2,9 +2,9 @@ import { writable } from 'svelte/store';
 let user = JSON.parse(localStorage.getItem('userUuid'));
 let courseList = JSON.parse(localStorage.getItem('courses'));
 let questionList = JSON.parse(localStorage.getItem('questions'));
-/* let questionsByCourseList = JSON.parse(
+let questionsByCourseList = JSON.parse(
   localStorage.getItem('questionsByCourse')
-); */
+);
 
 let questionByIdObj = JSON.parse(localStorage.getItem('questionById'))
 
@@ -14,7 +14,7 @@ const courses = writable(courseList);
 
 let questions = writable(questionList);
 
-//let questionsByCourse = writable(questionsByCourseList);
+let questionsByCourse = writable(questionsByCourseList);
 
 let questionById = writable(questionByIdObj);
 
@@ -27,7 +27,7 @@ export {
   courses,
   questions,
   courseId,
-  // questionsByCourse,
+  questionsByCourse,
   questionId,
   questionById
 };

@@ -1,20 +1,44 @@
-<script>
+<!-- <script>
   import { onMount, onDestroy } from 'svelte';
-  import { questions, questionId } from '../stores/stores';
-  
-  const questionById = $questions.find((q) => q?.id === $questionId);
+  import { questionId, questionById } from '../stores/stores';
 
-  let currentQuestionId;
+  import questionService from '../services/questionService';
 
-  const unsubscribeQuestionId = questionId.subscribe((currentValue) => {
-    currentQuestionId = currentValue;
+  let currentQuestionById
+
+  onMount(async () => {
+    await fetchers();
   });
 
-  onDestroy(unsubscribeQuestionId);
+  const fetchers = async () => {
+    const interval = setInterval(async () => {
+      const question = await questionService.findById($questionId);
 
-  $: console.log('QUESTION By ID', $questionId);
+      questionById.set(question);
+
+      if (question !== null) {
+        isLoading = false;
+        clearInterval(interval);
+        console.clear();
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  };
+
+  questionById.subscribe((currentValue) => {
+    localStorage.setItem('questionById', JSON.stringify(currentValue));
+  });
+
+  const unsubscribeQuestionById = questionById.subscribe((currentValue) => {
+    currentQuestionById = currentValue;
+  });
+
+  onDestroy(unsubscribeQuestionById);
+
+  $: console.log($questionById)
 </script>
 
 <section>
   <h3>{questionById?.title}</h3>
 </section>
+ -->

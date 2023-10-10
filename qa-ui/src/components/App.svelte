@@ -32,11 +32,14 @@
 
       const allQuestions = await questionService.getAll();
 
+      
       courses.set(allCourses);
 
       userUuid.set(setUserId);
 
       questions.set(allQuestions);
+
+     
 
       if (allCourses.length > 0 && setUserId !== null) {
         clearInterval(interval);
@@ -59,13 +62,13 @@
     localStorage.setItem('questions', JSON.stringify(currentValue));
   });
 
+
   const unsubscribeCourseId = courseId.subscribe((currentValue) => {
     currentCourseId = currentValue;
   });
 
   onDestroy(unsubscribeCourseId);
 
-  //$: console.log($courseId);
 </script>
 
 <section>

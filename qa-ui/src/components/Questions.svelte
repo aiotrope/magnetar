@@ -1,30 +1,28 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
-  import { questionId, questions } from '../stores/stores';
+  import {
+    questionId,
+    courseId,
+    questionsByCourse,
+  } from '../stores/stores';
 
   import questionService from '../services/questionService';
 
-  import Question from './Question.svelte';
-
   let isLoading = true;
 
-  let currentQuestionById;
+  let currentQuestionsByCourse;
 
-  export let questionsByCourse;
-
-  /* onMount(async () => {
-    if ($questionId !== undefined) {
-      await fetchers();
-    }
+  onMount(async () => {
+    await fetchers();
   });
 
   const fetchers = async () => {
     const interval = setInterval(async () => {
-      const question = await questionService.findById($questionId);
+      const questions = await questionService.getByCourse($courseId);
 
-      questionById.set(question);
+      questionsByCourse.set(questions);
 
-      if (question !== null) {
+      if (questions !== undefined && questions?.length > 0) {
         isLoading = false;
         clearInterval(interval);
         // console.clear()
@@ -32,28 +30,25 @@
     }, 1000);
     return () => clearInterval(interval);
   };
- */
-  /* questionById.subscribe((currentValue) => {
-    localStorage.setItem('questionById', JSON.stringify(currentValue));
+
+  questionsByCourse.subscribe((currentValue) => {
+    localStorage.setItem('questionsByCourse', JSON.stringify(currentValue));
   });
 
-  const unsubscribeQuestionById = questionById.subscribe((currentValue) => {
-    currentQuestionById = currentValue;
+   const unsubscribeQuestionsByCourse = courseId.subscribe((currentValue) => {
+    currentQuestionsByCourse = currentValue;
   });
 
-  onDestroy(unsubscribeQuestionById); */
+  onDestroy(unsubscribeQuestionsByCourse);
 
-  // const questionById = $questions.find((q) => q.id === $questionId);
-
-   const questionById = $questions.filter((q) => q?.id === $questionId);
-
-   $: console.log('QUESTION By ID', questionById[0]);
-
+  $: console.log(currentQuestionsByCourse)
+ 
 </script>
 
 <div>
   <h3>Questions</h3>
-  {#each questionsByCourse as question}
+  
+ {#each $questionsByCourse as question}
     <div class="mb-3">
       <h3>{question.title}</h3>
       <p>{question.details}</p>

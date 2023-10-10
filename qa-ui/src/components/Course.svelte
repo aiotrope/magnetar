@@ -6,6 +6,8 @@
     courseId,
     questionId,
     questions,
+    questionsByCourse,
+    questionById,
   } from '../stores/stores.js';
   import courseService from '../services/courseService.js';
   import questionService from '../services/questionService.js';
@@ -24,6 +26,12 @@
 
   let currentQuestionId;
 
+  let currentQuestions;
+
+  let currentQuestionsByCourse;
+
+  let currentQuestionById;
+
   onMount(async () => {
     await fetchers();
   });
@@ -40,10 +48,18 @@
       imgUrl = img.replace('500x150', '800x150');
       imgUrl = imgUrl;
 
+      const questions = await questionService.getByCourse($courseId);
+
+      questionsByCourse.set(questions);
+
+      // const question = await questionService.findById($questionId);
+
+      // questionById.set(question);
+
       if (courseById !== undefined) {
         isLoading = false;
         clearInterval(interval);
-        // console.clear()
+        //console.clear();
       }
     }, 1000);
     return () => clearInterval(interval);
@@ -61,21 +77,51 @@
     console.log(createQuestion);
 
     $questions = [createQuestion, ...$questions];
-  };
 
-  const questionsByCourse = $questions.filter((q) => q.course_id === $courseId);
+    $questionsByCourse = [createQuestion, ...$questionsByCourse];
+  };
 
   questionId.subscribe((currentValue) => {
     currentQuestionId = currentValue;
+  });
+
+  questions.subscribe((currentValue) => {
+    localStorage.setItem('questions', JSON.stringify(currentValue));
+  });
+
+  questionsByCourse.subscribe((currentValue) => {
+    localStorage.setItem('questionsByCourse', JSON.stringify(currentValue));
+  });
+
+  questionById.subscribe((currentValue) => {
+    localStorage.setItem('questionById', JSON.stringify(currentValue));
   });
 
   const unsubscribeQuestionId = questionId.subscribe((currentValue) => {
     currentQuestionId = currentValue;
   });
 
+  const unsubscribeQuestions = questions.subscribe((currentValue) => {
+    currentQuestions = currentValue;
+  });
+
+  const unsubscribeQuestionsByCourse = courseId.subscribe((currentValue) => {
+    currentQuestionsByCourse = currentValue;
+  });
+
+  const unsubscribeQuestionById = questionById.subscribe((currentValue) => {
+    currentQuestionById = currentValue;
+  });
+
+  onDestroy(unsubscribeQuestionsByCourse);
+
   onDestroy(unsubscribeQuestionId);
 
-  // $: console.log('QUESTION ID', $questionId);
+  onDestroy(unsubscribeQuestions);
+
+  onDestroy(unsubscribeQuestionById);
+
+   $: console.log($questionById)
 </script>
 
 <section>
@@ -137,10 +183,22 @@
     </section>
   {/if}
 </section>
-{#if questionsByCourse?.length > 0}
-  <Questions {questionsByCourse} />
-{:else if $questionId > 0}
-  <Question />
+{#if $questionsByCourse?.length > 0}
+  {#each $questionsByCourse as question}
+    <div class="mb-3">
+      <h3>{question.title}</h3>
+      <p>{question.details}</p>
+
+      <button
+        type="button"
+        class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+        on:click={() => questionId.update((val) => parseInt(question.id))}
+        >Answer this question</button
+      >
+    </div>
+  {/each}
+{:else if $questionById?.id}
+ <h3>{$questionById?.title}</h3>
 {/if}
 
 <section />

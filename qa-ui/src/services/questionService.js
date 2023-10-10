@@ -32,6 +32,17 @@ const getAll = async () => {
   return jsonData;
 };
 
+const getByCourse = async (courseId) => {
+  const response = await fetch(`/api/questions/course?course_id=${courseId}`);
+
+  const jsonData = await response.json();
+
+  if (jsonData.length || jsonData !== undefined) {
+    localStorage.setItem('questionsByCourse', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
 const findById = async (questionId) => {
   const response = await fetch(`/api/question?question_id=${questionId}`);
 
@@ -46,6 +57,7 @@ const findById = async (questionId) => {
 const questionService = {
   create,
   getAll,
+  getByCourse,
   findById,
 };
 
