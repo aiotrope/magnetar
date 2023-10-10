@@ -1,21 +1,28 @@
-/* import answerService from '../services/answerService.js';
+import answerService from '../services/answerService.js';
 import { cacheMethodCalls } from '../util/cacheUtil.js';
 
 const cachedAnswerService = cacheMethodCalls(answerService, ['create']);
 
-const handleCreate = async ({ request, response }) => {
-  const { course_id, question_id, created_by, details } = await request.body()
-    .value;
+const handleCreate = async ({ request, response, params }) => {
+  const courseId = params.courseId;
+  const questionId = request.url.searchParams.get('question_id');
+  const { user_uuid, details } = await request.body().value;
 
-  const newAnswer = await cachedAnswerService.create(
-    course_id,
-    question_id,
-    created_by,
-    details
-  );
+  if (request.url.searchParams.has('question_id') && courseId !== undefined) {
+    const newAnswer = await cachedAnswerService.create(
+      courseId,
+      questionId,
+      user_uuid,
+      details
+    );
 
-  response.status = 201;
-  response.body = newAnswer[0];
+    response.status = 201;
+    response.body = newAnswer[0];
+  } else {
+    response.status = 404;
+    response.body = 'Not defined';
+    return;
+  }
 };
 
 const handleFindAll = async ({ response }) => {
@@ -67,24 +74,21 @@ const handleFindByCourse = async ({ request, response }) => {
   }
 };
 
-const handleFindByCourseByQuestionOwnedByUser = async ({
+const handleFindByCourseByQuestion = async ({
   request,
   params,
   response,
 }) => {
   const courseId = params.courseId;
   const questionId = params.questionId;
-  const created_by = request.url.searchParams.get('created_by');
   if (
     courseId !== undefined &&
-    questionId !== undefined &&
-    created_by !== undefined
+    questionId !== undefined
   ) {
     const answers =
-      await cachedAnswerService.getAnswersByCourseByQuestionOwnedByUser(
+      await cachedAnswerService.getAnswersByCourseByQuestion(
         courseId,
         questionId,
-        created_by
       );
     response.status = 200;
     response.body = answers;
@@ -96,25 +100,20 @@ const handleFindByCourseByQuestionOwnedByUser = async ({
   }
 };
 
-const handleLLM = async ({ request, response }) => {
+/* const handleLLM = async ({ request, response }) => {
   const { question } = await request.body().value;
 
   const data = { question };
 
-  //const data = await request.json();
+  const responseData = await fetch('http://localhost:7800/llm/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
 
- const responseData = await fetch('http://localhost:7800/llm/', {
-   method: 'POST',
-   headers: {
-     'Content-Type': 'application/json',
-   },
-   body: JSON.stringify(data),
- });
-
-
-  // response.status = 201;
-  // return responseData
-};
+}; */
 
 const answerController = {
   handleFindAll,
@@ -122,9 +121,8 @@ const answerController = {
   handleFindByUser,
   handleCreate,
   handleFindByCourse,
-  handleFindByCourseByQuestionOwnedByUser,
-  handleLLM,
+  handleFindByCourseByQuestion,
+  // handleLLM,
 };
 
 export default answerController;
- */

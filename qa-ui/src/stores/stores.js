@@ -6,7 +6,13 @@ let questionsByCourseList = JSON.parse(
   localStorage.getItem('questionsByCourse')
 );
 
-let questionByIdObj = JSON.parse(localStorage.getItem('questionById'))
+// let questionByIdObj = JSON.parse(localStorage.getItem('questionById'))
+
+let answerList = JSON.parse(localStorage.getItem('answers'));
+
+let answersByCourseByQuestionList = JSON.parse(
+  localStorage.getItem('answersByCourseByQuestion')
+);
 
 const userUuid = writable(user);
 
@@ -14,9 +20,13 @@ const courses = writable(courseList);
 
 let questions = writable(questionList);
 
+let answers = writable(answerList);
+
 let questionsByCourse = writable(questionsByCourseList);
 
-let questionById = writable(questionByIdObj);
+// let questionById = writable(questionByIdObj);
+
+let answersByCourseByQuestion = writable(answersByCourseByQuestionList)
 
 let courseId = writable(0);
 
@@ -29,5 +39,7 @@ export {
   courseId,
   questionsByCourse,
   questionId,
-  questionById
+  // questionById,
+  answers,
+  answersByCourseByQuestion,
 };

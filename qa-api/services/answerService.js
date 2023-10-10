@@ -1,19 +1,20 @@
-/* import { sql } from '../database/database.js';
+import { sql } from '../database/database.js';
 
 const getAnswers = async () => {
-  const answers = await sql`SELECT * FROM answers;`;
+  const answers = await sql`SELECT * FROM answers ORDER BY created_on DESC;`;
   return answers;
 };
 
 const getAnswerById = async (id) => {
-  const answer = await sql`SELECT * FROM answers WHERE id=${id};`;
+  const answer =
+    await sql`SELECT * FROM answers WHERE id=${id} ORDER BY created_on DESC;`;
 
   return answer[0];
 };
 
-const getAnswersByUser = async (created_by) => {
+const getAnswersByUser = async (user_uuid) => {
   const answers =
-    await sql`SELECT * FROM answers WHERE created_by=${created_by} ORDER BY created_on DESC;`;
+    await sql`SELECT * FROM answers WHERE user_uuid=${user_uuid} ORDER BY created_on DESC;`;
 
   return answers;
 };
@@ -32,21 +33,20 @@ const getAnswersByQuestion = async (question_id) => {
   return answers;
 };
 
-const getAnswersByCourseByQuestionOwnedByUser = async (
+const getAnswersByCourseByQuestion = async (
   course_id,
   question_id,
-  created_by
 ) => {
   const answers =
-    await sql`SELECT * FROM answers WHERE course_id=${course_id} AND question_id=${question_id} AND created_by=${created_by} ORDER BY created_on DESC;`;
+    await sql`SELECT * FROM answers WHERE course_id=${course_id} AND question_id=${question_id} ORDER BY created_on DESC;`;
 
   return answers;
 };
 
-const create = async (course_id, question_id, created_by, details) => {
+const create = async (course_id, question_id, user_uuid, details) => {
   const answer =
-    await sql`INSERT INTO answers (course_id, question_id, created_by, details) 
-  VALUES (${course_id}, ${question_id}, ${created_by}, ${details}) returning *;`;
+    await sql`INSERT INTO answers (course_id, question_id, user_uuid, details) 
+  VALUES (${course_id}, ${question_id}, ${user_uuid}, ${details}) returning *;`;
 
   return answer;
 };
@@ -57,9 +57,8 @@ const answerService = {
   getAnswersByUser,
   getAnswersByCourse,
   getAnswersByQuestion,
-  getAnswersByCourseByQuestionOwnedByUser,
+  getAnswersByCourseByQuestion,
   create,
 };
 
 export default answerService;
- */

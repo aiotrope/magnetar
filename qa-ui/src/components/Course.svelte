@@ -7,7 +7,7 @@
     questionId,
     questions,
     questionsByCourse,
-    questionById,
+    // questionById,
   } from '../stores/stores.js';
   import courseService from '../services/courseService.js';
   import questionService from '../services/questionService.js';
@@ -30,7 +30,9 @@
 
   let currentQuestionsByCourse;
 
-  let currentQuestionById;
+  //let currentQuestionById;
+
+  let currentCourseId;
 
   onMount(async () => {
     await fetchers();
@@ -51,10 +53,6 @@
       const questions = await questionService.getByCourse($courseId);
 
       questionsByCourse.set(questions);
-
-      // const question = await questionService.findById($questionId);
-
-      // questionById.set(question);
 
       if (courseById !== undefined) {
         isLoading = false;
@@ -93,9 +91,9 @@
     localStorage.setItem('questionsByCourse', JSON.stringify(currentValue));
   });
 
-  questionById.subscribe((currentValue) => {
+  /*  questionById.subscribe((currentValue) => {
     localStorage.setItem('questionById', JSON.stringify(currentValue));
-  });
+  }); */
 
   const unsubscribeQuestionId = questionId.subscribe((currentValue) => {
     currentQuestionId = currentValue;
@@ -105,12 +103,14 @@
     currentQuestions = currentValue;
   });
 
-  const unsubscribeQuestionsByCourse = courseId.subscribe((currentValue) => {
-    currentQuestionsByCourse = currentValue;
-  });
+  const unsubscribeQuestionsByCourse = questionsByCourse.subscribe(
+    (currentValue) => {
+      currentQuestionsByCourse = currentValue;
+    }
+  );
 
-  const unsubscribeQuestionById = questionById.subscribe((currentValue) => {
-    currentQuestionById = currentValue;
+  const unsubscribeCourseId = courseId.subscribe((currentValue) => {
+    currentCourseId = currentValue;
   });
 
   onDestroy(unsubscribeQuestionsByCourse);
@@ -119,16 +119,18 @@
 
   onDestroy(unsubscribeQuestions);
 
-  onDestroy(unsubscribeQuestionById);
+  onDestroy(unsubscribeCourseId);
 
-   $: console.log($questionById)
+  $: questionIndex = $questionsByCourse?.map((e) => e?.id).indexOf($questionId);
+
+  // $: console.log('Index', questionIndex);
 </script>
 
-<section>
+<div class="grid mt-5 w-full">
   {#if isLoading}
     <Loader />
-  {:else}
-    <section class="mb-2">
+  {:else if questionIndex === -1}
+    <div class="mb-2">
       <div class="mb-5">
         <h2 class="text-l font-bold leading-7 text-gray-700">
           {course?.details}
@@ -141,8 +143,8 @@
           alt={`Image for course ${course?.title}`}
         />
       </div>
-    </section>
-    <section class="mb-3">
+    </div>
+    <div class="mb-3">
       <form on:submit={onSubmit}>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
@@ -180,25 +182,16 @@
           ADD QUESTION {course.title}
         </button>
       </form>
-    </section>
-  {/if}
-</section>
-{#if $questionsByCourse?.length > 0}
-  {#each $questionsByCourse as question}
-    <div class="mb-3">
-      <h3>{question.title}</h3>
-      <p>{question.details}</p>
-
-      <button
-        type="button"
-        class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-        on:click={() => questionId.update((val) => parseInt(question.id))}
-        >Answer this question</button
-      >
     </div>
-  {/each}
-{:else if $questionById?.id}
- <h3>{$questionById?.title}</h3>
-{/if}
+  {/if}
+</div>
 
-<section />
+{#if questionIndex !== -1 && $questionsByCourse?.length > 0}
+  <div>
+    <Question {questionIndex} {course} />
+  </div>
+{:else}
+  <div>
+    <Questions />
+  </div>
+{/if}

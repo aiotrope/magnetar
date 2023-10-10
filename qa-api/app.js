@@ -3,7 +3,7 @@ import { Application, oakCors } from './deps.js';
 import courseRoutes from './routes/courseRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import questionRoutes from './routes/questionRoutes.js';
-// import answerRoutes from './routes/answerRoutes.js';
+import answerRoutes from './routes/answerRoutes.js';
 
 const app = new Application();
 
@@ -20,8 +20,8 @@ app.use(userRoutes.allowedMethods());
 app.use(questionRoutes.routes());
 app.use(questionRoutes.allowedMethods());
 
-/* app.use(answerRoutes.routes());
-app.use(answerRoutes.allowedMethods()); */
+app.use(answerRoutes.routes());
+app.use(answerRoutes.allowedMethods());
 
 await app.listen({ port: 7777 });
 

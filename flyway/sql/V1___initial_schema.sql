@@ -59,7 +59,7 @@ CREATE INDEX idx_answers_question ON answers (question_id);
 
 CREATE INDEX idx_answers_question_user ON answers (question_id, user_uuid);
 
-CREATE INDEX idx_answers_course_question_user ON answers (course_id, question_id, user_uuid);
+CREATE INDEX idx_answers_course_question ON answers (course_id, question_id);
 
 CREATE INDEX idx_question_votes_user ON question_votes (user_uuid);
  

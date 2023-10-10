@@ -16,35 +16,38 @@ const { title = 'Questions & Answers', heading = 'Courses' } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"
+    ></script>
+
     <title>{title}</title>
   </head>
   <body>
     <Header client:load />
-    <main class="flex justify-center p-2 mt-3">
+    <main class="flex justify-center p-3 mt-3 w-full">
       <slot />
     </main>
   </body>
 </html>
 <style is:global>
-  :root {
-    --accent: 136, 58, 234;
-    --accent-light: 224, 204, 250;
-    --accent-dark: 49, 10, 101;
-    --accent-gradient: linear-gradient(
-      45deg,
-      rgb(var(--accent)),
-      rgb(var(--accent-light)) 30%,
-      white 60%
-    );
-  }
   html {
     font-family: system-ui, sans-serif;
-    /*  background: #13151a; */
     background-size: 224px;
   }
-  code {
+
+  .code {
+    background: #f4f5f6;
+    border-radius: 0.1rem;
+    border-left: 0.3rem solid #d1d1d1;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    white-space: nowrap;
     font-family:
       Menlo,
       Monaco,
@@ -55,5 +58,19 @@ const { title = 'Questions & Answers', heading = 'Courses' } = Astro.props;
       Courier New,
       monospace;
   }
-</style>
 
+  pre {
+    margin-top: 7px;
+    margin-bottom: 7px;
+    background: #f4f5f6;
+    border-left: 0.3rem solid rgb(82, 149, 244);
+    overflow-y: hidden;
+  }
+
+  pre > code {
+    border-radius: 0;
+    display: block;
+    padding: 1rem 1.2rem;
+    white-space: pre;
+  }
+</style>

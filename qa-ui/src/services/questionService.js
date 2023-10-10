@@ -58,7 +58,7 @@ const questionService = {
   create,
   getAll,
   getByCourse,
-  findById,
+  // findById,
 };
 
 export default questionService;
