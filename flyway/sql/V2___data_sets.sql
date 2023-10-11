@@ -19,3 +19,14 @@ INSERT INTO questions (course_id, user_uuid, title, details) VALUES (7, 'e566e10
 INSERT INTO questions (course_id, user_uuid, title, details) VALUES (8, '6a45ba57-b461-4a2c-a150-b8cfc136abbe', 'Hello Python', 'How to write Hello, world! in Python?');
 INSERT INTO questions (course_id, user_uuid, title, details) VALUES (9, 'cb4fb37d-69a5-4cf1-9a7d-4007e80794af', 'Hello CSharp', 'How to write Hello, world! in CSharp?');
 INSERT INTO questions (course_id, user_uuid, title, details) VALUES (10, 'e566e100-05c7-4d67-ab82-703c7f1eb764', 'Hello SQL', 'How to write Hello, world! in SQL?');
+
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (1, 1, '6a45ba57-b461-4a2c-a150-b8cfc136abbe', 'Placeholder answer Fortran');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (2, 2, '16a398f4-853e-48c9-a9f2-77b6c315ed82', 'Placeholder answer Java');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (3, 3, '952a0674-be85-4f48-a458-fdf81e6185d8', 'Placeholder answer CPP');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (4,4, '6a45ba57-b461-4a2c-a150-b8cfc136abbe', 'Placeholder answer Swift');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (5, 5, '6a45ba57-b461-4a2c-a150-b8cfc136abbe', 'Placeholder answer Javascript');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (6, 6, '6a45ba57-b461-4a2c-a150-b8cfc136abbe', 'Placeholder answer Rust');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (7, 7, 'e566e100-05c7-4d67-ab82-703c7f1eb764', 'Placeholder answer Golang');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (8, 8, '6a45ba57-b461-4a2c-a150-b8cfc136abbe', 'Placeholder answer Python');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (9, 9, 'cb4fb37d-69a5-4cf1-9a7d-4007e80794af', 'Placeholder answer CSharp');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (10, 10, 'e566e100-05c7-4d67-ab82-703c7f1eb764', 'Placeholder answer SQL');

@@ -30,6 +30,8 @@
 
   let currentQuestionsByCourse;
 
+  let queueSubmissions = [];
+
   //let currentQuestionById;
 
   let currentCourseId;
@@ -72,7 +74,9 @@
       inputQuestionData.details
     );
 
-    console.log(createQuestion);
+    // console.log(createQuestion);
+
+    queueSubmissions = [...queueSubmissions, createSubmission];
 
     $questions = [createQuestion, ...$questions];
 
@@ -126,7 +130,7 @@
   // $: console.log('Index', questionIndex);
 </script>
 
-<div class="grid mt-5 w-full">
+<div>
   {#if isLoading}
     <Loader />
   {:else if questionIndex === -1}
@@ -138,7 +142,7 @@
       </div>
       <div class="shadow-lg">
         <img
-          class="object-cover h-150 w-800"
+          class="object-cover"
           src={imgUrl}
           alt={`Image for course ${course?.title}`}
         />
@@ -184,14 +188,11 @@
       </form>
     </div>
   {/if}
+  <div>
+    {#if questionIndex !== -1 && $questionsByCourse?.length > 0}
+      <Question {questionIndex} {course} {imgUrl} />
+    {:else}
+      <Questions />
+    {/if}
+  </div>
 </div>
-
-{#if questionIndex !== -1 && $questionsByCourse?.length > 0}
-  <div>
-    <Question {questionIndex} {course} />
-  </div>
-{:else}
-  <div>
-    <Questions />
-  </div>
-{/if}

@@ -101,7 +101,7 @@
   onDestroy(unsubscribeQuestionsByCourse)
 </script>
 
-<section>
+<div class="grid place-items-center mx-auto p-4">
   {#if isLoading}
     <Loader />
   {:else if $courseId}
@@ -109,4 +109,4 @@
   {:else}
     <Courses />
   {/if}
-</section>
+</div>

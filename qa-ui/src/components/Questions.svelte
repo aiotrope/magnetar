@@ -8,7 +8,7 @@
   {#each $questionsByCourse as question}
     <div class="mb-3">
       <h3>{question.title}</h3>
-      <div class="mt-2 code">
+      <div class="code">
         {@html marked(question?.details)}
       </div>
       <button

@@ -70,6 +70,18 @@ services:
       - 3000
     depends_on:
       - qa-api
+  
+  llm-api:
+    build:
+      context: llm-api
+      dockerfile: Dockerfile
+    image: llm-api
+    restart: 'no'
+    expose:
+      - 7000
+    volumes:
+      - ./llm-api/:/app
+      - ./app-cache/:/app-cache
    
 volumes:
   astro_node_modules:

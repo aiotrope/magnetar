@@ -32,6 +32,8 @@ let courseId = writable(0);
 
 let questionId = writable(0);
 
+let answerId = writable(0);
+
 export {
   userUuid,
   courses,
@@ -42,4 +44,5 @@ export {
   // questionById,
   answers,
   answersByCourseByQuestion,
+  answerId
 };
