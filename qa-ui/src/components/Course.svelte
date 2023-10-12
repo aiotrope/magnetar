@@ -7,7 +7,6 @@
     questionId,
     questions,
     questionsByCourse,
-    // questionById,
   } from '../stores/stores.js';
   import courseService from '../services/courseService.js';
   import questionService from '../services/questionService.js';
@@ -31,8 +30,6 @@
   let currentQuestionsByCourse;
 
   let queueSubmissions = [];
-
-  //let currentQuestionById;
 
   let currentCourseId;
 
@@ -76,7 +73,7 @@
 
     // console.log(createQuestion);
 
-    queueSubmissions = [...queueSubmissions, createSubmission];
+    // queueSubmissions = [...queueSubmissions, createSubmission];
 
     $questions = [createQuestion, ...$questions];
 
@@ -95,14 +92,12 @@
     localStorage.setItem('questionsByCourse', JSON.stringify(currentValue));
   });
 
-  /*  questionById.subscribe((currentValue) => {
-    localStorage.setItem('questionById', JSON.stringify(currentValue));
-  }); */
 
   const unsubscribeQuestionId = questionId.subscribe((currentValue) => {
     currentQuestionId = currentValue;
   });
 
+  
   const unsubscribeQuestions = questions.subscribe((currentValue) => {
     currentQuestions = currentValue;
   });

@@ -34,7 +34,7 @@ const handleFindAll = async ({ response }) => {
 
 const handleFindById = async ({ request, response }) => {
   const id = request.url.searchParams.get('id');
-  if (id !== undefined) {
+  if (request.url.searchParams.has('id')) {
     const answer = await cachedAnswerService.getAnswerById(id);
     response.status = 200;
     response.body = answer;
@@ -74,24 +74,32 @@ const handleFindByCourse = async ({ request, response }) => {
   }
 };
 
-const handleFindByCourseByQuestion = async ({
-  request,
-  params,
-  response,
-}) => {
+const handleFindByCourseByQuestion = async ({ request, params, response }) => {
   const courseId = params.courseId;
   const questionId = params.questionId;
-  if (
-    courseId !== undefined &&
-    questionId !== undefined
-  ) {
-    const answers =
-      await cachedAnswerService.getAnswersByCourseByQuestion(
-        courseId,
-        questionId,
-      );
+  if (courseId !== undefined && questionId !== undefined) {
+    const answers = await cachedAnswerService.getAnswersByCourseByQuestion(
+      courseId,
+      questionId
+    );
     response.status = 200;
     response.body = answers;
+    return;
+  } else {
+    response.status = 404;
+    response.body = 'Not defined';
+    return;
+  }
+};
+
+const handleFindAnswerByQuestionId = async ({ request, response, params }) => {
+  const id = params.id;
+  const questionId = request.url.searchParams.get('question_id');
+
+  if (request.url.searchParams.has('question_id') && id !== undefined) {
+    const answer = await cachedAnswerService.getAnswerByQuestionId(id, questionId);
+    response.status = 200;
+    response.body = answer;
     return;
   } else {
     response.status = 404;
@@ -122,6 +130,7 @@ const answerController = {
   handleCreate,
   handleFindByCourse,
   handleFindByCourseByQuestion,
+  handleFindAnswerByQuestionId,
   // handleLLM,
 };
 

@@ -11,6 +11,7 @@
     answers,
     answersByCourseByQuestion,
     answerId,
+    questionById,
   } from '../stores/stores';
 
   import answerService from '../services/answerService.js';
@@ -18,6 +19,7 @@
   import Answers from './Answers.svelte';
 
   import Answer from './Answer.svelte';
+  import questionService from '../services/questionService.js';
 
   export let questionIndex;
 
@@ -30,6 +32,8 @@
   let currentAnswersByCourseByQuestion;
 
   let currentAnswerId;
+
+  let currentQuestionById;
 
   let inputAnswerData = { details: '' };
 
@@ -44,7 +48,11 @@
         $questionId
       );
 
+      const question = await questionService.findById($questionId);
+
       answersByCourseByQuestion.set(allAnswers);
+
+      questionById.set(question);
 
       if (allAnswers !== undefined) {
         isLoading = false;
@@ -78,6 +86,10 @@
     );
   });
 
+  questionById.subscribe((currentValue) => {
+    localStorage.setItem('questionById', JSON.stringify(currentValue));
+  });
+
   const unsubscribeAnswersByCourseByQuestion = answers.subscribe(
     (currentValue) => {
       currentAnswersByCourseByQuestion = currentValue;
@@ -88,9 +100,15 @@
     currentAnswerId = currentValue;
   });
 
+  const unsubscribeQuestionById = questionById.subscribe((currentValue) => {
+    currentQuestionById = currentValue;
+  });
+
   onDestroy(unsubscribeAnswersByCourseByQuestion);
 
   onDestroy(unsubscribeAnswerId);
+
+  onDestroy(unsubscribeQuestionById);
 
   $: answerIndex = $answersByCourseByQuestion
     ?.map((e) => e?.id)

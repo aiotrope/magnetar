@@ -6,8 +6,14 @@ const getAnswers = async () => {
 };
 
 const getAnswerById = async (id) => {
+  const answer = await sql`SELECT * FROM answers WHERE id=${id};`;
+
+  return answer[0];
+};
+
+const getAnswerByQuestionId = async (id, questionId) => {
   const answer =
-    await sql`SELECT * FROM answers WHERE id=${id} ORDER BY created_on DESC;`;
+    await sql`SELECT * FROM answers WHERE id=${id} AND question_id=${questionId}`;
 
   return answer[0];
 };
@@ -33,10 +39,7 @@ const getAnswersByQuestion = async (question_id) => {
   return answers;
 };
 
-const getAnswersByCourseByQuestion = async (
-  course_id,
-  question_id,
-) => {
+const getAnswersByCourseByQuestion = async (course_id, question_id) => {
   const answers =
     await sql`SELECT * FROM answers WHERE course_id=${course_id} AND question_id=${question_id} ORDER BY created_on DESC;`;
 
@@ -59,6 +62,7 @@ const answerService = {
   getAnswersByQuestion,
   getAnswersByCourseByQuestion,
   create,
+  getAnswerByQuestionId,
 };
 
 export default answerService;
