@@ -1,8 +1,7 @@
 import { sql } from '../database/database.js';
 
 const getQuestions = async () => {
-  const questions =
-    await sql`SELECT * FROM questions ORDER BY updated DESC;`;
+  const questions = await sql`SELECT * FROM questions ORDER BY updated DESC;`;
   return questions;
 };
 

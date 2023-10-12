@@ -1,40 +1,3 @@
-/* const create = async (course_id, user_uuid, title, details) => {
-  const payload = {
-    user_uuid: user_uuid,
-    title: title,
-    details: details,
-  };
-
-  const options = {
-    method: 'POST',
-    body: JSON.stringify(payload),
-    headers: {
-      Accept: 'application/json',
-      'Content-type': 'application/json',
-    },
-  };
-
-  const url = `/api/questions/${course_id}`;
-
-  const response = await fetch(url, options);
-
-  return await response.json();
-};
-
-const createPromise = async (createSubmission) => {
-  return await new Promise((resolve, reject) => {
-    setTimeout(async () => {
-      const questionSubmission = await create(
-        createSubmission?.course_id,
-        createSubmission?.user_uuid,
-        createSubmission?.title,
-        createSubmission?.details
-      );
-      resolve(questionSubmission);
-    }, 2000);
-  });
-}; */
-
 const create = async (course_id, user_uuid, title, details) => {
   return await new Promise(async (resolve, reject) => {
     setTimeout(async () => {
@@ -129,7 +92,7 @@ const postLLM = async (question) => {
         reject(error);
       }
     });
-  }, 1000);
+  }, 100);
 };
 
 const findById = async (questionId) => {
@@ -176,34 +139,3 @@ const questionService = {
 
 export default questionService;
 
-/*  const questionHasAnswerResponse = await fetch(
-    `/api/answer/${jsonData?.id}?question_id=${questionId}`
-  );
-
-  const questionHasAnswerData = await questionHasAnswerResponse.json();
-
-  if (
-    !questionHasAnswerData ||
-    !questionHasAnswerData?.user_uuid === 'automated'
-  ) {
-    const llm1 = await postLLM(jsonData?.details);
-    const llm2 = await postLLM(jsonData?.details);
-    const llm3 = await postLLM(jsonData?.details);
-
-    return await Promise.allSettled([
-      limit(() => llm1),
-      limit(() => llm2),
-      limit(() => llm3),
-    ]).then((results) => {
-      results.forEach(
-        async (result) =>
-          await answerService.create(
-            jsonData?.course_id,
-            questionId,
-            'automated',
-            result?.value
-          )
-      );
-    });
-  }
- */

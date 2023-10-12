@@ -1,10 +1,12 @@
+import { pLimit } from '../deps.js';
 import questionService from '../services/questionService.js';
 import { cacheMethodCalls } from '../util/cacheUtil.js';
 
 const cachedQuestionService = cacheMethodCalls(questionService, [
   'create',
-  'updateAutomatedAnswer',
 ]);
+
+const limit = pLimit(99);
 
 const handleCreate = async ({ request, response, params }) => {
   const courseId = params.courseId;
@@ -34,6 +36,7 @@ const handleFindById = async ({ request, response }) => {
     const question = await cachedQuestionService.getQuestionById(questionId);
     response.status = 200;
     response.body = question;
+
     return;
   } else {
     response.status = 404;
@@ -96,7 +99,7 @@ const handleUpdateAutomatedAnswer = async ({ request, params, response }) => {
   const { withautomatedanswer } = await request.body().value;
 
   if (id !== undefined) {
-    const updatedQuestion = await cachedQuestionService.updateAutomatedAnswer(
+    const updatedQuestion = await questionService.updateAutomatedAnswer(
       id,
       withautomatedanswer
     );

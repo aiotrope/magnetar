@@ -42,6 +42,10 @@
 
   const limit = pLimit(3);
 
+  const filterAnswers = $answersByCourseByQuestion?.filter(
+    (answer) => answer?.user_uuid === 'automated'
+  );
+
   const startLLM = async () => {
     const inputLLM = [
       await questionService.postLLM($questionById?.details),
@@ -70,9 +74,6 @@
 
   onMount(async () => {
     await fetchers();
-    if ($questionById?.withautomatedanswer === false) {
-      await startLLM();
-    }
   });
 
   const fetchers = async () => {
@@ -90,12 +91,15 @@
 
       if (
         allAnswers !== undefined &&
-        limit.activeCount !== 0 &&
-        limit.pendingCount !== 0
+        limit.activeCount === 0 &&
+        limit.pendingCount === 0 &&
+        $questionById?.withautomatedanswer === true &&
+        filterAnswers?.length > 0
       ) {
         isLoading = false;
         // clearInterval(interval);
         //console.clear();
+        limit.clearQueue();
       }
     }, 1000);
     return () => clearInterval(interval);
@@ -117,11 +121,15 @@
     $answersByCourseByQuestion = [createAnswer, ...$answersByCourseByQuestion];
   };
 
-  /*  (async () => {
-    if ($questionById?.withautomatedanswer === false) {
+  (async () => {
+    if (
+      $questionById?.withautomatedanswer === false &&
+      filterAnswers?.length === 0 &&
+      filterAnswers !== null
+    ) {
       await startLLM();
     }
-  })(); */
+  })();
 
   answersByCourseByQuestion.subscribe((currentValue) => {
     localStorage.setItem(
@@ -158,7 +166,7 @@
     ?.map((e) => e?.id)
     .indexOf($answerId);
 
-  $: console.log('idex', answerIndex);
+  $: console.log('QUESTION BY ID', $questionById?.withautomatedanswer);
 </script>
 
 <div>
