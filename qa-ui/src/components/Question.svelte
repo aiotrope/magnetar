@@ -3,6 +3,8 @@
 
   import { marked } from 'marked';
 
+  import pLimit from 'p-limit';
+
   import {
     questionsByCourse,
     courseId,
@@ -14,12 +16,13 @@
     questionById,
   } from '../stores/stores';
 
+  import questionService from '../services/questionService.js';
+
   import answerService from '../services/answerService.js';
 
   import Answers from './Answers.svelte';
 
   import Answer from './Answer.svelte';
-  import questionService from '../services/questionService.js';
 
   export let questionIndex;
 
@@ -37,8 +40,39 @@
 
   let inputAnswerData = { details: '' };
 
+  const limit = pLimit(3);
+
+  const startLLM = async () => {
+    const inputLLM = [
+      await questionService.postLLM($questionById?.details),
+      await questionService.postLLM($questionById?.details),
+      await questionService.postLLM($questionById?.details),
+    ];
+
+    let promises = inputLLM.map((llm) => {
+      return limit(
+        async () =>
+          await answerService.create(
+            $questionById?.course_id,
+            $questionById?.id,
+            'automatic',
+            llm
+          )
+      );
+    });
+
+    await questionService.updatedAutomatedAnswer($questionById?.id, true);
+
+    const result = await Promise.all(promises);
+    console.log('LLM RESULTS', result);
+    return result;
+  };
+
   onMount(async () => {
     await fetchers();
+    if ($questionById?.withautomatedanswer === false) {
+      await startLLM();
+    }
   });
 
   const fetchers = async () => {
@@ -54,9 +88,13 @@
 
       questionById.set(question);
 
-      if (allAnswers !== undefined) {
+      if (
+        allAnswers !== undefined &&
+        limit.activeCount !== 0 &&
+        limit.pendingCount !== 0
+      ) {
         isLoading = false;
-        clearInterval(interval);
+        // clearInterval(interval);
         //console.clear();
       }
     }, 1000);
@@ -78,6 +116,12 @@
 
     $answersByCourseByQuestion = [createAnswer, ...$answersByCourseByQuestion];
   };
+
+  /*  (async () => {
+    if ($questionById?.withautomatedanswer === false) {
+      await startLLM();
+    }
+  })(); */
 
   answersByCourseByQuestion.subscribe((currentValue) => {
     localStorage.setItem(

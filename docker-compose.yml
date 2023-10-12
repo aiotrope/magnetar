@@ -82,6 +82,8 @@ services:
     volumes:
       - ./llm-api/:/app
       - ./app-cache/:/app-cache
+    deploy:
+      replicas: 5
    
 volumes:
   astro_node_modules:

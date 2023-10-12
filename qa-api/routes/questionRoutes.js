@@ -13,5 +13,6 @@ router.get(
   '/questions/:courseId',
   questionController.handleFindByCourseOwnedByUser
 );
+router.patch('/question/:id', questionController.handleUpdateAutomatedAnswer);
 
 export default router;

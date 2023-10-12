@@ -1,9 +1,3 @@
-import pLimit from 'p-limit';
-
-import answerService from './answerService';
-
-const limit = pLimit(6);
-
 /* const create = async (course_id, user_uuid, title, details) => {
   const payload = {
     user_uuid: user_uuid,
@@ -143,9 +137,46 @@ const findById = async (questionId) => {
 
   const jsonData = await response.json();
 
-  localStorage.setItem('questionById', JSON.stringify(jsonData));
+  if (jsonData !== null) {
+    localStorage.setItem('questionById', JSON.stringify(jsonData));
+  }
 
-  const questionHasAnswerResponse = await fetch(
+  return jsonData;
+};
+
+const updatedAutomatedAnswer = async (questionId, withautomatedanswer) => {
+  const payload = {
+    withautomatedanswer: withautomatedanswer,
+  };
+
+  const options = {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `/api/question/${questionId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const questionService = {
+  create,
+  getAll,
+  getByCourse,
+  findById,
+  postLLM,
+  updatedAutomatedAnswer,
+};
+
+export default questionService;
+
+/*  const questionHasAnswerResponse = await fetch(
     `/api/answer/${jsonData?.id}?question_id=${questionId}`
   );
 
@@ -175,15 +206,4 @@ const findById = async (questionId) => {
       );
     });
   }
-
-  return jsonData;
-};
-
-const questionService = {
-  create,
-  getAll,
-  getByCourse,
-  findById,
-};
-
-export default questionService;
+ */

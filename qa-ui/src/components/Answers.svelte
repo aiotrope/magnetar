@@ -1,8 +1,7 @@
 <script>
   import { marked } from 'marked';
-  import { answersByCourseByQuestion, answerId } from '../stores/stores';
 
-  // $: console.log('ANSWER ID', $answerId)
+  import { answersByCourseByQuestion, answerId } from '../stores/stores';
 </script>
 
 <div>
@@ -10,7 +9,7 @@
   {#each $answersByCourseByQuestion as answer}
     <div class="mb-3">
       <div class="mt-2 code">
-       {@html marked(answer?.details)}
+        {@html marked(answer?.details)}
       </div>
       <button
         type="button"
@@ -20,4 +19,4 @@
       >
     </div>
   {/each}
-  </div>
+</div>

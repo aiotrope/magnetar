@@ -1,7 +1,7 @@
 import { sql } from '../database/database.js';
 
 const getAnswers = async () => {
-  const answers = await sql`SELECT * FROM answers ORDER BY created_on DESC;`;
+  const answers = await sql`SELECT * FROM answers ORDER BY updated DESC;`;
   return answers;
 };
 
@@ -20,28 +20,28 @@ const getAnswerByQuestionId = async (id, questionId) => {
 
 const getAnswersByUser = async (user_uuid) => {
   const answers =
-    await sql`SELECT * FROM answers WHERE user_uuid=${user_uuid} ORDER BY created_on DESC;`;
+    await sql`SELECT * FROM answers WHERE user_uuid=${user_uuid} ORDER BY updated DESC;`;
 
   return answers;
 };
 
 const getAnswersByCourse = async (course_id) => {
   const answers =
-    await sql`SELECT * FROM answers WHERE course_id=${course_id} ORDER BY created_on DESC;`;
+    await sql`SELECT * FROM answers WHERE course_id=${course_id} ORDER BY updated DESC;`;
 
   return answers;
 };
 
 const getAnswersByQuestion = async (question_id) => {
   const answers =
-    await sql`SELECT * FROM answers WHERE question_id=${question_id} ORDER BY created_on DESC;`;
+    await sql`SELECT * FROM answers WHERE question_id=${question_id} ORDER BY updated DESC;`;
 
   return answers;
 };
 
 const getAnswersByCourseByQuestion = async (course_id, question_id) => {
   const answers =
-    await sql`SELECT * FROM answers WHERE course_id=${course_id} AND question_id=${question_id} ORDER BY created_on DESC;`;
+    await sql`SELECT * FROM answers WHERE course_id=${course_id} AND question_id=${question_id} ORDER BY updated DESC;`;
 
   return answers;
 };

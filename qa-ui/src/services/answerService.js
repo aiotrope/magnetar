@@ -42,10 +42,17 @@ const getAllByCourseByQuestion = async (courseId, questionId) => {
   return jsonData;
 };
 
+const getAnswerByQuestionId = async (answerId, questionId) => {
+  const response = await fetch(`/api/answer/${answerId}?question_id=${questionId}`);
+
+  return await response.json();
+};
+
 const answerService = {
   create,
   getAll,
-  getAllByCourseByQuestion
+  getAllByCourseByQuestion,
+  getAnswerByQuestionId,
 };
 
 export default answerService;

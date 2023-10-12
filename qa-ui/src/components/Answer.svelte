@@ -1,9 +1,11 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
 
+
   import { marked } from 'marked';
 
   import answerService from '../services/answerService';
+  import questionService from '../services/questionService';
 
   import {
     answersByCourseByQuestion,
@@ -14,6 +16,7 @@
   export let answerIndex, questionIndex;
 
   export let imgUrl, course;
+
 </script>
 
 <div>

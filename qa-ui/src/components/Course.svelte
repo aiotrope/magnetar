@@ -29,8 +29,6 @@
 
   let currentQuestionsByCourse;
 
-  let queueSubmissions = [];
-
   let currentCourseId;
 
   onMount(async () => {
@@ -70,10 +68,6 @@
       inputQuestionData.title,
       inputQuestionData.details
     );
-
-    // console.log(createQuestion);
-
-    // queueSubmissions = [...queueSubmissions, createSubmission];
 
     $questions = [createQuestion, ...$questions];
 

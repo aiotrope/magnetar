@@ -1,7 +1,10 @@
 import questionService from '../services/questionService.js';
 import { cacheMethodCalls } from '../util/cacheUtil.js';
 
-const cachedQuestionService = cacheMethodCalls(questionService, ['create']);
+const cachedQuestionService = cacheMethodCalls(questionService, [
+  'create',
+  'updateAutomatedAnswer',
+]);
 
 const handleCreate = async ({ request, response, params }) => {
   const courseId = params.courseId;
@@ -88,6 +91,26 @@ const handleFindByCourseOwnedByUser = async ({ request, params, response }) => {
   }
 };
 
+const handleUpdateAutomatedAnswer = async ({ request, params, response }) => {
+  const id = params.id;
+  const { withautomatedanswer } = await request.body().value;
+
+  if (id !== undefined) {
+    const updatedQuestion = await cachedQuestionService.updateAutomatedAnswer(
+      id,
+      withautomatedanswer
+    );
+
+    response.status = 200;
+    response.body = updatedQuestion;
+    return;
+  } else {
+    response.status = 404;
+    response.body = 'Not defined';
+    return;
+  }
+};
+
 const questionController = {
   handleFindAll,
   handleFindById,
@@ -95,6 +118,7 @@ const questionController = {
   handleCreate,
   handleFindByCourse,
   handleFindByCourseOwnedByUser,
+  handleUpdateAutomatedAnswer,
 };
 
 export default questionController;
