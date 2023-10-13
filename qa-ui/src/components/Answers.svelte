@@ -1,7 +1,97 @@
 <script>
+  import { onMount, onDestroy } from 'svelte';
+
   import { marked } from 'marked';
 
-  import { answersByCourseByQuestion, answerId } from '../stores/stores';
+  import {
+    answersByCourseByQuestion,
+    answerId,
+    courseId,
+    questionId,
+    questionById,
+    answers,
+  } from '../stores/stores';
+
+  import answerService from '../services/answerService';
+
+  import questionService from '../services/questionService';
+
+  let isLoading = true;
+
+  let currentAnswersByCourseByQuestion;
+
+  let currentAnswerId;
+
+  let currentAnswers;
+
+  let currentQuestionById
+
+  onMount(async () => {
+    await fetchers();
+  });
+
+  const fetchers = async () => {
+    const interval = setInterval(async () => {
+      const allAnswers = await answerService.getAllByCourseByQuestion(
+        $courseId,
+        $questionId
+      );
+
+      const question = await questionService.findById($questionId);
+
+      answersByCourseByQuestion.set(allAnswers);
+
+      questionById.set(question);
+
+      if (allAnswers !== undefined) {
+        isLoading = false;
+        clearInterval(interval);
+        //console.clear();
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  };
+
+  answers.subscribe((currentValue) => {
+    localStorage.setItem('answers', JSON.stringify(currentValue));
+  });
+
+  answersByCourseByQuestion.subscribe((currentValue) => {
+    localStorage.setItem(
+      'answersByCourseByQuestion',
+      JSON.stringify(currentValue)
+    );
+  });
+
+  questionById.subscribe((currentValue) => {
+    localStorage.setItem('questionById', JSON.stringify(currentValue));
+  });
+
+  const unsubscribeAnswersByCourseByQuestion = answers.subscribe(
+    (currentValue) => {
+      currentAnswersByCourseByQuestion = currentValue;
+    }
+  );
+
+  const unsubscribeAnswerId = answerId.subscribe((currentValue) => {
+    currentAnswerId = currentValue;
+  });
+
+  const unsubscribeQuestionById = questionById.subscribe((currentValue) => {
+    currentQuestionById = currentValue;
+  });
+
+  const unsubscribeAnswers = answers.subscribe((currentValue) => {
+    currentAnswers = currentValue;
+  });
+
+  onDestroy(unsubscribeAnswersByCourseByQuestion);
+
+  onDestroy(unsubscribeAnswerId);
+
+  onDestroy(unsubscribeQuestionById);
+
+  onDestroy(unsubscribeAnswers);
 </script>
 
 <div>

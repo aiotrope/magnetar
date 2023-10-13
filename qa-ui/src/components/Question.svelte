@@ -38,7 +38,11 @@
 
   let currentQuestionById;
 
+  let currentAnswers;
+
   let inputAnswerData = { details: '' };
+
+  let processQueue = [];
 
   const limit = pLimit(3);
 
@@ -46,31 +50,22 @@
     (answer) => answer?.user_uuid === 'automated'
   );
 
-  const startLLM = async () => {
-    const inputLLM = [
-      await questionService.postLLM($questionById?.details),
-      await questionService.postLLM($questionById?.details),
-      await questionService.postLLM($questionById?.details),
-    ];
+  /*  (async () => {
+    if (
+      $questionById?.withautomatedanswer === false &&
+      filterAnswers?.length === 0 &&
+      limit.activeCount > 1 &&
+      limit.pendingCount > 1
+    ) {
+      const mult = await startLLM();
 
-    let promises = inputLLM.map((llm) => {
-      return limit(
-        async () =>
-          await answerService.create(
-            $questionById?.course_id,
-            $questionById?.id,
-            'automatic',
-            llm
-          )
-      );
-    });
+      console.log('MULT', mult);
+    }
+  })(); */
 
-    await questionService.updatedAutomatedAnswer($questionById?.id, true);
-
-    const result = await Promise.all(promises);
-    console.log('LLM RESULTS', result);
-    return result;
-  };
+  $: if ($questionById?.withautomatedanswer === false) {
+    (async () => await startLLM())();
+  }
 
   onMount(async () => {
     await fetchers();
@@ -91,15 +86,16 @@
 
       if (
         allAnswers !== undefined &&
-        limit.activeCount === 0 &&
-        limit.pendingCount === 0 &&
-        $questionById?.withautomatedanswer === true &&
+        limit.activeCount < 1 &&
+        limit.pendingCount < 1 &&
+        $questionById?.withautomatedanswer &&
         filterAnswers?.length > 0
       ) {
         isLoading = false;
-        // clearInterval(interval);
+        clearInterval(interval);
         //console.clear();
         limit.clearQueue();
+        processQueue.length = 0;
       }
     }, 1000);
     return () => clearInterval(interval);
@@ -121,15 +117,52 @@
     $answersByCourseByQuestion = [createAnswer, ...$answersByCourseByQuestion];
   };
 
-  (async () => {
-    if (
-      $questionById?.withautomatedanswer === false &&
-      filterAnswers?.length === 0 &&
-      filterAnswers !== null
-    ) {
-      await startLLM();
-    }
-  })();
+  const startLLM = async () => {
+    const promise1 = await questionService.postLLM(
+      $questionsByCourse[questionIndex]?.details
+    );
+    const promise2 = await questionService.postLLM(
+      $questionsByCourse[questionIndex]?.details
+    );
+    const promise3 = await questionService.postLLM(
+      $questionsByCourse[questionIndex]?.details
+    );
+
+    processQueue.push(promise1);
+    processQueue.push(promise2);
+    processQueue.push(promise3);
+
+    const updated = await questionService.updatedAutomatedAnswer(
+      $questionsByCourse[questionIndex]?.id,
+      true
+    );
+
+    const question = await questionService.findById(updated?.id);
+
+    questionById.set(question);
+
+    let promises = processQueue.map((llm) => {
+      return limit(
+        async () =>
+          await answerService.create($courseId, $questionId, 'automated', llm)
+      );
+    });
+
+    const result = await Promise.allSettled(promises).then((results) =>
+      results.forEach((result) => {
+        $answers = [result, ...$answers];
+
+        $answersByCourseByQuestion = [result, ...$answersByCourseByQuestion];
+      })
+    );
+    // console.log('LLM RESULTS', result);
+
+    return result;
+  };
+
+  answers.subscribe((currentValue) => {
+    localStorage.setItem('answers', JSON.stringify(currentValue));
+  });
 
   answersByCourseByQuestion.subscribe((currentValue) => {
     localStorage.setItem(
@@ -156,17 +189,27 @@
     currentQuestionById = currentValue;
   });
 
+  const unsubscribeAnswers = answers.subscribe((currentValue) => {
+    currentAnswers = currentValue;
+  });
+
   onDestroy(unsubscribeAnswersByCourseByQuestion);
 
   onDestroy(unsubscribeAnswerId);
 
   onDestroy(unsubscribeQuestionById);
 
+  onDestroy(unsubscribeAnswers);
+
   $: answerIndex = $answersByCourseByQuestion
     ?.map((e) => e?.id)
     .indexOf($answerId);
 
-  $: console.log('QUESTION BY ID', $questionById?.withautomatedanswer);
+  $: console.log('FILTER ANSWER', filterAnswers?.length);
+  $: console.log('WITH AUTO', $questionById?.withautomatedanswer);
+  $: console.log('QUESTION ID', $questionId);
+  $: console.log('QUESTION BY ID', $questionById);
+  $: console.log('ANSWER BY QUESTION', $answersByCourseByQuestion);
 </script>
 
 <div>

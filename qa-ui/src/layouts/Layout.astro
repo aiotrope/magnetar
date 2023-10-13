@@ -35,9 +35,19 @@ const { title = 'Questions & Answers', heading = 'Courses' } = Astro.props;
   </body>
 </html>
 <style is:global>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
   html {
     font-family: system-ui, sans-serif;
     background-size: 224px;
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0 auto;
   }
 
   .code {
