@@ -9,11 +9,13 @@ const courseImg = Astro.props.courseImg;
 <div class="grid mb-3">
   <div class="mb-1">
     <p class="mb-2">Course ID: {courseId}</p>
-    <img
-      class="object-cover shadow-lg"
-      src={courseImg}
-      alt={`Image for course ${courseTitle}`}
-    />
+    <a href="/">
+      <img
+        class="object-cover shadow-lg"
+        src={courseImg}
+        alt={`Image for course ${courseTitle}`}
+      />
+    </a>
   </div>
   <div>
     <h2 class="text-l font-bold leading-7 text-gray-700">

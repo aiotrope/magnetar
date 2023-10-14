@@ -12,7 +12,7 @@
   import questionService from '../services/questionService.js';
 
   import Loader from './Loader.svelte';
-  import Questions from './Questions.svelte';
+  import Questions from './Questions1.svelte';
   import Question from './Question1.svelte';
 
   let course = {};

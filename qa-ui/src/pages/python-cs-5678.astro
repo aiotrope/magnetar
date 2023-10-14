@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Course from '../components/Course.astro';
+import Questions from '../components/Questions.svelte';
 
 const title = "Python CS-5678"
 const courseId = 4;
@@ -11,11 +12,14 @@ const slug = 'python-cs-5678';
 ---
 
 <Layout title={title}>
-  <Course
-    courseId={courseId}
-    courseTitle={title}
-    courseDetails={details}
-    courseImg={img}
-    courseSlug={slug}
-  />
+  <div class="container mt-3">
+    <Course
+      courseId={courseId}
+      courseTitle={title}
+      courseDetails={details}
+      courseImg={img}
+      courseSlug={slug}
+    />
+    <Questions courseId={courseId} title={title} client:only={'svelte'} />
+  </div>
 </Layout>

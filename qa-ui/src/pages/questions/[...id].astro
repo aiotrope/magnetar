@@ -1,13 +1,10 @@
 ---
-import Layout from '../../layouts/Layout.astro'
+import Layout from '../../layouts/Layout.astro';
+import Question from '../../components/Question.svelte';
 
-export const { id } = Astro.params
+let questionId = Astro.params.id;
 ---
 
 <Layout>
-
+  <Question questionId={questionId} client:only="svelte" />
 </Layout>
-
-<script>
-   
-</script>
