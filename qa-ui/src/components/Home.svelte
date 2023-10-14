@@ -6,8 +6,12 @@
     courses,
     questions,
     courseId,
+    answerId,
     answers,
-    questionsByCourse
+    questionsByCourse,
+    questionId,
+    answersByCourseByQuestion,
+    questionById,
   } from '../stores/stores.js';
 
   import courseService from '../services/courseService.js';
@@ -19,13 +23,11 @@
   import Course from './Course.svelte';
   import Loader from './Loader.svelte';
 
+  //export let slug
+
+  let currentCourses, currentUserUuid, currentCourseId;
+
   let isLoading = true;
-
-  let currentCourseId;
-
-  let currentAnswers;
-
-  let currentQuestionsByCourse
 
   onMount(async () => {
     await fetchers();
@@ -37,21 +39,9 @@
 
       const setUserId = await userService.getUser();
 
-      const allQuestions = await questionService.getAll();
-
-      const allAnswers = await answerService.getAll();
-
-      const allQuestionsByCourse = await questionService.getByCourse($courseId)
-
       courses.set(allCourses);
 
       userUuid.set(setUserId);
-
-      questions.set(allQuestions);
-
-      answers.set(allAnswers);
-
-      questionsByCourse.set(allQuestionsByCourse)
 
       if (allCourses.length > 0 && setUserId !== null) {
         clearInterval(interval);
@@ -70,43 +60,45 @@
     localStorage.setItem('courses', JSON.stringify(currentValue));
   });
 
-  questions.subscribe((currentValue) => {
-    localStorage.setItem('questions', JSON.stringify(currentValue));
+  const unsubscribeCourses = courses.subscribe((currentValue) => {
+    currentCourses = currentValue;
   });
 
-  answers.subscribe((currentValue) => {
-    localStorage.setItem('answers', JSON.stringify(currentValue));
+  const unsubscribUserUuid = userUuid.subscribe((currentValue) => {
+    currentUserUuid = currentValue;
   });
-
-  questionsByCourse.subscribe((currentValue) => {
-    localStorage.setItem('questionsByCourse', JSON.stringify(currentValue))
-  })
 
   const unsubscribeCourseId = courseId.subscribe((currentValue) => {
     currentCourseId = currentValue;
   });
 
-  const unsubscribeAnswers = answers.subscribe((currentValue) => {
-    currentAnswers = currentValue;
-  });
+  onDestroy(unsubscribeCourses);
 
-  const unsubscribeQuestionsByCourse = answers.subscribe((currentValue) => {
-    currentQuestionsByCourse = currentValue;
-  });
- 
+  onDestroy(unsubscribUserUuid);
+
   onDestroy(unsubscribeCourseId);
 
-  onDestroy(unsubscribeAnswers);
+  // $: slug = $courses[courseIndex]?.slug
 
-  onDestroy(unsubscribeQuestionsByCourse)
+  $: courseIndex = $courses?.map((e) => e?.id).indexOf($courseId);
+
+  // $: console.log('Slug', slug)
 </script>
 
-<div class="grid place-items-center mx-auto p-4">
-  {#if isLoading}
-    <Loader />
-  {:else if $courseId}
-    <Course />
-  {:else}
-    <Courses />
-  {/if}
+<div class="container">
+  <h1 class="text-2xl font-bold leading-7 text-gray-700">Courses</h1>
+  <p>User: {$userUuid}</p>
+  <div class="flex flex-wrap gap-5 mt-5">
+    {#each $courses as course}
+      <div>
+        <a href={`/${course?.slug}`}>
+          <img
+            class="object-cover shadow-lg"
+            src={course.img}
+            alt={`Image for course ${course.title}`}
+          />
+        </a>
+      </div>
+    {/each}
+  </div>
 </div>

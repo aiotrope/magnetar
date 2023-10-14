@@ -129,10 +129,10 @@
           {course?.details}
         </h2>
       </div>
-      <div class="shadow-lg">
+      <div class="my-3">
         <img
-          class="object-cover"
-          src={imgUrl}
+          class="object-cover shadow-lg"
+          src={course?.img}
           alt={`Image for course ${course?.title}`}
         />
       </div>

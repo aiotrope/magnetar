@@ -23,7 +23,9 @@ app.use(questionRoutes.allowedMethods());
 app.use(answerRoutes.routes());
 app.use(answerRoutes.allowedMethods());
 
-await app.listen({ port: 7777 });
+const server = await app.listen({ port: 7777 });
+
+const wss = new SocketServer({ server });
 
 // console.log(`Server is running on port ${port}`);
 

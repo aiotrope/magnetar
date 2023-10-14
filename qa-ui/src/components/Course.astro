@@ -1,0 +1,24 @@
+---
+const courseId = Astro.props.courseId;
+const courseTitle = Astro.props.courseTitle;
+const courseDetails = Astro.props.courseDetails;
+const courseSlug = Astro.props.courseSlug;
+const courseImg = Astro.props.courseImg;
+---
+
+<div class="grid grid-rows-2 grid-flow-col gap-4">
+  <div class="mb-5">
+    <h2 class="text-l font-bold leading-7 text-gray-700">
+      {courseTitle}
+    </h2>
+    <p>Course #: {courseId}</p>
+    <p>{courseDetails}</p>
+  </div>
+  <div class="my-3">
+    <img
+      class="object-cover shadow-lg"
+      src={courseImg}
+      alt={`Image for course ${courseTitle}`}
+    />
+  </div>
+</div>

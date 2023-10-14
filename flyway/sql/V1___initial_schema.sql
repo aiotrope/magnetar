@@ -1,6 +1,7 @@
 CREATE TABLE courses (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
+  slug TEXT NOT NULL,
   details TEXT NOT NULL,
   img TEXT NOT Null,
   UNIQUE(title)

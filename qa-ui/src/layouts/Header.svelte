@@ -1,10 +1,6 @@
-<script>
-  // import { tempUserUuid } from '../stores/stores.js';
-</script>
-
 <nav class="border-gray-200 bg-indigo-900">
   <div
-    class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 text-white"
+    class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2 text-white"
   >
     <a href="/" class="flex items-center">
       <img
@@ -47,28 +43,28 @@
       >
         <li>
           <a
-            href="/"
+            href="/2"
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             aria-current="page">Home</a
           >
         </li>
         <li>
           <a
-            href="/"
+            href="/fortran"
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >Services</a
+            >Fortran</a
           >
         </li>
         <li>
           <a
-            href="/"
+            href="/4"
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Pricing</a
           >
         </li>
         <li>
           <a
-            href="/"
+            href="/5"
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Contact</a
           >

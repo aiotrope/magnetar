@@ -57,7 +57,7 @@ const { title = 'Questions & Answers', heading = 'Courses' } = Astro.props;
     margin-top: 1rem;
     margin-bottom: 1rem;
     padding: 1.5rem;
-    white-space: nowrap;
+    white-space: pre !important;
     font-family:
       Menlo,
       Monaco,
@@ -69,18 +69,27 @@ const { title = 'Questions & Answers', heading = 'Courses' } = Astro.props;
       monospace;
   }
 
+  main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		line-height: 1.6;
+	}
+
   pre {
     margin-top: 7px;
     margin-bottom: 7px;
     background: #f4f5f6;
     border-left: 0.3rem solid rgb(82, 149, 244);
-    overflow-y: hidden;
+    overflow-y: hidden !important;
+    white-space: pre;
   }
 
   pre > code {
     border-radius: 0;
     display: block;
     padding: 1rem 1.2rem;
-    white-space: pre;
+    white-space: pre !important;
   }
 </style>

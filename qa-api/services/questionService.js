@@ -1,4 +1,5 @@
 import { sql } from '../database/database.js';
+// import { slugify } from '../deps.js';
 
 const getQuestions = async () => {
   const questions = await sql`SELECT * FROM questions ORDER BY updated DESC;`;
@@ -33,6 +34,7 @@ const getQuestionsByCourseOwnedByUser = async (course_id, user_uuid) => {
 };
 
 const create = async (course_id, user_uuid, title, details) => {
+  // const slug = slugify(title)
   const question =
     await sql`INSERT INTO questions (course_id, user_uuid, title, details) 
   VALUES (${course_id}, ${user_uuid}, ${title}, ${details}) returning *;`;

@@ -1,12 +1,10 @@
-import { pLimit } from '../deps.js';
+import { slugify } from '../deps.js';
 import questionService from '../services/questionService.js';
 import { cacheMethodCalls } from '../util/cacheUtil.js';
 
 const cachedQuestionService = cacheMethodCalls(questionService, [
   'create',
 ]);
-
-const limit = pLimit(99);
 
 const handleCreate = async ({ request, response, params }) => {
   const courseId = params.courseId;
