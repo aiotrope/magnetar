@@ -6,19 +6,20 @@ const courseSlug = Astro.props.courseSlug;
 const courseImg = Astro.props.courseImg;
 ---
 
-<div class="grid grid-rows-2 grid-flow-col gap-4">
-  <div class="mb-5">
-    <h2 class="text-l font-bold leading-7 text-gray-700">
-      {courseTitle}
-    </h2>
-    <p>Course #: {courseId}</p>
-    <p>{courseDetails}</p>
-  </div>
-  <div class="my-3">
+<div class="grid mb-3">
+  <div class="mb-1">
+    <p class="mb-2">Course ID: {courseId}</p>
     <img
       class="object-cover shadow-lg"
       src={courseImg}
       alt={`Image for course ${courseTitle}`}
     />
+  </div>
+  <div>
+    <h2 class="text-l font-bold leading-7 text-gray-700">
+      Title: {courseTitle}
+    </h2>
+
+    <p>Description: {courseDetails}</p>
   </div>
 </div>

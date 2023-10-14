@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
   import { marked } from 'marked';
   import { questionId, questionsByCourse } from '../stores/stores';
 </script>
@@ -20,3 +20,4 @@
     </div>
   {/each}
 </div>
+ -->

@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
   import { onMount, onDestroy } from 'svelte';
 
   import { marked } from 'marked';
@@ -110,3 +110,4 @@
     </div>
   {/each}
 </div>
+ -->

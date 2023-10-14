@@ -1,14 +1,25 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Course from '../components/Course.astro';
+import Question from '../components/Question.svelte';
+
+const title = 'Fortran CS-5758';
+const courseId = 1;
+const details = 'Fortran CS-5758 Course Section';
+const img =
+  'https://craftypixels.com/placeholder-image/200x80/703594/FFFFFF&text=Fortran+CS-5758';
+const slug = 'fortran-cs-5758';
 ---
 
-<Layout title='Fortran CS-5758'>
-  <Course
-    courseId={1}
-    courseTitle="Fortran CS-5758"
-    courseDetails={'Fortran CS-5758 Course Section'}
-    courseImg={'https://craftypixels.com/placeholder-image/200x80/703594/FFFFFF&text=Fortran+CS-5758'}
-    courseSlug="fortran-cs-5758"
-  />
+<Layout title={title}>
+  <div class="container mt-3">
+    <Course
+      courseId={courseId}
+      courseTitle={title}
+      courseDetails={details}
+      courseImg={img}
+      courseSlug={slug}
+    />
+    <Question courseId={courseId} title={title} client:only={'svelte'} />
+  </div>
 </Layout>

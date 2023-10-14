@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
   import { onMount, onDestroy } from 'svelte';
 
 
@@ -38,3 +38,4 @@
     {@html marked($answersByCourseByQuestion[answerIndex]?.details)}
   </div>
 </div>
+ -->

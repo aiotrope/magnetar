@@ -23,7 +23,7 @@
   import Course from './Course.svelte';
   import Loader from './Loader.svelte';
 
-  //export let slug
+  // export let slug
 
   let currentCourses, currentUserUuid, currentCourseId;
 
@@ -45,8 +45,8 @@
 
       if (allCourses.length > 0 && setUserId !== null) {
         clearInterval(interval);
-        isLoading = false;
         // console.clear()
+        isLoading = false;
       }
     }, 1000);
     return () => clearInterval(interval);
@@ -80,25 +80,27 @@
 
   // $: slug = $courses[courseIndex]?.slug
 
-  $: courseIndex = $courses?.map((e) => e?.id).indexOf($courseId);
+  // $: courseIndex = $courses?.map((e) => e?.id).indexOf($courseId);
 
   // $: console.log('Slug', slug)
 </script>
 
-<div class="container">
-  <h1 class="text-2xl font-bold leading-7 text-gray-700">Courses</h1>
-  <p>User: {$userUuid}</p>
-  <div class="flex flex-wrap gap-5 mt-5">
-    {#each $courses as course}
-      <div>
-        <a href={`/${course?.slug}`}>
-          <img
-            class="object-cover shadow-lg"
-            src={course.img}
-            alt={`Image for course ${course.title}`}
-          />
-        </a>
-      </div>
-    {/each}
+{#if $courses?.length > 0}
+  <div class="container mt-3">
+    <h1 class="text-2xl font-bold leading-7 text-gray-700">Courses</h1>
+    <p>User: {$userUuid}</p>
+    <div class="flex flex-wrap gap-1">
+      {#each $courses as course}
+        <div>
+          <a href={`/${course?.slug}`}>
+            <img
+              class="object-cover shadow-lg"
+              src={course.img}
+              alt={`Image for course ${course.title}`}
+            />
+          </a>
+        </div>
+      {/each}
+    </div>
   </div>
-</div>
+{/if}

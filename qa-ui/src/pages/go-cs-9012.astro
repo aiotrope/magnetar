@@ -1,17 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Course from '../components/Course.astro';
+
+const title = 'Go CS-9012';
+const courseId = 3
+const details = 'Go CS-9012 Course Section';
+const img =
+  'https://craftypixels.com/placeholder-image/200x80/00ccff/ffffff&text=Go+CS-9012';
+const slug = 'go-cs-9012';
 ---
 
-<Layout title="Go CS-9012">
+<Layout title={title}>
   <Course
-    courseId={3}
-    courseTitle="Go CS-9012"
-    courseDetails={'Go CS-9012 Course Section'}
-    courseImg={'https://craftypixels.com/placeholder-image/200x80/00ccff/ffffff&text=Go+CS-9012'}
-    courseSlug="go-cs-9012"
+    courseId={courseId}
+    courseTitle={title}
+    courseDetails={details}
+    courseImg={img}
+    courseSlug={slug}
   />
 </Layout>
-
-
-
