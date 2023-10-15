@@ -1,9 +1,9 @@
-import { slugify } from '../deps.js';
 import questionService from '../services/questionService.js';
 import { cacheMethodCalls } from '../util/cacheUtil.js';
 
 const cachedQuestionService = cacheMethodCalls(questionService, [
   'create',
+  'updateAutomatedAnswer',
 ]);
 
 const handleCreate = async ({ request, response, params }) => {
@@ -97,7 +97,7 @@ const handleUpdateAutomatedAnswer = async ({ request, params, response }) => {
   const { withautomatedanswer } = await request.body().value;
 
   if (id !== undefined) {
-    const updatedQuestion = await questionService.updateAutomatedAnswer(
+    const updatedQuestion = await cachedQuestionService.updateAutomatedAnswer(
       id,
       withautomatedanswer
     );

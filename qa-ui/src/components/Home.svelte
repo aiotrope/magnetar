@@ -92,18 +92,13 @@
 
   onDestroy(unsubscribeAnswers);
 
-  // $: slug = $courses[courseIndex]?.slug
-
-  // $: courseIndex = $courses?.map((e) => e?.id).indexOf($courseId);
-
-  // $: console.log('Slug', slug)
 </script>
 
 <div class="container mt-3">
   {#if $courses?.length > 0}
-    <h1 class="text-2xl font-bold leading-7 text-gray-700">Courses</h1>
-    <p>User: {$userUuid}</p>
-    <div class="flex flex-wrap gap-1">
+    <h1 class="text-2xl font-bold leading-7 text-gray-700 mb-2">Courses</h1>
+    <p class="text-slate-200">User: {$userUuid}</p>
+    <div class="flex flex-wrap gap-2 my-2">
       {#each $courses as course}
         <div>
           <a href={`/${course?.slug}`}>

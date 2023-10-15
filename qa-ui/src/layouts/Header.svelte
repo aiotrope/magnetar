@@ -43,30 +43,51 @@
       >
         <li>
           <a
-            href="/2"
+            href="/"
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             aria-current="page">Home</a
           >
         </li>
         <li>
           <a
-            href="/fortran"
+            href="/fortran-cs-5758"
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Fortran</a
           >
         </li>
         <li>
           <a
-            href="/4"
+            href="/java-cs-3456"
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >Pricing</a
+            >Java</a
           >
         </li>
         <li>
           <a
-            href="/5"
+            href="/go-cs-9012"
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >Contact</a
+            >Go</a
+          >
+        </li>
+        <li>
+          <a
+            href="/python-cs-5678"
+            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            >Python</a
+          >
+        </li>
+        <li>
+          <a
+            href="/sql-cs-6634"
+            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            >SQL</a
+          >
+        </li>
+        <li>
+          <a
+            href="/javascript-cs-1234"
+            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            >Javascript</a
           >
         </li>
       </ul>

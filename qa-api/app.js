@@ -7,9 +7,12 @@ import answerRoutes from './routes/answerRoutes.js';
 
 const app = new Application();
 
-// const port = 7777;
-
-app.use(oakCors());
+app.use(
+  oakCors({
+    origin: /^.+localhost:(7800|3000)$/,
+    optionsSuccessStatus: 200,
+  })
+);
 
 app.use(courseRoutes.routes());
 app.use(courseRoutes.allowedMethods());
@@ -26,19 +29,3 @@ app.use(answerRoutes.allowedMethods());
 const server = await app.listen({ port: 7777 });
 
 const wss = new SocketServer({ server });
-
-// console.log(`Server is running on port ${port}`);
-
-/* const handleRequest = async (request) => {
-  const data = await request.json();
-
-  const response = await fetch('http://llm-api:7000/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  return response;
-}; */

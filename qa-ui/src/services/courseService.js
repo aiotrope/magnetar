@@ -15,9 +15,16 @@ const findById = async (courseId) => {
   return await response.json();
 };
 
+const formatTimestamp = (dateData) => {
+  const today = new Date(dateData);
+  const formatted = new Intl.DateTimeFormat('fi').format(today);
+  return formatted;
+};
+
 const courseService = {
   getAll,
   findById,
+  formatTimestamp,
 };
 
 export default courseService;
