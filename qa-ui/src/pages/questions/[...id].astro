@@ -5,6 +5,6 @@ import Question from '../../components/Question.svelte';
 let questionId = Astro.params.id;
 ---
 
-<Layout>
+<Layout title={`Questions & Answers | Question ID: ${questionId}`}>
   <Question questionId={questionId} client:only="svelte" />
 </Layout>

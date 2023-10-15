@@ -13,7 +13,7 @@ const create = async (courseId, questionId, user_uuid, details) => {
     },
   };
 
-  const url = `/api/answers/${courseId}?question_id=${questionId}`;
+  const url = `/api/answers/${courseId}?question_id=${questionId}`; //* check route
 
   const response = await fetch(url, options);
 
@@ -21,7 +21,7 @@ const create = async (courseId, questionId, user_uuid, details) => {
 };
 
 const getAll = async () => {
-  const response = await fetch('/api/answers');
+  const response = await fetch('/api/answers'); //* check route
 
   const jsonData = await response.json();
 
@@ -31,28 +31,9 @@ const getAll = async () => {
   return jsonData;
 };
 
-const getAllByCourseByQuestion = async (courseId, questionId) => {
-  const response = await fetch(`/api/answers/${courseId}/${questionId}`);
-
-  const jsonData = await response.json();
-
-  if (jsonData.length || jsonData !== undefined) {
-    localStorage.setItem('answersByCourseByQuestion', JSON.stringify(jsonData));
-  }
-  return jsonData;
-};
-
-const getAnswerByQuestionId = async (answerId, questionId) => {
-  const response = await fetch(`/api/answer/${answerId}?question_id=${questionId}`);
-
-  return await response.json();
-};
-
 const answerService = {
   create,
   getAll,
-  getAllByCourseByQuestion,
-  getAnswerByQuestionId,
 };
 
 export default answerService;

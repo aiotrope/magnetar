@@ -1,5 +1,5 @@
 const getAll = async () => {
-  const response = await fetch('/api/courses');
+  const response = await fetch('/api/courses'); //* check route
 
   const jsonData = await response.json();
 
@@ -7,12 +7,6 @@ const getAll = async () => {
     localStorage.setItem('courses', JSON.stringify(jsonData));
   }
   return jsonData;
-};
-
-const findById = async (courseId) => {
-  const response = await fetch(`/api/course?courseId=${courseId}`);
-
-  return await response.json();
 };
 
 const formatTimestamp = (dateData) => {
@@ -23,7 +17,6 @@ const formatTimestamp = (dateData) => {
 
 const courseService = {
   getAll,
-  findById,
   formatTimestamp,
 };
 

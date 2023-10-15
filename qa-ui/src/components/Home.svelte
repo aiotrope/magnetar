@@ -97,7 +97,7 @@
 <div class="container mt-3">
   {#if $courses?.length > 0}
     <h1 class="text-2xl font-bold leading-7 text-gray-700 mb-2">Courses</h1>
-    <p class="text-slate-200">User: {$userUuid}</p>
+    <p class="text-slate-300">User: {$userUuid}</p>
     <div class="flex flex-wrap gap-2 my-2">
       {#each $courses as course}
         <div>

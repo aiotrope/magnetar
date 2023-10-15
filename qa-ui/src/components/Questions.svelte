@@ -6,12 +6,13 @@
   import { userUuid, questions } from '../stores/stores.js';
   import questionService from '../services/questionService.js';
   import courseService from '../services/courseService.js';
+  import userService from '../services/userService.js';
 
   let isLoading = true;
 
   let inputQuestionData = { title: '', details: '' };
 
-  let currentQuestions;
+  let currentQuestions, currentUserUuid;
 
   export let courseId, title;
 
@@ -43,6 +44,10 @@
     );
 
     $questions = [createQuestion, ...$questions];
+
+    const setUserId = await userService.getUser();
+
+    userUuid.set(setUserId);
   };
 
   questions.subscribe((currentValue) => {
@@ -53,14 +58,20 @@
     currentQuestions = currentValue;
   });
 
+   const unsubscribUserUuid = userUuid.subscribe((currentValue) => {
+    currentUserUuid = currentValue;
+  });
+
   onDestroy(unsubscribeQuestions);
+
+  onDestroy(unsubscribUserUuid);
 
   $: filterQuestions = $questions.filter((e) => e.course_id === courseId);
 
   // $: console.log('FILTER QUESTION', filterQuestions);
 </script>
 
-<div class="container">
+<div class="container mb-10">
   <div class="grid">
     <div class="mb-4">
       <form on:submit|preventDefault={onSubmit}>
@@ -109,12 +120,12 @@
           <p class="text-md font-bold">
             Question: <a
               href={`/questions/${question?.id}`}
-              class="text-zinc-400 hover:text-indigo-500 text-bold"
+              class="text-sky-500 hover:text-sky-600 text-bold"
               >{question?.title}</a
             >
           </p>
-          <small>Asked by: {question?.user_uuid}</small><br />
-          <small>Asked: {courseService.formatTimestamp(question?.updated)}</small><br />
+          <small>Asked by: <span class="text-indigo-300">{question?.user_uuid}</span></small><br />
+          <small>Asked: <span class="text-slate-300">{courseService.formatTimestamp(question?.updated)}</span></small><br />
           <div
             class="code bg-zinc-50 p-3 my-1 border-l-4 border-l-indigo-500 text-slate-500"
           >

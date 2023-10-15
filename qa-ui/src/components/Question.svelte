@@ -8,6 +8,7 @@
   import answerService from '../services/answerService';
   import questionService from '../services/questionService';
   import courseService from '../services/courseService.js';
+  import userService from '../services/userService.js';
 
   export let questionId;
 
@@ -15,9 +16,9 @@
 
   let processQueue = [];
 
-  let currentAnswers, currentQuestions;
+  let currentAnswers, currentQuestions, currentUserUuid;
 
-   let inputAnswerData = { details: '' };
+  let inputAnswerData = { details: '' };
 
   $: questionIndex = $questions.map((e) => e.id).indexOf(parseInt(questionId));
 
@@ -30,7 +31,6 @@
   );
 
   $: autoAnswer = filterAnswers.filter((e) => e.user_uuid === 'automated');
-
 
   $: if ($questions[questionIndex]?.withautomatedanswer === false) {
     (async () => await updateQuestion())();
@@ -105,6 +105,10 @@
     console.log('CREATED ANSWER', createAnswer);
 
     $answers = [createAnswer, ...$answers];
+
+    const setUserId = await userService.getUser();
+
+    userUuid.set(setUserId);
   };
 
   answers.subscribe((currentValue) => {
@@ -115,6 +119,10 @@
     localStorage.setItem('questions', JSON.stringify(currentValue));
   });
 
+  userUuid.subscribe((currentValue) => {
+    localStorage.setItem('userUuid', JSON.stringify(currentValue));
+  });
+
   const unsubscribeAnswers = answers.subscribe((currentValue) => {
     currentAnswers = currentValue;
   });
@@ -123,14 +131,20 @@
     currentQuestions = currentValue;
   });
 
+  const unsubscribeUserUuid = userUuid.subscribe((currentValue) => {
+    currentUserUuid = currentValue;
+  });
+
   onDestroy(unsubscribeAnswers);
 
   onDestroy(unsubscribeQuestions);
 
+  onDestroy(unsubscribeUserUuid)
+
   $: console.log('LLM RESULTS', $questions[questionIndex]?.withautomatedanswer);
 </script>
 
-<div class="container mt-3 mb-20">
+<div class="container mt-3 mb-10">
   <div class="grid">
     <div class="my-1">
       <a href={`/${courseFinder?.slug}`}>
@@ -141,8 +155,18 @@
         />
       </a>
 
-      <small>Asked by: {$questions[questionIndex]?.user_uuid}</small><br />
-      <small>Asked: {$questions[questionIndex]?.updated}</small><br />
+      <small
+        >Asked by: <span class="text-indigo-300"
+          >{$questions[questionIndex]?.user_uuid}</span
+        ></small
+      ><br />
+      <small
+        >Asked: <span class="text-slate-300"
+          >{courseService.formatTimestamp(
+            $questions[questionIndex]?.updated
+          )}</span
+        ></small
+      ><br />
       <div
         class="code bg-zinc-50 p-3 my-1 border-l-4 border-l-slate-500 text-zinc-500"
       >
@@ -152,39 +176,48 @@
   </div>
   <div class="grid mb-2">
     <form on:submit|preventDefault={onSubmit}>
-        <div class="mb-1">
-          <label
-            for="details"
-            class="block text-sm font-medium text-gray-900 dark:text-white"
-            >Your answer to {$questions[questionIndex]?.title}</label
-          >
-        </div>
-        <textarea
-          id="details"
-          name="details"
-          rows="4"
-          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-5"
-          placeholder="Write a question here"
-          bind:value={inputAnswerData.details}
-          required
-        />
-        <button
-          class="bg-teal-600 hover:bg-teal-400 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
-          type="submit"
+      <div class="mb-1">
+        <label
+          for="details"
+          class="block text-sm font-medium text-gray-900 dark:text-white"
+          >Your answer to {$questions[questionIndex]?.title}</label
         >
-          SUBMIT ANSWER
-        </button>
-      </form>
-
+      </div>
+      <textarea
+        id="details"
+        name="details"
+        rows="4"
+        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-5"
+        placeholder="Write a question here"
+        bind:value={inputAnswerData.details}
+        required
+      />
+      <button
+        class="bg-teal-600 hover:bg-teal-400 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
+        type="submit"
+      >
+        SUBMIT ANSWER
+      </button>
+    </form>
   </div>
   {#if filterAnswers?.length > 0}
     <div>
       <h2 class="text-lg font-bold dark:text-white">Answers</h2>
       {#each filterAnswers as answer}
         <div>
-          <small>Answered by: {answer?.user_uuid}</small><br />
-          <small>Answered: {courseService.formatTimestamp(answer?.updated)}</small><br />
-          <div class="code bg-emerald-50 p-3 my-2 border-l-4 border-l-emerald-600">
+          <small
+            >Answered by: <span class="text-emerald-400"
+              >{answer?.user_uuid}</span
+            ></small
+          ><br />
+          <small
+            >Answered: <span class="text-slate-300"
+              >{courseService.formatTimestamp(answer?.updated)}</span
+            ></small
+          ><br />
+          <div
+            class="code bg-emerald-50 p-3 my-2 border-l-4 border-l-emerald-600"
+          >
             {@html marked(answer?.details)}
           </div>
         </div>

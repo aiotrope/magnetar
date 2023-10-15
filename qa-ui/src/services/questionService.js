@@ -16,7 +16,7 @@ const create = async (course_id, user_uuid, title, details) => {
         },
       };
       try {
-        const url = `/api/questions/${course_id}`;
+        const url = `/api/questions/${course_id}`; //* check route
 
         const response = await fetch(url, options);
 
@@ -38,23 +38,12 @@ const create = async (course_id, user_uuid, title, details) => {
 };
 
 const getAll = async () => {
-  const response = await fetch('/api/questions');
+  const response = await fetch('/api/questions'); //* check route
 
   const jsonData = await response.json();
 
   if (jsonData.length || jsonData !== undefined) {
     localStorage.setItem('questions', JSON.stringify(jsonData));
-  }
-  return jsonData;
-};
-
-const getByCourse = async (courseId) => {
-  const response = await fetch(`/api/questions/course?course_id=${courseId}`);
-
-  const jsonData = await response.json();
-
-  if (jsonData.length || jsonData !== undefined) {
-    localStorage.setItem('questionsByCourse', JSON.stringify(jsonData));
   }
   return jsonData;
 };
@@ -75,7 +64,7 @@ const postLLM = async (question) => {
         },
       };
       try {
-        const url = '/llm/';
+        const url = '/llm/'; //* check route
 
         const response = await fetch(url, options);
 
@@ -95,18 +84,6 @@ const postLLM = async (question) => {
   }, 100);
 };
 
-const findById = async (questionId) => {
-  const response = await fetch(`/api/question?question_id=${questionId}`);
-
-  const jsonData = await response.json();
-
-  if (jsonData !== null) {
-    localStorage.setItem('questionById', JSON.stringify(jsonData));
-  }
-
-  return jsonData;
-};
-
 const updatedAutomatedAnswer = async (questionId, withautomatedanswer) => {
   const payload = {
     withautomatedanswer: withautomatedanswer,
@@ -121,7 +98,7 @@ const updatedAutomatedAnswer = async (questionId, withautomatedanswer) => {
     },
   };
 
-  const url = `/api/question/${questionId}`;
+  const url = `/api/question/${questionId}`; //* check route
 
   const response = await fetch(url, options);
 
@@ -131,11 +108,8 @@ const updatedAutomatedAnswer = async (questionId, withautomatedanswer) => {
 const questionService = {
   create,
   getAll,
-  getByCourse,
-  findById,
   postLLM,
   updatedAutomatedAnswer,
 };
 
 export default questionService;
-
