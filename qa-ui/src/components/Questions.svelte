@@ -5,22 +5,18 @@
 
   import {
     userUuid,
-    // questionId,
-    questionsByCourse,
+    // questionsByCourse,
     questions,
   } from '../stores/stores.js';
-  import courseService from '../services/courseService.js';
   import questionService from '../services/questionService.js';
 
   import Loader from './Loader.svelte';
-  // import Questions from './Questions.svelte';
-  // import Question from './Question1.svelte';
 
   let isLoading = true;
 
   let inputQuestionData = { title: '', details: '' };
 
-  let currentQuestionId, currentQuestionsByCourse, currentQuestions;
+  let currentQuestions;
 
   export let courseId, title;
 
@@ -30,17 +26,17 @@
 
   const fetchers = async () => {
     const interval = setInterval(async () => {
-      const allQuestionsByCourse = await questionService.getByCourse(courseId);
+      // const allQuestionsByCourse = await questionService.getByCourse(courseId);
 
       const allQuestions = await questionService.getAll();
 
-      questionsByCourse.set(allQuestionsByCourse);
+      // questionsByCourse.set(allQuestionsByCourse);
 
       questions.set(allQuestions);
 
       if (
-        allQuestionsByCourse !== undefined ||
-        allQuestionsByCourse?.length ||
+        // allQuestionsByCourse !== undefined ||
+        // allQuestionsByCourse?.length ||
         allQuestions?.length
       ) {
         isLoading = false;
@@ -59,40 +55,31 @@
       inputQuestionData.details
     );
 
-    $questionsByCourse = [createQuestion, ...$questionsByCourse];
+    // $questionsByCourse = [createQuestion, ...$questionsByCourse];
 
     $questions = [createQuestion, ...$questions];
   };
 
-  /*  questionId.subscribe((currentValue) => {
-    currentQuestionId = currentValue;
-  });
- */
-  questionsByCourse.subscribe((currentValue) => {
+
+  /* questionsByCourse.subscribe((currentValue) => {
     localStorage.setItem('questionsByCourse', JSON.stringify(currentValue));
   });
-
+ */
   questions.subscribe((currentValue) => {
     localStorage.setItem('questions', JSON.stringify(currentValue));
   });
 
-  /* const unsubscribeQuestionId = questionId.subscribe((currentValue) => {
-    currentQuestionId = currentValue;
-  }); */
-
-  const unsubscribeQuestionsByCourse = questionsByCourse.subscribe(
+  /* const unsubscribeQuestionsByCourse = questionsByCourse.subscribe(
     (currentValue) => {
       currentQuestionsByCourse = currentValue;
     }
-  );
+  ); */
 
   const unsubscribeQuestions = questions.subscribe((currentValue) => {
     currentQuestions = currentValue;
   });
 
-  onDestroy(unsubscribeQuestionsByCourse);
-
-  // onDestroy(unsubscribeQuestionId);
+  // onDestroy(unsubscribeQuestionsByCourse);
 
   onDestroy(unsubscribeQuestions);
 
@@ -167,5 +154,7 @@
         </div>
       {/each}
     </div>
+    {:else}
+    <Loader />
   {/if}
 </div>

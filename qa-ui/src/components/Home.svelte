@@ -1,31 +1,16 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
 
-  import {
-    userUuid,
-    courses,
-    questions,
-    courseId,
-    answerId,
-    answers,
-    questionsByCourse,
-    questionId,
-    answersByCourseByQuestion,
-    questionById,
-  } from '../stores/stores.js';
+  import { userUuid, courses, questions, answers } from '../stores/stores.js';
 
   import courseService from '../services/courseService.js';
   import userService from '../services/userService.js';
   import questionService from '../services/questionService.js';
   import answerService from '../services/answerService.js';
 
-  import Courses from './Courses.svelte';
-  import Course from './Course.svelte';
   import Loader from './Loader.svelte';
 
-  // export let slug
-
-  let currentCourses, currentUserUuid, currentCourseId;
+  let currentCourses, currentUserUuid, currentAnswers, currentQuestions;
 
   let isLoading = true;
 
@@ -39,11 +24,24 @@
 
       const setUserId = await userService.getUser();
 
+      const allQuestions = await questionService.getAll();
+
+      const allAnswers = await answerService.getAll();
+
       courses.set(allCourses);
 
       userUuid.set(setUserId);
 
-      if (allCourses.length > 0 && setUserId !== null) {
+      questions.set(allQuestions);
+
+      answers.set(allAnswers);
+
+      if (
+        allCourses.length &&
+        allQuestions?.length &&
+        allAnswers.length &&
+        setUserId !== null
+      ) {
         clearInterval(interval);
         // console.clear()
         isLoading = false;
@@ -52,12 +50,22 @@
     return () => clearInterval(interval);
   };
 
+
+
   userUuid.subscribe((currentValue) => {
     localStorage.setItem('userUuid', JSON.stringify(currentValue));
   });
 
   courses.subscribe((currentValue) => {
     localStorage.setItem('courses', JSON.stringify(currentValue));
+  });
+
+  questions.subscribe((currentValue) => {
+    localStorage.setItem('questions', JSON.stringify(currentValue));
+  });
+
+  answers.subscribe((currentValue) => {
+    localStorage.setItem('answers', JSON.stringify(currentValue));
   });
 
   const unsubscribeCourses = courses.subscribe((currentValue) => {
@@ -68,15 +76,21 @@
     currentUserUuid = currentValue;
   });
 
-  const unsubscribeCourseId = courseId.subscribe((currentValue) => {
-    currentCourseId = currentValue;
+  const unsubscribeAnswers = answers.subscribe((currentValue) => {
+    currentAnswers = currentValue;
+  });
+
+  const unsubscribeQuestions = questions.subscribe((currentValue) => {
+    currentQuestions = currentValue;
   });
 
   onDestroy(unsubscribeCourses);
 
   onDestroy(unsubscribUserUuid);
 
-  onDestroy(unsubscribeCourseId);
+  onDestroy(unsubscribeQuestions);
+
+  onDestroy(unsubscribeAnswers);
 
   // $: slug = $courses[courseIndex]?.slug
 
@@ -85,8 +99,8 @@
   // $: console.log('Slug', slug)
 </script>
 
-{#if $courses?.length > 0}
-  <div class="container mt-3">
+<div class="container mt-3">
+  {#if $courses?.length > 0}
     <h1 class="text-2xl font-bold leading-7 text-gray-700">Courses</h1>
     <p>User: {$userUuid}</p>
     <div class="flex flex-wrap gap-1">
@@ -102,5 +116,7 @@
         </div>
       {/each}
     </div>
-  </div>
-{/if}
+  {:else}
+    <Loader />
+  {/if}
+</div>
