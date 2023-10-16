@@ -14,6 +14,6 @@ router.get(
   questionController.handleFindByCourseOwnedByUser
 );
 router.patch('/question/:id', questionController.handleUpdateAutomatedAnswer);
-// router.patch('/question/votes/:id', questionController.handleUpdateVotes);
+router.patch('/question/votes/:id', questionController.handleUpdateVotes);
 
 export default router;

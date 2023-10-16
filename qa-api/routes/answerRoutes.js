@@ -13,7 +13,7 @@ router.get(
   answerController.handleFindByCourseByQuestion
 );
 router.get('/answer/:id', answerController.handleFindAnswerByQuestionId);
-// router.patch('/answer/votes/:id', answerController.handleUpdateVotes);
+router.patch('/answer/votes/:id', answerController.handleUpdateVotes);
 
 
 

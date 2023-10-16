@@ -63,13 +63,19 @@
 
   $: filterQuestions = $questions.filter((e) => e.course_id === courseId);
 
+
+
   $: userVotedQuestion = $questionVotes?.filter(
     (e) => e?.question_id === $questionID && e?.user_uuid === $userUuid
   );
 
   $: userVotedQuestionLen = userVotedQuestion?.length;
 
-  $: if (userVotedQuestionLen === 0 && userVotedQuestionLen !== undefined && $questionID > 0) {
+  $: if (
+    userVotedQuestionLen === 0 &&
+    userVotedQuestionLen !== undefined &&
+    $questionID > 0
+  ) {
     (async () => {
       const add = await voteService.createQuestionVote($questionID, $userUuid);
 
@@ -79,14 +85,14 @@
       const allQuestionVotes = await voteService.getQuestionVotes();
       questionVotes.set(allQuestionVotes);
 
-      /* const update = await questionService.updateVotes(
+      const update = await questionService.updateVote(
         $questionID,
         userVotedQuestionLen
-      ); */
-      const allQuestions = await questionService.getAll();
-      questions.set(allQuestions);
-
-      console.log(add)
+      );
+      if (update) {
+        const allQuestions = await questionService.getAll();
+        questions.set(allQuestions);
+      }
     })();
   }
 
@@ -122,7 +128,7 @@
 
   onDestroy(unsubscribeQuestionID);
 
-  $: console.log('Q ID', $questionID)
+  // $: console.log('SAMPLE', $questionID);
 </script>
 
 <div class="container mb-10">
@@ -184,27 +190,44 @@
               <button
                 type="submit"
                 class={`${
-                  userVotedQuestionLen < 2
+                  $questionVotes.filter(
+                    (e) =>
+                      e.question_id === question?.id &&
+                      e?.user_uuid === $userUuid
+                  )?.length < 1
                     ? 'bg-transparent hover:bg-amber-300 text-sky-600 px-3 border border-zinc-100 rounded'
                     : 'bg-transparent text-sky-600 px-3 border border-sky-600 rounded opacity-50 cursor-not-allowed'
                 }`}
-                disabled={userVotedQuestionLen > 2}
+                disabled={$questionVotes.filter(
+                  (e) =>
+                    e.question_id === question?.id && e?.user_uuid === $userUuid
+                )?.length > 0}
                 on:click={() =>
                   questionID.update((val) => parseInt(question?.id) + val)}
               >
                 <i
                   class={`${
-                    userVotedQuestionLen < 2
+                    $questionVotes.filter(
+                      (e) =>
+                        e.question_id === question?.id &&
+                        e?.user_uuid === $userUuid
+                    )?.length < 1
                       ? 'fa fa-thumbs-up text-sky-600 hover:text-red-400 text-lg'
                       : 'fa fa-thumbs-up text-sky-600 opacity-50 cursor-not-allowed text-lg'
                   } `}
                 />
                 <span
                   class={`${
-                   userVotedQuestionLen < 2
+                    $questionVotes.filter(
+                      (e) =>
+                        e.question_id === question?.id &&
+                        e?.user_uuid === $userUuid
+                    )?.length < 1
                       ? 'hover:text-red-400'
                       : 'opacity-50 cursor-not-allowed'
-                  }`}>{question?.votes}</span
+                  }`}
+                  >{$questionVotes.filter((e) => e.question_id === question?.id)
+                    ?.length}</span
                 >
               </button>
             </div>

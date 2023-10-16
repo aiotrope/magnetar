@@ -31,7 +31,7 @@ const getAll = async () => {
   return jsonData;
 };
 
-/* const updateVotes = async (answerId, votes) => {
+const updateVote = async (answerId, votes) => {
   const payload = {
     votes: votes,
   };
@@ -51,11 +51,11 @@ const getAll = async () => {
 
   return await response.json();
 };
- */
+ 
 const answerService = {
   create,
   getAll,
-  // updateVotes
+  updateVote
  
 };
 

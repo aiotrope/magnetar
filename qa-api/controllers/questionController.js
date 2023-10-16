@@ -113,7 +113,7 @@ const handleUpdateAutomatedAnswer = async ({ request, params, response }) => {
   }
 };
 
-/* const handleUpdateVotes = async ({ request, params, response }) => {
+const handleUpdateVotes = async ({ request, params, response }) => {
   const id = params.id;
   const { votes } = await request.body().value;
 
@@ -131,7 +131,7 @@ const handleUpdateAutomatedAnswer = async ({ request, params, response }) => {
     response.body = 'Not defined';
     return;
   }
-}; */
+}; 
 
 const questionController = {
   handleFindAll,
@@ -141,7 +141,7 @@ const questionController = {
   handleFindByCourse,
   handleFindByCourseOwnedByUser,
   handleUpdateAutomatedAnswer,
-  // handleUpdateVotes,
+  handleUpdateVotes,
 };
 
 export default questionController;

@@ -19,7 +19,7 @@ let questionVotes = writable(questionVoteList);
 
 let answerVotes = writable(answerVoteList);
 
-let answerId = writable(0);
+let answerID = writable(0);
 
 let questionID = writable(0)
 
@@ -28,7 +28,7 @@ export {
   courses,
   questions,
   answers,
-  answerId,
+  answerID,
   questionVotes,
   answerVotes,
   questionID

@@ -9,3 +9,6 @@ INSERT INTO questions (course_id, user_uuid, title, details) VALUES (1, '6a45ba5
 
 INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (1, 1, '6a45ba57-b461-4a2c-a150-b8cfc136abbe', 'Placeholder answer Fortran');
 
+INSERT INTO question_votes (question_id, user_uuid) VALUES (1, '6a45ba57-b461-4a2c-a150-b8cfc136acce');
+
+INSERT INTO answer_votes (answer_id, user_uuid) VALUES (1, '6a45ba57-b461-4a2c-a150-b8cfc136abdd');

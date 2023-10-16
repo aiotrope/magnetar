@@ -114,7 +114,7 @@ const handleFindAnswerByQuestionId = async ({ request, response, params }) => {
   }
 };
 
-/* const handleUpdateVotes = async ({ request, params, response }) => {
+const handleUpdateVotes = async ({ request, params, response }) => {
   const id = params.id;
   const { votes } = await request.body().value;
 
@@ -132,7 +132,8 @@ const handleFindAnswerByQuestionId = async ({ request, response, params }) => {
     response.body = 'Not defined';
     return;
   }
-}; */
+};
+
 const answerController = {
   handleFindAll,
   handleFindById,
@@ -141,7 +142,7 @@ const answerController = {
   handleFindByCourse,
   handleFindByCourseByQuestion,
   handleFindAnswerByQuestionId,
-  // handleUpdateVotes,
+  handleUpdateVotes,
 };
 
 export default answerController;

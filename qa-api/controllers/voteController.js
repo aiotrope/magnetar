@@ -1,6 +1,4 @@
 import voteService from '../services/voteService.js';
-import questionService from '../services/questionService.js';
-import answerService from '../services/answerService.js';
 import { cacheMethodCalls } from '../util/cacheUtil.js';
 
 const cachedVoteService = cacheMethodCalls(voteService, [
@@ -8,38 +6,23 @@ const cachedVoteService = cacheMethodCalls(voteService, [
   'createAnswerVote',
 ]);
 
-const cachedQuestionService = cacheMethodCalls(questionService, ['updateVote']);
-const cachedAnswerService = cacheMethodCalls(answerService, ['updateVote']);
-
 const handleCreateQuestionVote = async ({ request, response }) => {
   const questionId = request.url.searchParams.get('question_id');
 
   const { user_uuid } = await request.body().value;
 
-  const voted = await cachedVoteService.userVotedQuestion(
-    parseInt(questionId),
-    user_uuid
-  );
-
   if (request.url.searchParams.has('question_id')) {
     const newVote = await cachedVoteService.createQuestionVote(
-      parseInt(questionId),
+      questionId,
       user_uuid
     );
 
-    const updateQuestion = await cachedQuestionService.updateVote(
-      parseInt(questionId),
-      parseInt(voted)
-    );
-
-    if (updateQuestion) {
-      response.status = 201;
-      response.body = newVote[0];
-      return;
-    }
+    response.status = 201;
+    response.body = newVote[0];
+    return;
   } else {
-    response.status = 422;
-    response.body = 'Cannot process';
+    response.status = 404;
+    response.body = 'Not defined';
     return;
   }
 };
@@ -49,25 +32,19 @@ const handleCreateAnswerVote = async ({ request, response }) => {
 
   const { user_uuid } = await request.body().value;
 
-  const voted = await cachedVoteService.userVotedAnswer(answerId, user_uuid);
-
-  if (request.url.searchParams.has('answer_id') && voted === 0) {
+  if (request.url.searchParams.has('answer_id')) {
     const newVote = await cachedVoteService.createAnswerVote(
       answerId,
       user_uuid
     );
 
-    const updateAnswer = await cachedAnswerService.updateVote(answerId, voted);
+    response.status = 201;
+    response.body = newVote[0];
 
-    if (updateAnswer) {
-      response.status = 201;
-      response.body = newVote[0];
-
-      return;
-    }
+    return;
   } else {
-    response.status = 422;
-    response.body = 'Cannot process';
+    response.status = 404;
+    response.body = 'Not defined';
     return;
   }
 };

@@ -24,7 +24,7 @@ const getAnswerVotes = async () => {
   return votes;
 };
 
-const userVotedQuestion = async (question_id, user_uuid) => {
+/* const userVotedQuestion = async (question_id, user_uuid) => {
   const count =
     await sql`SELECT COUNT(*) FROM question_votes WHERE question_id=${question_id} AND user_uuid=${user_uuid}`;
     return count
@@ -34,15 +34,15 @@ const userVotedAnswer = async (answer_id, user_uuid) => {
   const count =
     await sql`SELECT COUNT(*) FROM answer_votes WHERE answer_id=${answer_id} AND user_uuid=${user_uuid}`;
     return count
-};
+}; */
 
 const voteService = {
   createQuestionVote,
   createAnswerVote,
   getQuestionVotes,
   getAnswerVotes,
-  userVotedQuestion,
-  userVotedAnswer
+  // userVotedQuestion,
+  // userVotedAnswer
 };
 
 export default voteService;
