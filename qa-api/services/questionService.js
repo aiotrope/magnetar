@@ -1,7 +1,7 @@
 import { sql } from '../database/database.js';
 
 const getQuestions = async () => {
-  const questions = await sql`SELECT * FROM questions ORDER BY updated DESC;`;
+  const questions = await sql`SELECT * FROM questions ORDER BY timestamp DESC;`;
   return questions;
 };
 
@@ -13,21 +13,21 @@ const getQuestionById = async (id) => {
 
 const getQuestionsByUser = async (user_uuid) => {
   const questions =
-    await sql`SELECT * FROM questions WHERE user_uuid=${user_uuid} ORDER BY updated DESC;`;
+    await sql`SELECT * FROM questions WHERE user_uuid=${user_uuid} ORDER BY timestamp DESC;`;
 
   return questions;
 };
 
 const getQuestionsByCourse = async (course_id) => {
   const questions =
-    await sql`SELECT * FROM questions WHERE course_id=${course_id} ORDER BY updated DESC;`;
+    await sql`SELECT * FROM questions WHERE course_id=${course_id} ORDER BY timestamp DESC;`;
 
   return questions;
 };
 
 const getQuestionsByCourseOwnedByUser = async (course_id, user_uuid) => {
   const questions =
-    await sql`SELECT * FROM questions WHERE course_id=${course_id} AND user_uuid=${user_uuid} ORDER BY updated DESC;`;
+    await sql`SELECT * FROM questions WHERE course_id=${course_id} AND user_uuid=${user_uuid} ORDER BY timestamp DESC;`;
 
   return questions;
 };
@@ -55,7 +55,7 @@ const updateAutomatedAnswer = async (id, withautomatedanswer) => {
   });
 };
 
-const updateVotes = async (id, votes) => {
+const updateVote = async (id, votes) => {
   return await new Promise(async (resolve, reject) => {
     const updateData = {
       id: id,
@@ -78,7 +78,7 @@ const questionService = {
   getQuestionsByCourseOwnedByUser,
   create,
   updateAutomatedAnswer,
-  updateVotes
+  updateVote
 };
 
 export default questionService;

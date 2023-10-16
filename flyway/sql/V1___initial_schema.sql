@@ -1,3 +1,11 @@
+CREATE OR REPLACE FUNCTION update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.timestamp = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE TABLE courses (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
@@ -7,8 +15,6 @@ CREATE TABLE courses (
   UNIQUE(title)
 );
 
-/* timestamp timestamp default current_timestamp */
-
 CREATE TABLE questions (
   id SERIAL PRIMARY KEY,
   course_id INTEGER REFERENCES courses(id),
@@ -17,7 +23,7 @@ CREATE TABLE questions (
   details TEXT NOT NULL,
   votes INTEGER DEFAULT 0,
   withautomatedanswer BOOLEAN DEFAULT FALSE,
-  updated TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE(title)
 );
 
@@ -28,7 +34,7 @@ CREATE TABLE answers (
   user_uuid TEXT NOT NULL,
   details TEXT NOT NULL,
   votes INTEGER DEFAULT 0,
-  updated TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE question_votes (
@@ -72,3 +78,13 @@ CREATE INDEX idx_answers_id_question ON answers (id, question_id);
 CREATE INDEX idx_question_votes_question_user ON question_votes (question_id, user_uuid);
  
 CREATE INDEX idx_answer_votes_answer_user ON answer_votes (answer_id, user_uuid);
+
+CREATE TRIGGER update_questions_timestamp
+BEFORE UPDATE ON questions
+FOR EACH ROW
+EXECUTE PROCEDURE update_timestamp();
+
+CREATE TRIGGER update_answers_timestamp
+BEFORE UPDATE ON answers
+FOR EACH ROW
+EXECUTE PROCEDURE update_timestamp();

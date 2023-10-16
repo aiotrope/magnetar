@@ -21,6 +21,8 @@ let answerVotes = writable(answerVoteList);
 
 let answerId = writable(0);
 
+let questionID = writable(0)
+
 export {
   userUuid,
   courses,
@@ -29,4 +31,5 @@ export {
   answerId,
   questionVotes,
   answerVotes,
+  questionID
 };

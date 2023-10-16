@@ -105,7 +105,7 @@ const updatedAutomatedAnswer = async (questionId, withautomatedanswer) => {
   return await response.json();
 };
 
-const updateVotes = async (questionId, votes) => {
+/* const updateVotes = async (questionId, votes) => {
   const payload = {
     votes: votes,
   };
@@ -125,13 +125,13 @@ const updateVotes = async (questionId, votes) => {
 
   return await response.json();
 };
-
+ */
 const questionService = {
   create,
   getAll,
   postLLM,
   updatedAutomatedAnswer,
-  updateVotes
+  // updateVotes
 };
 
 export default questionService;

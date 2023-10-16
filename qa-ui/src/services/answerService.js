@@ -31,9 +31,31 @@ const getAll = async () => {
   return jsonData;
 };
 
+/* const updateVotes = async (answerId, votes) => {
+  const payload = {
+    votes: votes,
+  };
+
+  const options = {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `/api/answer/votes/${answerId}`; //* check route
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+ */
 const answerService = {
   create,
   getAll,
+  // updateVotes
  
 };
 

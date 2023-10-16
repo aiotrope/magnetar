@@ -3,7 +3,12 @@
 
   import { marked } from 'marked';
 
-  import { userUuid, questions, questionVotes } from '../stores/stores.js';
+  import {
+    userUuid,
+    questions,
+    questionVotes,
+    questionID,
+  } from '../stores/stores.js';
   import questionService from '../services/questionService.js';
   import courseService from '../services/courseService.js';
   import userService from '../services/userService.js';
@@ -13,7 +18,10 @@
 
   let inputQuestionData = { title: '', details: '' };
 
-  let currentQuestions, currentUserUuid, currentQuestionVotes;
+  let currentQuestions,
+    currentUserUuid,
+    currentQuestionVotes,
+    currentQuestionID;
 
   export let courseId, title;
 
@@ -49,41 +57,38 @@
     const setUserId = await userService.getUser();
 
     userUuid.set(setUserId);
+    inputQuestionData.title = '';
+    inputQuestionData.details = '';
   };
 
-  const addQuestionVote = async (obj) => {
-    const voted = $questionVotes?.filter(
-      (e) => e?.question_id === obj?.id && e?.user_uuid === $userUuid
-    );
+  $: filterQuestions = $questions.filter((e) => e.course_id === courseId);
 
-    if (voted?.length < 2) {
-      const add = await voteService.createQuestionVote(
-        parseInt(obj?.id),
-        $userUuid
-      );
+  $: userVotedQuestion = $questionVotes?.filter(
+    (e) => e?.question_id === $questionID && e?.user_uuid === $userUuid
+  );
 
-      const votes = $questionVotes?.filter(
-        (e) => e.question_id === parseInt(obj?.id)
-      );
+  $: userVotedQuestionLen = userVotedQuestion?.length;
 
-      const update = await questionService.updateVotes(
-        parseInt(obj?.id),
-        votes?.length
-      );
-      if (add && update) {
-        const setUserId = await userService.getUser();
-        const allQuestionVotes = await voteService.getQuestionVotes();
-        const allQuestions = await questionService.getAll();
-        userUuid.set(setUserId);
-        questionVotes.set(allQuestionVotes);
-        questions.set(allQuestions);
+  $: if (userVotedQuestionLen === 0 && userVotedQuestionLen !== undefined && $questionID > 0) {
+    (async () => {
+      const add = await voteService.createQuestionVote($questionID, $userUuid);
 
-        return add;
-      }
-    } else {
-      alert('Question voted')
-    }
-  };
+      const setUserId = await userService.getUser();
+      userUuid.set(setUserId);
+
+      const allQuestionVotes = await voteService.getQuestionVotes();
+      questionVotes.set(allQuestionVotes);
+
+      /* const update = await questionService.updateVotes(
+        $questionID,
+        userVotedQuestionLen
+      ); */
+      const allQuestions = await questionService.getAll();
+      questions.set(allQuestions);
+
+      console.log(add)
+    })();
+  }
 
   questions.subscribe((currentValue) => {
     localStorage.setItem('questions', JSON.stringify(currentValue));
@@ -105,13 +110,19 @@
     currentUserUuid = currentValue;
   });
 
+  const unsubscribeQuestionID = questionID.subscribe((currentValue) => {
+    currentQuestionID = currentValue;
+  });
+
   onDestroy(unsubscribeQuestions);
 
   onDestroy(unsubscribUserUuid);
 
   onDestroy(unsubscribeQuestionVotes);
 
-  $: filterQuestions = $questions.filter((e) => e.course_id === courseId);
+  onDestroy(unsubscribeQuestionID);
+
+  $: console.log('Q ID', $questionID)
 </script>
 
 <div class="container mb-10">
@@ -171,10 +182,30 @@
           <div class="grid grid-cols-2">
             <div class="p-2">
               <button
-                class="bg-transparent hover:bg-indigo-500 text-indigo-700 hover:text-white p-2 border border-indigo-500 hover:border-transparent rounded"
-                on:click={addQuestionVote(question)}
+                type="submit"
+                class={`${
+                  userVotedQuestionLen < 2
+                    ? 'bg-transparent hover:bg-amber-300 text-sky-600 px-3 border border-zinc-100 rounded'
+                    : 'bg-transparent text-sky-600 px-3 border border-sky-600 rounded opacity-50 cursor-not-allowed'
+                }`}
+                disabled={userVotedQuestionLen > 2}
+                on:click={() =>
+                  questionID.update((val) => parseInt(question?.id) + val)}
               >
-                <i class="fa fa-thumbs-up text-slate-300" /> Vote {question?.votes}
+                <i
+                  class={`${
+                    userVotedQuestionLen < 2
+                      ? 'fa fa-thumbs-up text-sky-600 hover:text-red-400 text-lg'
+                      : 'fa fa-thumbs-up text-sky-600 opacity-50 cursor-not-allowed text-lg'
+                  } `}
+                />
+                <span
+                  class={`${
+                   userVotedQuestionLen < 2
+                      ? 'hover:text-red-400'
+                      : 'opacity-50 cursor-not-allowed'
+                  }`}>{question?.votes}</span
+                >
               </button>
             </div>
             <div>
@@ -182,7 +213,7 @@
               <small class="text-indigo-400">{question?.user_uuid}</small><br />
               <i class="fa fa-edit text-slate-400" />
               <small class="text-slate-400"
-                >{courseService.formatTimestamp(question?.updated)}</small
+                >{courseService.formatTimestamp(question?.timestamp)}</small
               >
             </div>
           </div>

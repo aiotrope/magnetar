@@ -3,12 +3,20 @@
   import { marked } from 'marked';
   import pLimit from 'p-limit';
 
-  import { questions, courses, answers, userUuid } from '../stores/stores';
+  import {
+    questions,
+    courses,
+    answers,
+    userUuid,
+    questionVotes,
+    answerVotes,
+  } from '../stores/stores';
 
   import answerService from '../services/answerService';
   import questionService from '../services/questionService';
   import courseService from '../services/courseService.js';
   import userService from '../services/userService.js';
+  import voteService from '../services/voteService.js';
 
   export let questionId;
 
@@ -16,7 +24,11 @@
 
   let processQueue = [];
 
-  let currentAnswers, currentQuestions, currentUserUuid;
+  let currentAnswers,
+    currentQuestions,
+    currentUserUuid,
+    currentQuestionVotes,
+    currentAnswerVotes;
 
   let inputAnswerData = { details: '' };
 
@@ -109,6 +121,88 @@
     const setUserId = await userService.getUser();
 
     userUuid.set(setUserId);
+    inputAnswerData.details = '';
+  };
+
+  /*  const userVotedQuestion = () => {
+    const voted = $questionVotes?.filter(
+      (e) => e?.question_id === questionId && e?.user_uuid === $userUuid
+    );
+
+    return voted?.length;
+  }; */
+
+  $: userVotedQuestion = $questionVotes?.filter(
+    (e) => e?.question_id === parseInt(questionId) && e?.user_uuid === $userUuid
+  );
+
+  $: userVotedQuestionLen = userVotedQuestion?.length;
+
+  const addQuestionVote = async () => {
+    const voted = $questionVotes?.filter(
+      (e) =>
+        e?.question_id === parseInt(questionId) && e?.user_uuid === $userUuid
+    );
+
+    if (voted?.length < 2) {
+      const add = await voteService.createQuestionVote(
+        parseInt(questionId),
+        $userUuid
+      );
+
+      /* const update = await questionService.updateVotes(
+        parseInt(questionId),
+        voted?.length
+      ); */
+      if (add) {
+        const setUserId = await userService.getUser();
+        const allQuestionVotes = await voteService.getQuestionVotes();
+        const allQuestions = await questionService.getAll();
+        userUuid.set(setUserId);
+        questionVotes.set(allQuestionVotes);
+        questions.set(allQuestions);
+      }
+    } else {
+      alert(`${$userUuid} user voted question`);
+    }
+  };
+
+  const userVotedAnswer = (obj) => {
+    const voted = $answerVotes?.filter(
+      (e) => e?.answer_id === parseInt(obj?.id) && e?.user_uuid === $userUuid
+    );
+
+    return voted?.length;
+  };
+
+  const addAnswerVote = async (obj) => {
+    const voted = $answerVotes?.filter(
+      (e) => e?.answer_id === obj?.id && e?.user_uuid === $userUuid
+    );
+
+    if (voted?.length < 2) {
+      const add = await voteService.createAnswerVote(
+        parseInt(obj?.id),
+        $userUuid
+      );
+
+      const votes = $answerVotes?.filter(
+        (e) => e.answer_id === parseInt(obj?.id)
+      );
+
+     /*  const update = await answerService.updateVotes(
+        parseInt(obj?.id),
+        votes?.length
+      ); */
+      const setUserId = await userService.getUser();
+      const allAnswerVotes = await voteService.getAnswerVotes();
+      const allAnswers = await answerService.getAll();
+      userUuid.set(setUserId);
+      answerVotes.set(allAnswerVotes);
+      answers.set(allAnswers);
+    } else {
+      alert(`${$userUuid} user voted answer`);
+    }
   };
 
   answers.subscribe((currentValue) => {
@@ -123,6 +217,14 @@
     localStorage.setItem('userUuid', JSON.stringify(currentValue));
   });
 
+  questionVotes.subscribe((currentValue) => {
+    localStorage.setItem('questionVotes', JSON.stringify(currentValue));
+  });
+
+  answerVotes.subscribe((currentValue) => {
+    localStorage.setItem('answerVotes', JSON.stringify(currentValue));
+  });
+
   const unsubscribeAnswers = answers.subscribe((currentValue) => {
     currentAnswers = currentValue;
   });
@@ -135,13 +237,25 @@
     currentUserUuid = currentValue;
   });
 
+  const unsubscribeQuestionVotes = questionVotes.subscribe((currentValue) => {
+    currentQuestionVotes = currentValue;
+  });
+
+  const unsubscribeAnswerVotes = answerVotes.subscribe((currentValue) => {
+    currentAnswerVotes = currentValue;
+  });
+
   onDestroy(unsubscribeAnswers);
 
   onDestroy(unsubscribeQuestions);
 
   onDestroy(unsubscribeUserUuid);
 
-  $: console.log('LLM RESULTS', $questions[questionIndex]?.withautomatedanswer);
+  onDestroy(unsubscribeQuestionVotes);
+
+  onDestroy(unsubscribeAnswerVotes);
+
+  $: console.log('LEN', questionId);
 </script>
 
 <div class="container mt-3 mb-10">
@@ -156,7 +270,25 @@
       </a>
       <div class="grid grid-cols-2">
         <div class="p-2">
-          <i class="fa fa-thumbs-up text-xl text-zinc-500" />
+          <button
+            type="button"
+            class={`${
+              userVotedQuestionLen < 2
+                ? 'bg-transparent hover:bg-amber-300 text-sky-600 px-3 border border-zinc-100 rounded'
+                : 'bg-transparent text-sky-600 px-3 border border-sky-300 rounded opacity-50 cursor-not-allowed'
+            }`}
+            disabled={userVotedQuestionLen > 2}
+            on:click={addQuestionVote}
+          >
+            <i
+              class={`${
+                userVotedQuestionLen < 2
+                  ? 'fa fa-thumbs-up text-sky-600 hover:text-red-400 text-lg'
+                  : 'fa fa-thumbs-up text-lg opacity-50 cursor-not-allowed'
+              }`}
+            />
+            {$questions[questionIndex]?.votes}
+          </button>
         </div>
         <div>
           <i class="fa fa-user text-slate-400" />
@@ -166,7 +298,7 @@
           <i class="fa fa-edit text-slate-400" />
           <small class="text-slate-400"
             >{courseService.formatTimestamp(
-              $questions[questionIndex]?.updated
+              $questions[questionIndex]?.timestamp
             )}</small
           >
         </div>
@@ -216,11 +348,34 @@
               <small class="text-emerald-400">{answer?.user_uuid}</small><br />
               <i class="fa fa-edit text-slate-400" />
               <small class="text-slate-400"
-                >{courseService.formatTimestamp(answer?.updated)}</small
+                >{courseService.formatTimestamp(answer?.timestamp)}</small
               >
             </div>
             <div class="pl-20 pt-5">
-              <i class="fa fa-thumbs-up text-xl text-zinc-500" />
+              <button
+                class={`${
+                  userVotedAnswer(answer) < 2
+                    ? 'bg-transparent hover:bg-indigo-400 text-sky-600 px-3 border border-zinc-200 rounded'
+                    : 'bg-transparent text-sky-600 px-3 border border-sky-600 rounded opacity-50 cursor-not-allowed'
+                }`}
+                disabled={userVotedAnswer(answer) > 2}
+                on:click={addAnswerVote(answer)}
+              >
+                <i
+                  class={`${
+                    userVotedAnswer(answer) < 2
+                      ? 'fa fa-thumbs-up text-slate-500 hover:text-red-400 text-lg'
+                      : 'fa fa-thumbs-up text-slate-500 text-lg opacity-50 cursor-not-allowed'
+                  }`}
+                />
+                <span
+                  class={`${
+                    userVotedAnswer(answer) < 2
+                      ? 'hover:text-red-400'
+                      : 'opacity-50 cursor-not-allowed'
+                  }`}>{answer?.votes}</span
+                >
+              </button>
             </div>
           </div>
 
