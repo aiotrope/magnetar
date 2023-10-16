@@ -7,6 +7,8 @@ CREATE TABLE courses (
   UNIQUE(title)
 );
 
+/* timestamp timestamp default current_timestamp */
+
 CREATE TABLE questions (
   id SERIAL PRIMARY KEY,
   course_id INTEGER REFERENCES courses(id),
@@ -32,13 +34,15 @@ CREATE TABLE answers (
 CREATE TABLE question_votes (
   id SERIAL PRIMARY KEY,
   question_id INTEGER REFERENCES questions(id),
-  user_uuid TEXT NOT NULL
+  user_uuid TEXT NOT NULL,
+  created TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 CREATE TABLE answer_votes (
   id SERIAL PRIMARY KEY,
   answer_id INTEGER REFERENCES answers(id),
-  user_uuid TEXT NOT NULL
+  user_uuid TEXT NOT NULL,
+  created TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 CREATE INDEX idx_courses_id ON courses (id);
@@ -65,6 +69,6 @@ CREATE INDEX idx_answers_course_question ON answers (course_id, question_id);
 
 CREATE INDEX idx_answers_id_question ON answers (id, question_id);
 
-CREATE INDEX idx_question_votes_user ON question_votes (user_uuid);
+CREATE INDEX idx_question_votes_question_user ON question_votes (question_id, user_uuid);
  
-CREATE INDEX idx_answer_upvotes_user ON answer_votes (user_uuid);
+CREATE INDEX idx_answer_votes_answer_user ON answer_votes (answer_id, user_uuid);

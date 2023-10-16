@@ -4,6 +4,7 @@ import courseRoutes from './routes/courseRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import questionRoutes from './routes/questionRoutes.js';
 import answerRoutes from './routes/answerRoutes.js';
+import voteRoutes from './routes/voteRoutes.js';
 
 const app = new Application();
 
@@ -25,6 +26,9 @@ app.use(questionRoutes.allowedMethods());
 
 app.use(answerRoutes.routes());
 app.use(answerRoutes.allowedMethods());
+
+app.use(voteRoutes.routes());
+app.use(voteRoutes.allowedMethods());
 
 const server = await app.listen({ port: 7777 });
 

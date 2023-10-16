@@ -21,7 +21,7 @@ const create = async (courseId, questionId, user_uuid, details) => {
 };
 
 const getAll = async () => {
-  const response = await fetch('/api/answers'); //* check route
+  const response = await fetch('/api/answers');
 
   const jsonData = await response.json();
 
@@ -34,6 +34,7 @@ const getAll = async () => {
 const answerService = {
   create,
   getAll,
+ 
 };
 
 export default answerService;

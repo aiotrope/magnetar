@@ -3,16 +3,17 @@
 
   import { marked } from 'marked';
 
-  import { userUuid, questions } from '../stores/stores.js';
+  import { userUuid, questions, questionVotes } from '../stores/stores.js';
   import questionService from '../services/questionService.js';
   import courseService from '../services/courseService.js';
   import userService from '../services/userService.js';
+  import voteService from '../services/voteService.js';
 
   let isLoading = true;
 
   let inputQuestionData = { title: '', details: '' };
 
-  let currentQuestions, currentUserUuid;
+  let currentQuestions, currentUserUuid, currentQuestionVotes;
 
   export let courseId, title;
 
@@ -50,15 +51,57 @@
     userUuid.set(setUserId);
   };
 
+  const addQuestionVote = async (obj) => {
+    const voted = $questionVotes?.filter(
+      (e) => e?.question_id === obj?.id && e?.user_uuid === $userUuid
+    );
+
+    if (voted?.length < 2) {
+      const add = await voteService.createQuestionVote(
+        parseInt(obj?.id),
+        $userUuid
+      );
+
+      const votes = $questionVotes?.filter(
+        (e) => e.question_id === parseInt(obj?.id)
+      );
+
+      const update = await questionService.updateVotes(
+        parseInt(obj?.id),
+        votes?.length
+      );
+      if (add && update) {
+        const setUserId = await userService.getUser();
+        const allQuestionVotes = await voteService.getQuestionVotes();
+        const allQuestions = await questionService.getAll();
+        userUuid.set(setUserId);
+        questionVotes.set(allQuestionVotes);
+        questions.set(allQuestions);
+
+        return add;
+      }
+    } else {
+      alert('Question voted')
+    }
+  };
+
   questions.subscribe((currentValue) => {
     localStorage.setItem('questions', JSON.stringify(currentValue));
+  });
+
+  questionVotes.subscribe((currentValue) => {
+    localStorage.setItem('questionVotes', JSON.stringify(currentValue));
   });
 
   const unsubscribeQuestions = questions.subscribe((currentValue) => {
     currentQuestions = currentValue;
   });
 
-   const unsubscribUserUuid = userUuid.subscribe((currentValue) => {
+  const unsubscribeQuestionVotes = questionVotes.subscribe((currentValue) => {
+    currentQuestionVotes = currentValue;
+  });
+
+  const unsubscribUserUuid = userUuid.subscribe((currentValue) => {
     currentUserUuid = currentValue;
   });
 
@@ -66,14 +109,15 @@
 
   onDestroy(unsubscribUserUuid);
 
-  $: filterQuestions = $questions.filter((e) => e.course_id === courseId);
+  onDestroy(unsubscribeQuestionVotes);
 
-  // $: console.log('FILTER QUESTION', filterQuestions);
+  $: filterQuestions = $questions.filter((e) => e.course_id === courseId);
 </script>
 
 <div class="container mb-10">
   <div class="grid">
-    <div class="mb-4">
+    <small class="text-slate-300">Current user: {$userUuid}</small>
+    <div class="mb-4 mt-1">
       <form on:submit|preventDefault={onSubmit}>
         <div class="mb-2">
           <label class="block text-gray-700 text-sm font-bold" for="title">
@@ -124,8 +168,24 @@
               >{question?.title}</a
             >
           </p>
-          <small>Asked by: <span class="text-indigo-300">{question?.user_uuid}</span></small><br />
-          <small>Asked: <span class="text-slate-300">{courseService.formatTimestamp(question?.updated)}</span></small><br />
+          <div class="grid grid-cols-2">
+            <div class="p-2">
+              <button
+                class="bg-transparent hover:bg-indigo-500 text-indigo-700 hover:text-white p-2 border border-indigo-500 hover:border-transparent rounded"
+                on:click={addQuestionVote(question)}
+              >
+                <i class="fa fa-thumbs-up text-slate-300" /> Vote {question?.votes}
+              </button>
+            </div>
+            <div>
+              <i class="fa fa-user text-slate-400" />
+              <small class="text-indigo-400">{question?.user_uuid}</small><br />
+              <i class="fa fa-edit text-slate-400" />
+              <small class="text-slate-400"
+                >{courseService.formatTimestamp(question?.updated)}</small
+              >
+            </div>
+          </div>
           <div
             class="code bg-zinc-50 p-3 my-1 border-l-4 border-l-indigo-500 text-slate-500"
           >
@@ -134,6 +194,5 @@
         </div>
       {/each}
     </div>
- 
   {/if}
 </div>

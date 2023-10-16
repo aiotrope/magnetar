@@ -4,6 +4,7 @@ import { cacheMethodCalls } from '../util/cacheUtil.js';
 const cachedQuestionService = cacheMethodCalls(questionService, [
   'create',
   'updateAutomatedAnswer',
+  'updateVotes',
 ]);
 
 const handleCreate = async ({ request, response, params }) => {
@@ -112,6 +113,23 @@ const handleUpdateAutomatedAnswer = async ({ request, params, response }) => {
   }
 };
 
+const handleUpdateVotes = async ({ request, params, response }) => {
+  const id = params.id;
+  const { votes } = await request.body().value;
+
+  if (id !== undefined) {
+    const updatedQuestion = await cachedQuestionService.updateVotes(id, votes);
+
+    response.status = 200;
+    response.body = updatedQuestion;
+    return;
+  } else {
+    response.status = 404;
+    response.body = 'Not defined';
+    return;
+  }
+};
+
 const questionController = {
   handleFindAll,
   handleFindById,
@@ -120,6 +138,7 @@ const questionController = {
   handleFindByCourse,
   handleFindByCourseOwnedByUser,
   handleUpdateAutomatedAnswer,
+  handleUpdateVotes,
 };
 
 export default questionController;

@@ -38,4 +38,7 @@ GET http://localhost:7800/api/answers HTTP/1.1
 ### find answer by id
 GET http://localhost:7800/api/answer/8?question_id=8 HTTP/1.1
 
+### find question votes
+GET http://localhost:7800/api/votes/question HTTP/1.1
+
 

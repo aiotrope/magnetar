@@ -1,7 +1,10 @@
 import answerService from '../services/answerService.js';
 import { cacheMethodCalls } from '../util/cacheUtil.js';
 
-const cachedAnswerService = cacheMethodCalls(answerService, ['create']);
+const cachedAnswerService = cacheMethodCalls(answerService, [
+  'create',
+  'updateVotes',
+]);
 
 const handleCreate = async ({ request, response, params }) => {
   const courseId = params.courseId;
@@ -97,7 +100,10 @@ const handleFindAnswerByQuestionId = async ({ request, response, params }) => {
   const questionId = request.url.searchParams.get('question_id');
 
   if (request.url.searchParams.has('question_id') && id !== undefined) {
-    const answer = await cachedAnswerService.getAnswerByQuestionId(id, questionId);
+    const answer = await cachedAnswerService.getAnswerByQuestionId(
+      id,
+      questionId
+    );
     response.status = 200;
     response.body = answer;
     return;
@@ -108,21 +114,22 @@ const handleFindAnswerByQuestionId = async ({ request, response, params }) => {
   }
 };
 
-/* const handleLLM = async ({ request, response }) => {
-  const { question } = await request.body().value;
+const handleUpdateVotes = async ({ request, params, response }) => {
+  const id = params.id;
+  const { votes } = await request.body().value;
 
-  const data = { question };
+  if (id !== undefined) {
+    const updatedAnswer = await cachedAnswerService.updateVotes(id, votes);
 
-  const responseData = await fetch('http://localhost:7800/llm/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-}; */
-
+    response.status = 200;
+    response.body = updatedAnswer;
+    return;
+  } else {
+    response.status = 404;
+    response.body = 'Not defined';
+    return;
+  }
+};
 const answerController = {
   handleFindAll,
   handleFindById,
@@ -131,7 +138,7 @@ const answerController = {
   handleFindByCourse,
   handleFindByCourseByQuestion,
   handleFindAnswerByQuestionId,
-  // handleLLM,
+  handleUpdateVotes,
 };
 
 export default answerController;

@@ -105,11 +105,33 @@ const updatedAutomatedAnswer = async (questionId, withautomatedanswer) => {
   return await response.json();
 };
 
+const updateVotes = async (questionId, votes) => {
+  const payload = {
+    votes: votes,
+  };
+
+  const options = {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `/api/question/votes/${questionId}`; //* check route
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
 const questionService = {
   create,
   getAll,
   postLLM,
   updatedAutomatedAnswer,
+  updateVotes
 };
 
 export default questionService;

@@ -139,7 +139,7 @@
 
   onDestroy(unsubscribeQuestions);
 
-  onDestroy(unsubscribeUserUuid)
+  onDestroy(unsubscribeUserUuid);
 
   $: console.log('LLM RESULTS', $questions[questionIndex]?.withautomatedanswer);
 </script>
@@ -154,19 +154,23 @@
           alt={`Image for course ${courseFinder?.title}`}
         />
       </a>
-
-      <small
-        >Asked by: <span class="text-indigo-300"
-          >{$questions[questionIndex]?.user_uuid}</span
-        ></small
-      ><br />
-      <small
-        >Asked: <span class="text-slate-300"
-          >{courseService.formatTimestamp(
-            $questions[questionIndex]?.updated
-          )}</span
-        ></small
-      ><br />
+      <div class="grid grid-cols-2">
+        <div class="p-2">
+          <i class="fa fa-thumbs-up text-xl text-zinc-500" />
+        </div>
+        <div>
+          <i class="fa fa-user text-slate-400" />
+          <small class="text-indigo-400"
+            >{$questions[questionIndex]?.user_uuid}</small
+          ><br />
+          <i class="fa fa-edit text-slate-400" />
+          <small class="text-slate-400"
+            >{courseService.formatTimestamp(
+              $questions[questionIndex]?.updated
+            )}</small
+          >
+        </div>
+      </div>
       <div
         class="code bg-zinc-50 p-3 my-1 border-l-4 border-l-slate-500 text-zinc-500"
       >
@@ -175,7 +179,8 @@
     </div>
   </div>
   <div class="grid mb-2">
-    <form on:submit|preventDefault={onSubmit}>
+    <small class="text-slate-300">Current user: {$userUuid}</small>
+    <form on:submit|preventDefault={onSubmit} class="mt-1">
       <div class="mb-1">
         <label
           for="details"
@@ -205,16 +210,20 @@
       <h2 class="text-lg font-bold dark:text-white">Answers</h2>
       {#each filterAnswers as answer}
         <div>
-          <small
-            >Answered by: <span class="text-emerald-400"
-              >{answer?.user_uuid}</span
-            ></small
-          ><br />
-          <small
-            >Answered: <span class="text-slate-300"
-              >{courseService.formatTimestamp(answer?.updated)}</span
-            ></small
-          ><br />
+          <div class="grid grid-cols-2">
+            <div>
+              <i class="fa fa-user-circle text-slate-400" />
+              <small class="text-emerald-400">{answer?.user_uuid}</small><br />
+              <i class="fa fa-edit text-slate-400" />
+              <small class="text-slate-400"
+                >{courseService.formatTimestamp(answer?.updated)}</small
+              >
+            </div>
+            <div class="pl-20 pt-5">
+              <i class="fa fa-thumbs-up text-xl text-zinc-500" />
+            </div>
+          </div>
+
           <div
             class="code bg-emerald-50 p-3 my-2 border-l-4 border-l-emerald-600"
           >

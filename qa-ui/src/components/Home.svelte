@@ -1,16 +1,29 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
 
-  import { userUuid, courses, questions, answers } from '../stores/stores.js';
+  import {
+    userUuid,
+    courses,
+    questions,
+    answers,
+    questionVotes,
+    answerVotes,
+  } from '../stores/stores.js';
 
   import courseService from '../services/courseService.js';
   import userService from '../services/userService.js';
   import questionService from '../services/questionService.js';
   import answerService from '../services/answerService.js';
+  import voteService from '../services/voteService.js';
 
   import Loader from './Loader.svelte';
 
-  let currentCourses, currentUserUuid, currentAnswers, currentQuestions;
+  let currentCourses,
+    currentUserUuid,
+    currentAnswers,
+    currentQuestions,
+    currentQuestionVotes,
+    currentAnswerVotes;
 
   let isLoading = true;
 
@@ -28,6 +41,10 @@
 
       const allAnswers = await answerService.getAll();
 
+      const allQuestionVotes = await voteService.getQuestionVotes();
+
+      const allAnswerVotes = await voteService.getAnswerVotes();
+
       courses.set(allCourses);
 
       userUuid.set(setUserId);
@@ -36,11 +53,17 @@
 
       answers.set(allAnswers);
 
+      questionVotes.set(allQuestionVotes);
+
+      answerVotes.set(allAnswerVotes);
+
       if (
-        allCourses.length &&
+        allCourses?.length &&
         allQuestions?.length &&
-        allAnswers.length &&
-        setUserId !== null
+        allAnswers?.length &&
+        setUserId !== null &&
+        allQuestionVotes?.length &&
+        allAnswerVotes?.length
       ) {
         clearInterval(interval);
         // console.clear()
@@ -49,8 +72,6 @@
     }, 1000);
     return () => clearInterval(interval);
   };
-
-
 
   userUuid.subscribe((currentValue) => {
     localStorage.setItem('userUuid', JSON.stringify(currentValue));
@@ -66,6 +87,14 @@
 
   answers.subscribe((currentValue) => {
     localStorage.setItem('answers', JSON.stringify(currentValue));
+  });
+
+  questionVotes.subscribe((currentValue) => {
+    localStorage.setItem('questionVotes', JSON.stringify(currentValue));
+  });
+
+  answerVotes.subscribe((currentValue) => {
+    localStorage.setItem('answerVotes', JSON.stringify(currentValue));
   });
 
   const unsubscribeCourses = courses.subscribe((currentValue) => {
@@ -84,6 +113,14 @@
     currentQuestions = currentValue;
   });
 
+  const unsubscribeQuestionVotes = questionVotes.subscribe((currentValue) => {
+    currentQuestionVotes = currentValue;
+  });
+
+  const unsubscribeAnswerVotes = answerVotes.subscribe((currentValue) => {
+    currentAnswerVotes = currentValue;
+  });
+
   onDestroy(unsubscribeCourses);
 
   onDestroy(unsubscribUserUuid);
@@ -92,6 +129,9 @@
 
   onDestroy(unsubscribeAnswers);
 
+  onDestroy(unsubscribeQuestionVotes);
+
+  onDestroy(unsubscribeAnswerVotes);
 </script>
 
 <div class="container mt-3">

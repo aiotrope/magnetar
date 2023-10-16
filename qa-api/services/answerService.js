@@ -54,6 +54,21 @@ const create = async (course_id, question_id, user_uuid, details) => {
   return answer;
 };
 
+const updateVotes = async (id, votes) => {
+  return await new Promise(async (resolve, reject) => {
+    const updateData = {
+      id: id,
+      votes: votes,
+    };
+    const answerToUpdate = await sql`UPDATE answers SET ${sql(
+      updateData,
+      'votes'
+    )} WHERE id=${updateData.id} returning *;`;
+
+    resolve(answerToUpdate);
+  });
+};
+
 const answerService = {
   getAnswers,
   getAnswerById,
@@ -63,6 +78,7 @@ const answerService = {
   getAnswersByCourseByQuestion,
   create,
   getAnswerByQuestionId,
+  updateVotes
 };
 
 export default answerService;

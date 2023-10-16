@@ -55,6 +55,21 @@ const updateAutomatedAnswer = async (id, withautomatedanswer) => {
   });
 };
 
+const updateVotes = async (id, votes) => {
+  return await new Promise(async (resolve, reject) => {
+    const updateData = {
+      id: id,
+      votes: votes,
+    };
+    const questionToUpdate = await sql`UPDATE questions SET ${sql(
+      updateData,
+      'votes'
+    )} WHERE id=${updateData.id} returning *;`;
+
+    resolve(questionToUpdate);
+  });
+};
+
 const questionService = {
   getQuestions,
   getQuestionById,
@@ -63,6 +78,7 @@ const questionService = {
   getQuestionsByCourseOwnedByUser,
   create,
   updateAutomatedAnswer,
+  updateVotes
 };
 
 export default questionService;
