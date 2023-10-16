@@ -13,7 +13,7 @@ const create = async (courseId, questionId, user_uuid, details) => {
     },
   };
 
-  const url = `/api/answers/${courseId}?question_id=${questionId}`; //* check route
+  const url = `/api/answers/${courseId}?question_id=${questionId}`;
 
   const response = await fetch(url, options);
 
@@ -45,7 +45,7 @@ const updateVote = async (answerId, votes) => {
     },
   };
 
-  const url = `/api/answer/votes/${answerId}`; //* check route
+  const url = `/api/answer/votes/${answerId}`;
 
   const response = await fetch(url, options);
 

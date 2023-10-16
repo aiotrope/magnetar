@@ -21,7 +21,7 @@ let answerVotes = writable(answerVoteList);
 
 let answerID = writable(0);
 
-let questionID = writable(0)
+let questionID = writable(0);
 
 export {
   userUuid,
@@ -31,5 +31,5 @@ export {
   answerID,
   questionVotes,
   answerVotes,
-  questionID
+  questionID,
 };

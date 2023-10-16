@@ -34,6 +34,7 @@
 
   let inputAnswerData = { details: '' };
 
+  
   $: questionIndex = $questions.map((e) => e.id).indexOf(parseInt(questionId));
 
   $: courseFinder = $courses.find(
@@ -127,7 +128,7 @@
   };
 
   $: userVotedQuestion = $questionVotes?.filter(
-    (e) => e?.question_id === questionId && e?.user_uuid === $userUuid
+    (e) => e?.question_id === parseInt(questionId) && e?.user_uuid === $userUuid
   );
 
   $: userVotedQuestionLen = userVotedQuestion?.length;
@@ -141,7 +142,7 @@
 
       const update = await questionService.updateVote(
         parseInt(questionId),
-        voted?.length
+        userVotedQuestionLen
       );
       if (add) {
         const setUserId = await userService.getUser();
@@ -157,7 +158,7 @@
   };
 
   $: userVotedAnswer = $answerVotes?.filter(
-    (e) => e?.question_id === $answerID && e?.user_uuid === $userUuid
+    (e) => e?.question_id === parseInt($answerID) && e?.user_uuid === $userUuid
   );
 
   $: userVotedAnswerLen = userVotedAnswer?.length;
@@ -168,7 +169,7 @@
     $answerID > 0
   ) {
     (async () => {
-      const add = await voteService.createAnswerVote($answerID, $userUuid);
+      const add = await voteService.createAnswerVote(parseInt($answerID), $userUuid);
 
       const setUserId = await userService.getUser();
       userUuid.set(setUserId);
@@ -177,13 +178,13 @@
       answerVotes.set(allAnswerVotes);
 
       const update = await answerService.updateVote(
-        $answerID,
+        parseInt($answerID),
         userVotedAnswerLen
       );
       if (update) {
         const allAnswers = await answerService.getAll();
         answers.set(allAnswers);
-        window.location.reload()
+        window.location.reload();
       }
     })();
   }
@@ -244,7 +245,7 @@
 
   onDestroy(unsubscribeAnswerID);
 
-  $: console.log('LEN', questionId);
+  // $: console.log('LEN', questionId);
 </script>
 
 <div class="container mt-3 mb-10">
@@ -357,7 +358,7 @@
             </div>
             <div class="pl-20 pt-5">
               <button
-              type="button"
+                type="button"
                 class={`${
                   $answerVotes.filter(
                     (e) =>
@@ -393,7 +394,8 @@
                     )?.length === 0
                       ? 'hover:text-red-400'
                       : 'opacity-50 cursor-not-allowed'
-                  }`}>{$answerVotes.filter((e) => e?.answer_id === answer?.id)
+                  }`}
+                  >{$answerVotes.filter((e) => e?.answer_id === answer?.id)
                     ?.length}</span
                 >
               </button>

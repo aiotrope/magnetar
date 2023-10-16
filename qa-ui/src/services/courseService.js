@@ -1,5 +1,5 @@
 const getAll = async () => {
-  const response = await fetch('/api/courses'); //* check route
+  const response = await fetch('/api/courses');
 
   const jsonData = await response.json();
 

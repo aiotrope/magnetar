@@ -1,13 +1,13 @@
 const getUser = async () => {
-  const userQuestions = await fetch('/api/questions'); //* check route
+  const userQuestions = await fetch('/api/questions'); 
 
-  const userAnswers = await fetch('/api/answers'); //* check route
+  const userAnswers = await fetch('/api/answers'); 
 
-  const questionVotes = await fetch('/api/votes/question'); //* check route
+  const questionVotes = await fetch('/api/votes/question'); 
 
-  const answerVotes = await fetch('/api/votes/answer'); //* check route
+  const answerVotes = await fetch('/api/votes/answer'); 
 
-  const uuid = await fetch('/api/user/uuid'); //* check route
+  const uuid = await fetch('/api/user/uuid'); 
 
   const jsonQuestions = await userQuestions.json();
 

@@ -8,24 +8,10 @@ const handleFindAll = async ({ response }) => {
   const courses = await cachedCourseService.getCourses();
   response.status = 200;
   response.body = courses;
-
-};
-
-const handleFindOne = async ({ request, response }) => {
-  const courseId = request.url.searchParams.get('courseId');
-  if (courseId !== undefined) {
-    const course = await courseService.getCourse(courseId);
-    response.status = 200;
-    response.body = course;
-  } else {
-    response.status = 404;
-    response.body = 'Not defined';
-  }
 };
 
 const courseController = {
   handleFindAll,
-  handleFindOne,
 };
 
 export default courseController;

@@ -16,7 +16,7 @@ const create = async (course_id, user_uuid, title, details) => {
         },
       };
       try {
-        const url = `/api/questions/${course_id}`; //* check route
+        const url = `/api/questions/${course_id}`;
 
         const response = await fetch(url, options);
 
@@ -38,7 +38,7 @@ const create = async (course_id, user_uuid, title, details) => {
 };
 
 const getAll = async () => {
-  const response = await fetch('/api/questions'); //* check route
+  const response = await fetch('/api/questions');
 
   const jsonData = await response.json();
 
@@ -64,7 +64,7 @@ const postLLM = async (question) => {
         },
       };
       try {
-        const url = '/llm/'; //* check route
+        const url = '/llm/';
 
         const response = await fetch(url, options);
 
@@ -98,7 +98,7 @@ const updatedAutomatedAnswer = async (questionId, withautomatedanswer) => {
     },
   };
 
-  const url = `/api/question/${questionId}`; //* check route
+  const url = `/api/question/${questionId}`;
 
   const response = await fetch(url, options);
 
@@ -119,7 +119,7 @@ const updateVote = async (questionId, votes) => {
     },
   };
 
-  const url = `/api/question/votes/${questionId}`; //* check route
+  const url = `/api/question/votes/${questionId}`;
 
   const response = await fetch(url, options);
 

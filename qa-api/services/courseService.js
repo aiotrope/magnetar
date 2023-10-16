@@ -5,16 +5,8 @@ const getCourses = async () => {
   return courses;
 };
 
-const getCourse = async (id) => {
-  const courses =
-    await sql`SELECT * FROM courses WHERE id=${id};`;
-
-  return courses[0];
-};
-
 const courseService = {
   getCourses,
-  getCourse,
 };
 
 export default courseService;

@@ -35,84 +35,6 @@ const handleFindAll = async ({ response }) => {
   return;
 };
 
-const handleFindById = async ({ request, response }) => {
-  const id = request.url.searchParams.get('id');
-  if (request.url.searchParams.has('id')) {
-    const answer = await cachedAnswerService.getAnswerById(id);
-    response.status = 200;
-    response.body = answer;
-    return;
-  } else {
-    response.status = 404;
-    response.body = 'Not defined';
-    return;
-  }
-};
-
-const handleFindByUser = async ({ request, response }) => {
-  const created_by = request.url.searchParams.get('created_by');
-  if (created_by !== undefined) {
-    const answer = await cachedAnswerService.getAnswersByUser(created_by);
-    response.status = 200;
-    response.body = answer;
-    return;
-  } else {
-    response.status = 404;
-    response.body = 'Not defined';
-    return;
-  }
-};
-
-const handleFindByCourse = async ({ request, response }) => {
-  const course_id = request.url.searchParams.get('course_id');
-  if (course_id !== undefined) {
-    const answers = await cachedAnswerService.getAnswersByCourse(course_id);
-    response.status = 200;
-    response.body = answers;
-    return;
-  } else {
-    response.status = 404;
-    response.body = 'Not defined';
-    return;
-  }
-};
-
-const handleFindByCourseByQuestion = async ({ request, params, response }) => {
-  const courseId = params.courseId;
-  const questionId = params.questionId;
-  if (courseId !== undefined && questionId !== undefined) {
-    const answers = await cachedAnswerService.getAnswersByCourseByQuestion(
-      courseId,
-      questionId
-    );
-    response.status = 200;
-    response.body = answers;
-    return;
-  } else {
-    response.status = 404;
-    response.body = 'Not defined';
-    return;
-  }
-};
-
-const handleFindAnswerByQuestionId = async ({ request, response, params }) => {
-  const id = params.id;
-  const questionId = request.url.searchParams.get('question_id');
-
-  if (request.url.searchParams.has('question_id') && id !== undefined) {
-    const answer = await cachedAnswerService.getAnswerByQuestionId(
-      id,
-      questionId
-    );
-    response.status = 200;
-    response.body = answer;
-    return;
-  } else {
-    response.status = 404;
-    response.body = 'Not defined';
-    return;
-  }
-};
 
 const handleUpdateVotes = async ({ request, params, response }) => {
   const id = params.id;
@@ -136,12 +58,7 @@ const handleUpdateVotes = async ({ request, params, response }) => {
 
 const answerController = {
   handleFindAll,
-  handleFindById,
-  handleFindByUser,
   handleCreate,
-  handleFindByCourse,
-  handleFindByCourseByQuestion,
-  handleFindAnswerByQuestionId,
   handleUpdateVotes,
 };
 
