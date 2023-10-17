@@ -8,12 +8,7 @@ import voteRoutes from './routes/voteRoutes.js';
 
 const app = new Application();
 
-app.use(
-  oakCors({
-    origin: /^.+localhost:(7800|3000|80|8085)$/,
-    optionsSuccessStatus: 200,
-  })
-);
+app.use(oakCors());
 
 app.use(courseRoutes.routes());
 app.use(courseRoutes.allowedMethods());
@@ -33,3 +28,5 @@ app.use(voteRoutes.allowedMethods());
 const server = await app.listen({ port: 7777 });
 
 const wss = new SocketServer({ server });
+
+// const ws = new WebSocket('ws://' + server + '/');
