@@ -8,8 +8,8 @@ spec:
       name: qa-api-database-migration-job
     spec:
       containers:
-        - name: qa-api-database-migration-migrations
-          image: qa-api-database-migration-migrations:latest
+        - name: qa-api-database-migrations
+          image: qa-api-database-migrations:latest
           imagePullPolicy: Never
           env:
             - name: FLYWAY_USER

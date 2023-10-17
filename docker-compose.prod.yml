@@ -28,6 +28,8 @@ services:
       - redis
     env_file:
       - project.env
+    environment:
+      - REDIS_URL=${REDIS_URL}
     deploy:
       replicas: 5
       restart_policy:

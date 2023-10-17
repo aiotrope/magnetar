@@ -236,5 +236,90 @@ $ cd qa-api/ && minikube image build -t qa-api -f ./Dockerfile.k8s .
 $ cd qa-ui/ && minikube image build -t qa-ui -f ./Dockerfile.k8s .
 $ cd llm-api/ && minikube image build -t llm-api -f ./Dockerfile.k8s .
 
+# deploying apps
+kubectl apply -f kubernetes/qa-api-deployment.yaml
+kubectl apply -f kubernetes/qa-ui-deployment.yaml
+kubectl apply -f kubernetes/llm-api-deployment.yaml
+
+# check current deployment
+$ kubectl get deployments
+
+# list the pods
+$ kubectl get pods
+
+# check logs
+$ kubectl logs <pod_name>
+# e.g kubectl logs qa-ui-deployment-7d76756d9b-qxlxc
+
+# deploy the services and exposing the apps
+$ kubectl apply -f kubernetes/qa-api-service.yaml
+$ kubectl apply -f kubernetes/llm-api-service.yaml
+$ kubectl apply -f kubernetes/qa-ui-service.yaml
+
+# list services
+$ kubectl get services
+
+# access app 
+$ minikube service qa-api-service --url # e.g.
+
+# delete and cleanup
+$ kubectl delete -f kubernetes/qa-api-service.yaml
+$ kubectl delete -f kubernetes/qa-ui-service.yaml
+$ kubectl delete -f kubernetes/llm-api-service.yaml
+$ kubectl delete -f kubernetes/qa-api-deployment.yaml
+$ kubectl delete -f kubernetes/llm-api-deployment.yaml
+$ kubectl delete -f kubernetes/qa-ui-deployment.yaml
+
+# chech resources request
+$ kubectl top pod
+
+# enable metric server
+$ minikube addons enable metrics-server
+
+# instally pg operator
+$ kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.19/releases/cnpg-1.19.1.yaml
+
+# check add ons
+$ minikube addons list
+
+# list cnpg-system
+$ kubectl get all -n cnpg-system
+
+# deploying database cluster
+$ kubectl apply -f kubernetes/qa-api-database-cluster.yaml
+
+# list all clusters
+$ kubectl get cluster
+
+# adding horizontal scale congiguration
+$ kubectl apply -f kubernetes/qa-api-deployment-hpa.yaml 
+$ kubectl apply -f kubernetes/llm-api-deployment-hpa.yaml 
+$ kubectl apply -f kubernetes/qa-ui-deployment-hpa.yaml 
+
+# check horizonal scaling
+$ kubectl get hpa
+
+# describe the DB secrets created automatically
+$ kubectl describe secret qa-api-database-cluster
+# describe the secret for automatic username default "app"
+$ kubectl describe secret qa-api-database-cluster-app
+
+# init database migrations and secrets/environment container injection
+$ cd flyway/ && minikube image build -t qa-api-database-migrations -f ./Dockerfile .
+
+# list images for database migrations
+$ minikube image list
+
+# start DB migrations
+$ kubectl apply -f kubernetes/qa-api-database-migration-job.yaml 
+
+# rebuild and reaapply changes to qa-api after migrations
+$ cd qa-api/ && minikube image build -t qa-api -f ./Dockerfile.k8s .
+$ kubectl apply -f kubernetes/qa-api-deployment.yaml
+$ kubectl get pods
+$ minikube service qa-api-service --url
+# e.g generated url http://127.0.0.1:52953
+$ minikube service qa-ui-service --url
+# e.g generated url http://127.0.0.1:52953
 
 ```
