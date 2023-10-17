@@ -1,4 +1,4 @@
-import { sql } from '../database/database.js';
+import { sql } from '../database.js';
 
 const getQuestions = async () => {
   const questions = await sql`SELECT * FROM questions ORDER BY timestamp DESC;`;
@@ -47,7 +47,7 @@ const questionService = {
   getQuestions,
   create,
   updateAutomatedAnswer,
-  updateVote
+  updateVote,
 };
 
 export default questionService;

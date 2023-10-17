@@ -1,5 +1,5 @@
 Dockerfile
-Dockerfile.*
+Dockerfile.prod
 .dockerignore
 .env
 .gitignore

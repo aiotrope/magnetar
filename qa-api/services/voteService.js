@@ -1,4 +1,4 @@
-import { sql } from '../database/database.js';
+import { sql } from '../database.js';
 
 const createQuestionVote = async (question_id, user_uuid) => {
   const vote = await sql`INSERT INTO question_votes (question_id, user_uuid) 

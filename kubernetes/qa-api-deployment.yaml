@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qa-api-deployment
+  labels:
+    app: qa-api
+spec:
+  selector:
+    matchLabels:
+      app: qa-api
+  template:
+    metadata:
+      labels:
+        app: qa-api
+    spec:
+      containers:
+        - name: qa-api
+          image: qa-api:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 7777
+          resources:
+            requests: 
+              cpu: 200m
+            limits: 
+              memory: "356Mi"
+              cpu: 500m
+          env:
+            - name: PGPASS
+              valueFrom:
+                secretKeyRef:
+                  name: qa-api-database-cluster-app
+                  key: pgpass
+                  optional: false
+
+# The following configuration adds a resource request for 100m CPU units per container (0.1 CPU units) and limits the
+# resource usage to 200m CPU units per container (0.2 CPU units).
+# modification essentially adds an environment variable called PGPASS to the application.

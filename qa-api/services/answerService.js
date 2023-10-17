@@ -1,4 +1,4 @@
-import { sql } from '../database/database.js';
+import { sql } from '../database.js';
 
 const getAnswers = async () => {
   const answers = await sql`SELECT * FROM answers ORDER BY timestamp DESC;`;

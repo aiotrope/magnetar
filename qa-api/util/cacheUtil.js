@@ -1,18 +1,13 @@
-import { connect, load } from '../deps.js';
+import { createClient, load } from '../deps.js';
 
 const env = await load();
 
-const redis = await connect({
-  hostname: 'redis',
-  port: 6379,
-});
-
- 
-/* const redis = createClient({
-  url: env['REDIS_LAB_URL'],
+const redis = createClient({
+  url: env['REDIS_URL'], //* url for  docker compose config environment: redis://redis:6379
   pingInterval: 1000,
 });
-await redis.connect(); */
+
+await redis.connect();
 
 const cacheMethodCalls = (object, methodsToFlushCacheWith = []) => {
   const handler = {

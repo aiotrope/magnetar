@@ -1,0 +1,16 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: qa-api-deployment-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: qa-api-deployment
+  minReplicas: 1
+  maxReplicas: 7
+  targetCPUUtilizationPercentage: 10
+
+
+# defining the minimum number of replicas as 1, the maximum number of replicas as 7, 
+# and set the target CPU utilization rate to 10%.

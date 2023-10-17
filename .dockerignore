@@ -11,7 +11,7 @@ logs/
 *.log
 
 Dockerfile
-Dockerfile.*
+Dockerfile.prod
 .dockerignore
 docker-compose.prod.yml
 docker-compose.yml

@@ -6,6 +6,12 @@ The online Q&A platform is intended for coursework-related queries and responses
 
 Please refer to the RUNNING.md file on how to run the app in debug and production mode as well as how to run the e2e test and K6 performance test.
 
+## Phasing
+
+- Branch stage1 - tage8: stage 8, the last dev branch before starting developing the app in Kubernetes
+
+- stage9: start K8s app development
+
 ## API Reference
 
 ### Fetch all course
@@ -124,7 +130,7 @@ GET/api/assignments/user/uuid
 
 ### CLI Commands
 
-#### Docker compose 
+#### Docker compose
 
 ```bash
 # build images individually per Dockerfile
@@ -143,9 +149,9 @@ docker compose -f docker-compose.prod.yml up -d
 # DEV MODE
 # buid/rebuild docker images based on docker-compose on debug mode; running on port 7800
 # remove app-cache/ && production-database-data/ from previous production mode before proceeding
-cd magnetar && docker compose up --build 
+cd magnetar && docker compose up --build
 # to restart on debug mode on port 7800
-cd magnetar && docker compose up 
+cd magnetar && docker compose up
 # on detach mode
 docker compose -f docker-compose.dev.yml up -d
 
@@ -176,12 +182,12 @@ $ docker-compose run --entrypoint=npx e2e-playwright playwright test && docker-c
 
 ```bash
 # list containers
-$ docker container ls 
+$ docker container ls
 $ docker ps
 
 # entering psql console
 $ docker container ls
-$ docker exec -it <container_id> psql -U <dbUsername> <dbName> 
+$ docker exec -it <container_id> psql -U <dbUsername> <dbName>
 
 # show all tables
 $ \dt+
@@ -210,6 +216,25 @@ services:
 volumes:
   postgres-data:
 
-
 ```
 
+## CLI Commands Kubernetes
+
+```bash
+# after installing minikube & kubectl
+# start a cluster
+$ minikube start
+
+# start a new terminal, and leave this running
+$ minikube dashboard
+
+# stop cluster but no deletion
+$ minikube stop
+
+# build the app images
+$ cd qa-api/ && minikube image build -t qa-api -f ./Dockerfile.k8s .
+$ cd qa-ui/ && minikube image build -t qa-ui -f ./Dockerfile.k8s .
+$ cd llm-api/ && minikube image build -t llm-api -f ./Dockerfile.k8s .
+
+
+```

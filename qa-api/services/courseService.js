@@ -1,4 +1,4 @@
-import { sql } from '../database/database.js';
+import { sql } from '../database.js';
 
 const getCourses = async () => {
   const courses = await sql`SELECT * FROM courses;`;

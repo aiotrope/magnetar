@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qa-ui-deployment
+  labels:
+    app: qa-ui
+spec:
+  selector:
+    matchLabels:
+      app: qa-ui
+  template:
+    metadata:
+      labels:
+        app: qa-ui
+    spec:
+      containers:
+        - name: qa-ui
+          image: qa-ui:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          resources:
+            requests: 
+              cpu: 100m
+            limits: 
+              memory: "356Mi"
+              cpu: 200m
+         
+
+# The following configuration adds a resource request for 100m CPU units per container (0.1 CPU units) and limits the
+# resource usage to 200m CPU units per container (0.2 CPU units).
