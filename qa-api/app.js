@@ -10,7 +10,7 @@ const app = new Application();
 
 app.use(
   oakCors({
-    origin: /^.+localhost:(7800|3000)$/,
+    origin: /^.+localhost:(7800|3000|80|8085)$/,
     optionsSuccessStatus: 200,
   })
 );

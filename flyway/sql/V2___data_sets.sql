@@ -5,10 +5,14 @@ INSERT INTO courses (title, slug, details, img) VALUES ('Python CS-5678', 'pytho
 INSERT INTO courses (title, slug, details, img) VALUES ('SQL CS-6634', 'sql-cs-6634', 'SQL CS-6634 Course Section', 'https://craftypixels.com/placeholder-image/200x80/b3cbcb/595959&text=SQL+CS-6634');
 INSERT INTO courses (title, slug, details, img) VALUES ('Javascript CS-1234', 'javascript-cs-1234', 'Javascript CS-1234 Course Section', 'https://craftypixels.com/placeholder-image/200x80/ffff00/595959&text=Javascript+CS-1234');
 
-INSERT INTO questions (course_id, user_uuid, title, details) VALUES (1, '6a45ba57-b461-4a2c-a150-b8cfc136abbe', 'Hello Fortran', 'How to write Hello, world! in Fortran?');
+INSERT INTO questions (course_id, user_uuid, title, details) VALUES (1, '6a45ba57-b461-4a2c-a150-b8cfc136aube', 'Hello Fortran', 'How to write Hello, world! in Fortran?');
+INSERT INTO questions (course_id, user_uuid, title, details) VALUES (1, '6a45ba57-u461-4a2c-a151-b8cfc136abbe', 'Sample Fortran Question', 'Sample Fortran DEtails');
 
-INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (1, 1, '6a45ba57-b461-4a2c-a150-b8cfc136abbe', 'Placeholder answer Fortran');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (1, 1, '4a45ba57-b461-4a2c-a150-b8cfc136albe', 'Placeholder answer Fortran');
+INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (1, 1, '6a45ba57-b461-4a2c-a150-z1cfc136abbe', 'Placeholder answer Fortran 1');
 
-INSERT INTO question_votes (question_id, user_uuid) VALUES (1, '6a45ba57-b461-4a2c-a150-b8cfc136acce');
+INSERT INTO question_votes (question_id, user_uuid) VALUES (1, '4a45ba57-b461-4a2c-a150-b8cfc136acce');
+INSERT INTO question_votes (question_id, user_uuid) VALUES (1, '6a45ba57-b462-4a2c-a150-b8cfc136accf');
 
-INSERT INTO answer_votes (answer_id, user_uuid) VALUES (1, '6a45ba57-b461-4a2c-a150-b8cfc136abdd');
+INSERT INTO answer_votes (answer_id, user_uuid) VALUES (1, '1a45ba57-b461-4a2c-a150-b8cfc136abde');
+INSERT INTO answer_votes (answer_id, user_uuid) VALUES (1, '0a45ba57-b551-4a2h-a150-b8cfc136abdd');
