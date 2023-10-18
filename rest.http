@@ -1,5 +1,5 @@
 ### get courses
-GET http://localhost:7800/api/courses HTTP/1.1
+GET http://127.0.0.1:7800/api/courses HTTP/1.1
 
 ### get questions
 GET http://localhost:7800/api/questions HTTP/1.1
@@ -8,10 +8,10 @@ GET http://localhost:7800/api/questions HTTP/1.1
 GET http://localhost:7800/api/answers HTTP/1.1
 
 ### get all questions votes
-GET http://localhost:7800/api/votes/questions HTTP/1.1
+GET http://localhost:7800/api/votes/question HTTP/1.1
 
 ### get all answers votes
-GET http://localhost:7800/api/votes/answers HTTP/1.1
+GET http://localhost:7800/api/votes/answer HTTP/1.1
 
 ### get/generate user uuid
 GET http://localhost:7800/api/user/uuid HTTP/1.1
@@ -85,6 +85,9 @@ Content-Type: application/json
     "votes": 2
     
 }
+
+####
+GET http://localhost:7777/courses HTTP/1.1
 
 
 

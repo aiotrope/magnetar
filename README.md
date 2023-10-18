@@ -224,12 +224,33 @@ volumes:
 # after installing minikube & kubectl
 # start a cluster
 $ minikube start
-
 # start a new terminal, and leave this running
 $ minikube dashboard
-
 # stop cluster but no deletion
 $ minikube stop
+
+# enable metric server
+$ minikube addons enable metrics-server
+
+# instally pg operator
+$ kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.19/releases/cnpg-1.19.1.yaml
+
+# deploying database cluster
+$ kubectl apply -f kubernetes/qa-api-database-cluster.yaml
+
+# describe the DB secrets created automatically
+$ kubectl describe secret qa-api-database-cluster
+# describe the secret for automatic username default "app"
+$ kubectl describe secret qa-api-database-cluster-app
+
+# init database migrations and secrets/environment container injection
+$ cd flyway/ && minikube image build -t qa-api-database-migrations -f ./Dockerfile .
+
+# list images for database migrations
+$ minikube image list
+
+# start DB migrations
+$ kubectl apply -f kubernetes/qa-api-database-migration-job.yaml 
 
 # build the app images
 $ cd qa-api/ && minikube image build -t qa-api -f ./Dockerfile.k8s .
@@ -270,23 +291,19 @@ $ kubectl delete -f kubernetes/qa-api-deployment.yaml
 $ kubectl delete -f kubernetes/llm-api-deployment.yaml
 $ kubectl delete -f kubernetes/qa-ui-deployment.yaml
 
-# chech resources request
+# delete all pods 
+$ kubectl delete pods --all -A
+$ kubectl delete deploy --all -A
+$ kubectl delete all --all -A # all resources
+
+# check resources request
 $ kubectl top pod
-
-# enable metric server
-$ minikube addons enable metrics-server
-
-# instally pg operator
-$ kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.19/releases/cnpg-1.19.1.yaml
 
 # check add ons
 $ minikube addons list
 
 # list cnpg-system
 $ kubectl get all -n cnpg-system
-
-# deploying database cluster
-$ kubectl apply -f kubernetes/qa-api-database-cluster.yaml
 
 # list all clusters
 $ kubectl get cluster
@@ -299,20 +316,6 @@ $ kubectl apply -f kubernetes/qa-ui-deployment-hpa.yaml
 # check horizonal scaling
 $ kubectl get hpa
 
-# describe the DB secrets created automatically
-$ kubectl describe secret qa-api-database-cluster
-# describe the secret for automatic username default "app"
-$ kubectl describe secret qa-api-database-cluster-app
-
-# init database migrations and secrets/environment container injection
-$ cd flyway/ && minikube image build -t qa-api-database-migrations -f ./Dockerfile .
-
-# list images for database migrations
-$ minikube image list
-
-# start DB migrations
-$ kubectl apply -f kubernetes/qa-api-database-migration-job.yaml 
-
 # rebuild and reaapply changes to qa-api after migrations
 $ cd qa-api/ && minikube image build -t qa-api -f ./Dockerfile.k8s .
 $ kubectl apply -f kubernetes/qa-api-deployment.yaml
@@ -321,5 +324,7 @@ $ minikube service qa-api-service --url
 # e.g generated url http://127.0.0.1:52953
 $ minikube service qa-ui-service --url
 # e.g generated url http://127.0.0.1:52953
+
+
 
 ```

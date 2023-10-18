@@ -1,13 +1,20 @@
-import { createClient, load } from '../deps.js';
+import { connect, parseURL } from '../deps.js';
 
-const env = await load();
+const url = Deno.env.get('REDIS_URL')
+const parsed = parseURL(url)
 
-const redis = createClient({
-  url: env['REDIS_URL'], //* url for  docker compose config environment: redis://redis:6379
-  pingInterval: 1000,
+//* console.log('REDIS URL', parsed)
+
+const redis = await connect({
+  hostname: parsed?.hostname,
+  port: parsed?.port,
+  name: parsed?.name,
+  password: parsed?.password,
+  db: parsed?.db,
+  tls: parsed?.tls
 });
 
-await redis.connect();
+
 
 const cacheMethodCalls = (object, methodsToFlushCacheWith = []) => {
   const handler = {

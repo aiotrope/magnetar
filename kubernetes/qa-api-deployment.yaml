@@ -21,9 +21,8 @@ spec:
             - containerPort: 7777
           resources:
             requests: 
-              cpu: 200m
+              cpu: 100m
             limits: 
-              memory: "356Mi"
               cpu: 500m
           env:
             - name: PGPASS
@@ -33,6 +32,7 @@ spec:
                   key: pgpass
                   optional: false
 
-# The following configuration adds a resource request for 100m CPU units per container (0.1 CPU units) and limits the
-# resource usage to 200m CPU units per container (0.2 CPU units).
+
+# The following configuration adds a resource request for 200m CPU units per container (0.2 CPU units) and limits the
+# resource usage to 500m CPU units per container (0.5 CPU units).
 # modification essentially adds an environment variable called PGPASS to the application.

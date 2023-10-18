@@ -7,18 +7,9 @@ dist
 .DS_Store
 .vscode
 
-logs/
+logs
 *.log
 
 Dockerfile
 Dockerfile.prod
 .dockerignore
-docker-compose.prod.yml
-docker-compose.yml
-k6/
-
-example.*
-rest.http
-LICENSE
-
-kubernetes

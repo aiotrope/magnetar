@@ -15,24 +15,6 @@ const sql = postgres({
   database,
   username,
   password,
-});
+}); 
 
 export { sql };
-
-
-
-//* FOR DOCKCOMPOSE CONFIG. Uncomment/comment depending on environment usage
-
-//* import { postgres, load } from '../deps.js';
-//* const env = await load();
-//* const sql = postgres({}); // for w/o env. vars
-//* If using env. var 
-/* const sql = postgres({
-  host: env['POSTGRES_HOST'],
-  username: env['POSTGRES_USER'],
-  password: env['POSTGRES_PASSWORD'],
-  database: env['POSTGRES_DB'],
-  port: env['POSTGRES_PORT'],
-  max: 2,
-}); */
-//* export { sql };

@@ -1,6 +1,4 @@
 Dockerfile
 Dockerfile.prod
 .dockerignore
-.env
-.env.qa-api
 .gitignore
