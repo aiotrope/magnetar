@@ -9,7 +9,6 @@ const details = 'Java CS-3456 Course Section';
 const img =
   'https://craftypixels.com/placeholder-image/200x80/ff8c1a/ffffff&text=Java+CS-3456';
 const slug = 'java-cs-3456';
-const qa_url = import.meta.env.QA_API_BASE_URL
 ---
 
 <Layout title={`Questions & Answers | ${title}`}>
@@ -21,7 +20,7 @@ const qa_url = import.meta.env.QA_API_BASE_URL
       courseImg={img}
       courseSlug={slug}
     />
-    <Questions courseId={courseId} title={title} qa_url={qa_url} client:only={'svelte'} />
+    <Questions courseId={courseId} title={title} client:only={'svelte'} />
   </div>
 </Layout>
 

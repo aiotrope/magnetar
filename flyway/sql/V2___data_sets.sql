@@ -12,7 +12,6 @@ INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (1, 1, '
 INSERT INTO answers (course_id, question_id, user_uuid, details) VALUES (1, 1, '6a45ba57-b461-4a2c-a150-z1cfc136abbe', 'Placeholder answer Fortran 1');
 
 INSERT INTO question_votes (question_id, user_uuid) VALUES (1, '4a45ba57-b461-4a2c-a150-b8cfc136acce');
-INSERT INTO question_votes (question_id, user_uuid) VALUES (1, '6a45ba57-b462-4a2c-a150-b8cfc136accf');
 
 INSERT INTO answer_votes (answer_id, user_uuid) VALUES (1, '1a45ba57-b461-4a2c-a150-b8cfc136abde');
-INSERT INTO answer_votes (answer_id, user_uuid) VALUES (1, '0a45ba57-b551-4a2h-a150-b8cfc136abdd');
+

@@ -8,7 +8,12 @@ import voteRoutes from './routes/voteRoutes.js';
 
 const app = new Application();
 
-app.use(oakCors());
+app.use(
+  oakCors({
+    origin: /^.+localhost:(7800|3000)$/,
+    optionsSuccessStatus: 200,
+  })
+);
 
 app.use(courseRoutes.routes());
 app.use(courseRoutes.allowedMethods());

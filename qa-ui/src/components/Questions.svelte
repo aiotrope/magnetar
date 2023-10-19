@@ -9,181 +9,21 @@
     questionVotes,
     questionID,
   } from '../stores/stores.js';
+  import questionService from '../services/questionService.js';
+  import courseService from '../services/courseService.js';
+  import userService from '../services/userService.js';
+  import voteService from '../services/voteService.js';
 
-  export let courseId, title, qa_url;
+  let isLoading = true;
+
+  let inputQuestionData = { title: '', details: '' };
 
   let currentQuestions,
     currentUserUuid,
     currentQuestionVotes,
     currentQuestionID;
 
-  let isLoading = true;
-
-  let inputQuestionData = { title: '', details: '' };
-
-  /* import questionService from '../services/questionService.js';
-  import courseService from '../services/courseService.js';
-  import userService from '../services/userService.js';
-  import voteService from '../services/voteService.js';
- */
-
-  // API Calls
-  // ###########################################################################################################################################
-  const getAllQuestions = async () => {
-    const response = await fetch(`${qa_url}/questions`);
-
-    const jsonData = await response.json();
-
-    if (jsonData.length || jsonData !== undefined) {
-      localStorage.setItem('questions', JSON.stringify(jsonData));
-    }
-    return jsonData;
-  };
-
-  const createNewQuestion = async (
-    _course_id,
-    _user_uuid,
-    _title,
-    _details
-  ) => {
-    return await new Promise(async (resolve, reject) => {
-      setTimeout(async () => {
-        const payload = {
-          user_uuid: _user_uuid,
-          title: _title,
-          details: _details,
-        };
-
-        const options = {
-          method: 'POST',
-          body: JSON.stringify(payload),
-          headers: {
-            Accept: 'application/json',
-            'Content-type': 'application/json',
-          },
-        };
-        try {
-          const url = `${qa_url}/questions/${_course_id}`;
-
-          const response = await fetch(url, options);
-
-          if (!response.ok) {
-            throw new Error(
-              `${response.status} - ${response.statusText} - Cannot submit question!`
-            );
-          }
-
-          const jsonData = await response.json();
-
-          resolve(jsonData);
-        } catch (error) {
-          alert(error);
-          reject(error);
-        }
-      });
-    }, 2000);
-  };
-
-  const getUser = async () => {
-    const userQuestions = await fetch(`${qa_url}/questions`);
-
-    const userAnswers = await fetch(`${qa_url}/answers`);
-
-    const questionVotes = await fetch(`${qa_url}/votes/question`);
-
-    const answerVotes = await fetch(`${qa_url}/votes/answer`);
-
-    const uuid = await fetch(`${qa_url}/user/uuid`);
-
-    const jsonQuestions = await userQuestions.json();
-
-    const jsonAnswers = await userAnswers.json();
-
-    const jsonQuestionVotes = await questionVotes.json();
-
-    const jsonAnswerVotes = await answerVotes.json();
-
-    const jsonUuid = await uuid.json();
-
-    let user;
-    if (jsonQuestions?.length > 0 && jsonQuestions !== undefined) {
-      const userOnDbQ = jsonQuestions[0]?.user_uuid;
-      user = userOnDbQ;
-    } else if (jsonAnswers?.length > 0 && jsonAnswers !== undefined) {
-      const userOnDbA = jsonAnswers[0]?.user_uuid;
-      user = userOnDbA;
-    } else if (
-      jsonQuestionVotes?.length > 0 &&
-      jsonQuestionVotes !== undefined
-    ) {
-      const userOnDbQV = jsonQuestionVotes[0]?.user_uuid;
-      user = userOnDbQV;
-    } else if (jsonAnswerVotes?.length > 0 && jsonAnswerVotes !== undefined) {
-      const userOnDbAV = jsonAnswerVotes[0]?.user_uuid;
-      user = userOnDbAV;
-    } else {
-      user = jsonUuid?.uuid;
-    }
-
-    localStorage.setItem('userUuid', JSON.stringify(user));
-
-    return user;
-  };
-
-  const createQuestionVote = async (_questionId, _user_uuid) => {
-    const payload = {
-      user_uuid: _user_uuid,
-    };
-
-    const options = {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-    };
-
-    const url = `${qa_url}/vote/question?question_id=${_questionId}`;
-
-    const response = await fetch(url, options);
-
-    return await response.json();
-  };
-
-  const getQuestionVotes = async () => {
-    const response = await fetch(`${qa_url}/votes/question`);
-
-    const jsonData = await response.json();
-
-    if (jsonData.length || jsonData !== undefined) {
-      localStorage.setItem('questionVotes', JSON.stringify(jsonData));
-    }
-    return jsonData;
-  };
-
-  const updateQuestionVote = async (_questionId, _votes) => {
-    const payload = {
-      votes: _votes,
-    };
-
-    const options = {
-      method: 'PATCH',
-      body: JSON.stringify(payload),
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-    };
-  };
-
-  const formatTimestamp = (_dateData) => {
-    const today = new Date(_dateData);
-    const formatted = new Intl.DateTimeFormat('fi').format(today);
-    return formatted;
-  };
-
-  // ###########################################################################################################################################
+  export let courseId, title;
 
   onMount(async () => {
     await fetchers();
@@ -191,7 +31,7 @@
 
   const fetchers = async () => {
     const interval = setInterval(async () => {
-      const allQuestions = await getAllQuestions();
+      const allQuestions = await questionService.getAll();
 
       questions.set(allQuestions);
 
@@ -205,7 +45,7 @@
   };
 
   const onSubmit = async () => {
-    const createQuestion = await createNewQuestion(
+    const createQuestion = await questionService.create(
       courseId,
       $userUuid,
       inputQuestionData.title,
@@ -214,17 +54,19 @@
 
     $questions = [createQuestion, ...$questions];
 
-    const setUserId = await getUser();
+    const setUserId = await userService.getUser();
 
     userUuid.set(setUserId);
     inputQuestionData.title = '';
     inputQuestionData.details = '';
   };
 
-  $: filterQuestions = $questions.filter((e) => e.course_id === courseId);
+  $: filterQuestions = $questions.filter((e) => e?.course_id === courseId);
+
+
 
   $: userVotedQuestion = $questionVotes?.filter(
-    (e) => e?.question_id === $questionID && e?.user_uuid === $userUuid
+    (e) => e?.question_id === parseInt($questionID) && e?.user_uuid === $userUuid
   );
 
   $: userVotedQuestionLen = userVotedQuestion?.length;
@@ -232,25 +74,25 @@
   $: if (
     userVotedQuestionLen === 0 &&
     userVotedQuestionLen !== undefined &&
-    $questionID > 0
+    parseInt($questionID) > 0
   ) {
     (async () => {
-      const add = await createQuestionVote($questionID, $userUuid);
+      const add = await voteService.createQuestionVote(parseInt($questionID), $userUuid);
 
-      const setUserId = await getUser();
+      const setUserId = await userService.getUser();
       userUuid.set(setUserId);
 
-      const allQuestionVotes = await getQuestionVotes();
+      const allQuestionVotes = await voteService.getQuestionVotes();
       questionVotes.set(allQuestionVotes);
 
-      const update = await updateQuestionVote(
-        $questionID,
+      const update = await questionService.updateVote(
+        parseInt($questionID),
         userVotedQuestionLen
       );
-      if (update) {
-        const allQuestions = await getAllQuestions();
+      if (update && add) {
+        const allQuestions = await questionService.getAll();
         questions.set(allQuestions);
-        // window.location.reload()
+        // window.location.reload
       }
     })();
   }
@@ -287,7 +129,7 @@
 
   onDestroy(unsubscribeQuestionID);
 
-  // $: console.log('SAMPLE', $questionID);
+  $: console.log('SAMPLE', $questionID);
 </script>
 
 <div class="container mb-10">
@@ -351,7 +193,7 @@
                 class={`${
                   $questionVotes.filter(
                     (e) =>
-                      e.question_id === question?.id &&
+                      e?.question_id === question?.id &&
                       e?.user_uuid === $userUuid
                   )?.length < 1
                     ? 'bg-transparent hover:bg-amber-300 text-sky-600 px-3 border border-zinc-100 rounded'
@@ -359,16 +201,16 @@
                 }`}
                 disabled={$questionVotes.filter(
                   (e) =>
-                    e.question_id === question?.id && e?.user_uuid === $userUuid
+                    e?.question_id === question?.id && e?.user_uuid === $userUuid
                 )?.length > 0}
                 on:click={() =>
-                  questionID.update((val) => parseInt(question?.id) + val)}
+                  questionID.update((val) => question?.id)}
               >
                 <i
                   class={`${
                     $questionVotes.filter(
                       (e) =>
-                        e.question_id === question?.id &&
+                        e?.question_id === question?.id &&
                         e?.user_uuid === $userUuid
                     )?.length < 1
                       ? 'fa fa-thumbs-up text-sky-600 hover:text-red-400 text-lg'
@@ -379,13 +221,13 @@
                   class={`${
                     $questionVotes.filter(
                       (e) =>
-                        e.question_id === question?.id &&
+                        e?.question_id === question?.id &&
                         e?.user_uuid === $userUuid
                     )?.length < 1
                       ? 'hover:text-red-400'
                       : 'opacity-50 cursor-not-allowed'
                   }`}
-                  >{$questionVotes.filter((e) => e.question_id === question?.id)
+                  >{$questionVotes.filter((e) => e?.question_id === question?.id)
                     ?.length}</span
                 >
               </button>
@@ -395,7 +237,7 @@
               <small class="text-indigo-400">{question?.user_uuid}</small><br />
               <i class="fa fa-edit text-slate-400" />
               <small class="text-slate-400"
-                >{formatTimestamp(question?.timestamp)}</small
+                >{courseService.formatTimestamp(question?.timestamp)}</small
               >
             </div>
           </div>

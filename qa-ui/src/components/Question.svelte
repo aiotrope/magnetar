@@ -13,7 +13,17 @@
     answerID,
   } from '../stores/stores';
 
-  export let questionId, qa_url, llm_url;
+  import answerService from '../services/answerService';
+  import questionService from '../services/questionService';
+  import courseService from '../services/courseService.js';
+  import userService from '../services/userService.js';
+  import voteService from '../services/voteService.js';
+
+  export let questionId;
+
+  const limit = pLimit(3);
+
+  let processQueue = [];
 
   let currentAnswers,
     currentQuestions,
@@ -22,321 +32,9 @@
     currentAnswerVotes,
     currentAnswerID;
 
-  /* import answerService from '../services/answerService';
-  import questionService from '../services/questionService';
-  import courseService from '../services/courseService.js';
-  import userService from '../services/userService.js';
-  import voteService from '../services/voteService.js'; */
-
-  const limit = pLimit(3);
-
-  let processQueue = [];
-
   let inputAnswerData = { details: '' };
 
-  // API Calls
-  // ###########################################################################################################################################
-  const updatedAutomatedAnswer = async (_questionId, _withautomatedanswer) => {
-    const payload = {
-      withautomatedanswer: _withautomatedanswer,
-    };
-
-    const options = {
-      method: 'PATCH',
-      body: JSON.stringify(payload),
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-    };
-
-    const url = `${qa_url}/question/${_questionId}`;
-
-    const response = await fetch(url, options);
-
-    return await response.json();
-  };
-
-  const getAllQuestions = async () => {
-    const response = await fetch(`${qa_url}/questions`);
-
-    const jsonData = await response.json();
-
-    if (jsonData.length || jsonData !== undefined) {
-      localStorage.setItem('questions', JSON.stringify(jsonData));
-    }
-    return jsonData;
-  };
-
-  const getAllAnswers = async () => {
-    const response = await fetch(`${qa_url}/answers`);
-
-    const jsonData = await response.json();
-
-    if (jsonData.length || jsonData !== undefined) {
-      localStorage.setItem('answers', JSON.stringify(jsonData));
-    }
-    return jsonData;
-  };
-
-  const postLLM = async (_question) => {
-    return await new Promise(async (resolve, reject) => {
-      setTimeout(async () => {
-        const payload = {
-          question: _question,
-        };
-
-        const options = {
-          method: 'POST',
-          mode: 'cors',
-          body: JSON.stringify(payload),
-          headers: {
-            Accept: 'application/json',
-            'Content-type': 'application/json',
-          },
-        };
-        try {
-          const url = llm_url;
-
-          const response = await fetch(url, options);
-
-          const jsonData = await response.json();
-
-          const result = await jsonData?.generated_text;
-
-          const replaceString = result.replace(_question, '');
-
-          resolve(replaceString.trim());
-
-          return result;
-        } catch (error) {
-          reject(error);
-        }
-      });
-    }, 100);
-  };
-
-  const createNewAnswer = async (
-    _courseId,
-    _questionId,
-    _user_uuid,
-    _details
-  ) => {
-    const payload = {
-      user_uuid: _user_uuid,
-      details: _details,
-    };
-
-    const options = {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-    };
-
-    const url = `${qa_url}/answers/${_courseId}?question_id=${_questionId}`;
-
-    const response = await fetch(url, options);
-
-    return await response.json();
-  };
-
-  const getUser = async () => {
-    const userQuestions = await fetch(`${qa_url}/questions`);
-
-    const userAnswers = await fetch(`${qa_url}/answers`);
-
-    const questionVotes = await fetch(`${qa_url}/votes/question`);
-
-    const answerVotes = await fetch(`${qa_url}/votes/answer`);
-
-    const uuid = await fetch(`${qa_url}/user/uuid`);
-
-    const jsonQuestions = await userQuestions.json();
-
-    const jsonAnswers = await userAnswers.json();
-
-    const jsonQuestionVotes = await questionVotes.json();
-
-    const jsonAnswerVotes = await answerVotes.json();
-
-    const jsonUuid = await uuid.json();
-
-    let user;
-    if (jsonQuestions?.length > 0 && jsonQuestions !== undefined) {
-      const userOnDbQ = jsonQuestions[0]?.user_uuid;
-      user = userOnDbQ;
-    } else if (jsonAnswers?.length > 0 && jsonAnswers !== undefined) {
-      const userOnDbA = jsonAnswers[0]?.user_uuid;
-      user = userOnDbA;
-    } else if (
-      jsonQuestionVotes?.length > 0 &&
-      jsonQuestionVotes !== undefined
-    ) {
-      const userOnDbQV = jsonQuestionVotes[0]?.user_uuid;
-      user = userOnDbQV;
-    } else if (jsonAnswerVotes?.length > 0 && jsonAnswerVotes !== undefined) {
-      const userOnDbAV = jsonAnswerVotes[0]?.user_uuid;
-      user = userOnDbAV;
-    } else {
-      user = jsonUuid?.uuid;
-    }
-
-    localStorage.setItem('userUuid', JSON.stringify(user));
-
-    return user;
-  };
-
-  const createQuestionVote = async (_questionId, _user_uuid) => {
-    const payload = {
-      user_uuid: _user_uuid,
-    };
-
-    const options = {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-    };
-
-    const url = `${qa_url}/vote/question?question_id=${_questionId}`;
-
-    const response = await fetch(url, options);
-
-    return await response.json();
-  };
-
-  const updateQuestionVote = async (_questionId, _votes) => {
-    const payload = {
-      votes: _votes,
-    };
-
-    const options = {
-      method: 'PATCH',
-      body: JSON.stringify(payload),
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-    };
-
-    const url = `${qa_url}/question/votes/${_questionId}`;
-
-    const response = await fetch(url, options);
-
-    return await response.json();
-  };
-
-  const getQuestionVotes = async () => {
-    const response = await fetch(`${qa_url}/votes/question`);
-
-    const jsonData = await response.json();
-
-    if (jsonData.length || jsonData !== undefined) {
-      localStorage.setItem('questionVotes', JSON.stringify(jsonData));
-    }
-    return jsonData;
-  };
-
-  const getAnswerVotes = async () => {
-    const response = await fetch(`${qa_url}/votes/answer`);
-
-    const jsonData = await response.json();
-
-    if (jsonData.length || jsonData !== undefined) {
-      localStorage.setItem('answerVotes', JSON.stringify(jsonData));
-    }
-    return jsonData;
-  };
-
-  const createAnswerVote = async (_answerId, _user_uuid) => {
-    const payload = {
-      user_uuid: _user_uuid,
-    };
-
-    const options = {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-    };
-
-    const url = `${qa_url}/vote/answer?answer_id=${_answerId}`;
-
-    const response = await fetch(url, options);
-
-    return await response.json();
-  };
-
-  const updateAnswerVote = async (_answerId, _votes) => {
-    const payload = {
-      votes: _votes,
-    };
-
-    const options = {
-      method: 'PATCH',
-      body: JSON.stringify(payload),
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-    };
-
-    const url = `${qa_url}/answer/votes/${_answerId}`;
-
-    const response = await fetch(url, options);
-
-    return await response.json();
-  };
-
-  const formatTimestamp = (_dateData) => {
-    const today = new Date(_dateData);
-    const formatted = new Intl.DateTimeFormat('fi').format(today);
-    return formatted;
-  };
-
-  // ###########################################################################################################################################
-
-  const startLLM = async () => {
-    const promise1 = await postLLM($questions[questionIndex]?.details);
-    const promise2 = await postLLM($questions[questionIndex]?.details);
-    const promise3 = await postLLM($questions[questionIndex]?.details);
-
-    processQueue.push(promise1);
-    processQueue.push(promise2);
-    processQueue.push(promise3);
-
-    let promises = processQueue.map((llm) => {
-      return limit(
-        async () =>
-          await createNewAnswer(
-            $questions[questionIndex]?.course_id,
-            questionId,
-            'automated',
-            llm
-          )
-      );
-    });
-
-    const result = await Promise.allSettled(promises);
-
-    const allAnswers = await getAllAnswers();
-
-    answers.set(allAnswers);
-
-    limit.clearQueue();
-
-    processQueue.length = 0;
-
-    return result;
-  };
-
+  
   $: questionIndex = $questions.map((e) => e.id).indexOf(parseInt(questionId));
 
   $: courseFinder = $courses.find(
@@ -349,17 +47,6 @@
 
   $: autoAnswer = filterAnswers.filter((e) => e.user_uuid === 'automated');
 
-  const updateQuestion = async () => {
-    const updated = await updatedAutomatedAnswer(
-      $questions[questionIndex]?.id,
-      true
-    );
-
-    const allQuestions = await getAllQuestions();
-
-    questions.set(allQuestions);
-  };
-
   $: if ($questions[questionIndex]?.withautomatedanswer === false) {
     (async () => await updateQuestion())();
   }
@@ -371,10 +58,61 @@
     (async () => await startLLM())();
   }
 
+  const updateQuestion = async () => {
+    const updated = await questionService.updatedAutomatedAnswer(
+      $questions[questionIndex]?.id,
+      true
+    );
+
+    const allQuestions = await questionService.getAll();
+
+    questions.set(allQuestions);
+  };
+
+  const startLLM = async () => {
+    const promise1 = await questionService.postLLM(
+      $questions[questionIndex]?.details
+    );
+    const promise2 = await questionService.postLLM(
+      $questions[questionIndex]?.details
+    );
+    const promise3 = await questionService.postLLM(
+      $questions[questionIndex]?.details
+    );
+
+    processQueue.push(promise1);
+    processQueue.push(promise2);
+    processQueue.push(promise3);
+
+    let promises = processQueue.map((llm) => {
+      return limit(
+        async () =>
+          await answerService.create(
+            $questions[questionIndex]?.course_id,
+            parseInt(questionId),
+            'automated',
+            llm
+          )
+      );
+    });
+
+    const result = await Promise.allSettled(promises);
+
+    const allAnswers = await answerService.getAll();
+
+    answers.set(allAnswers);
+
+    limit.clearQueue();
+
+    processQueue.length = 0;
+
+    return result;
+  };
+
   const onSubmit = async () => {
-    const createAnswer = await createNewAnswer(
+    const createAnswer = await answerService.create(
       $questions[questionIndex]?.course_id,
-      questionId,
+      parseInt(questionId),
       $userUuid,
       inputAnswerData.details
     );
@@ -383,7 +121,7 @@
 
     $answers = [createAnswer, ...$answers];
 
-    const setUserId = await getUser();
+    const setUserId = await userService.getUser();
 
     userUuid.set(setUserId);
     inputAnswerData.details = '';
@@ -397,20 +135,22 @@
 
   const addQuestionVote = async () => {
     if (userVotedQuestionLen === 0) {
-      const add = await createQuestionVote(parseInt(questionId), $userUuid);
+      const add = await voteService.createQuestionVote(
+        parseInt(questionId),
+        $userUuid
+      );
 
-      const update = await updateQuestionVote(
+      const update = await questionService.updateVote(
         parseInt(questionId),
         userVotedQuestionLen
       );
       if (add) {
-        const setUserId = getUser();
-        const allQuestionVotes = await getQuestionVotes();
-        const allQuestions = await getAllQuestions();
+        const setUserId = await userService.getUser();
+        const allQuestionVotes = await voteService.getQuestionVotes();
+        const allQuestions = await questionService.getAll();
         userUuid.set(setUserId);
         questionVotes.set(allQuestionVotes);
         questions.set(allQuestions);
-        // window.location.reload();
       }
     } else {
       alert(`${$userUuid} user voted question`);
@@ -426,25 +166,25 @@
   $: if (
     userVotedAnswerLen === 0 &&
     userVotedAnswerLen !== undefined &&
-    $answerID > 0
+    parseInt($answerID) > 0
   ) {
     (async () => {
-      const add = await createAnswerVote(parseInt($answerID), $userUuid);
+      const add = await voteService.createAnswerVote(parseInt($answerID), $userUuid);
 
-      const setUserId = await getUser();
+      const setUserId = await userService.getUser();
       userUuid.set(setUserId);
 
-      const allAnswerVotes = await getAnswerVotes();
+      const allAnswerVotes = await voteService.getAnswerVotes();
       answerVotes.set(allAnswerVotes);
 
-      const update = await updateAnswerVote(
+      const update = await answerService.updateVote(
         parseInt($answerID),
         userVotedAnswerLen
       );
       if (update) {
-        const allAnswers = await getAllAnswers();
+        const allAnswers = await answerService.getAll();
         answers.set(allAnswers);
-        window.location.reload();
+        // window.location.reload(); //
       }
     })();
   }
@@ -562,7 +302,9 @@
           ><br />
           <i class="fa fa-edit text-slate-400" />
           <small class="text-slate-400"
-            >{formatTimestamp($questions[questionIndex]?.timestamp)}</small
+            >{courseService.formatTimestamp(
+              $questions[questionIndex]?.timestamp
+            )}</small
           >
         </div>
       </div>
@@ -611,7 +353,7 @@
               <small class="text-emerald-400">{answer?.user_uuid}</small><br />
               <i class="fa fa-edit text-slate-400" />
               <small class="text-slate-400"
-                >{formatTimestamp(answer?.timestamp)}</small
+                >{courseService.formatTimestamp(answer?.timestamp)}</small
               >
             </div>
             <div class="pl-20 pt-5">
@@ -630,7 +372,7 @@
                     e?.answer_id === answer?.id && e?.user_uuid === $userUuid
                 )?.length > 0}
                 on:click={() =>
-                  answerID.update((val) => parseInt(answer?.id) + val)}
+                  answerID.update((val) => answer?.id)}
               >
                 <i
                   class={`${
