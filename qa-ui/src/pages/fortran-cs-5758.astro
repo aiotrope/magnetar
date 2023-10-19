@@ -9,6 +9,7 @@ const details = 'Fortran CS-5758 Course Section';
 const img =
   'https://craftypixels.com/placeholder-image/200x80/703594/FFFFFF&text=Fortran+CS-5758';
 const slug = 'fortran-cs-5758';
+const qa_url = import.meta.env.QA_API_BASE_URL
 ---
 
 <Layout title={`Questions & Answers | ${title}`}>
@@ -20,6 +21,6 @@ const slug = 'fortran-cs-5758';
       courseImg={img}
       courseSlug={slug}
     />
-    <Questions courseId={courseId} title={title} client:only={'svelte'} />
+    <Questions courseId={courseId} title={title} qa_url={qa_url} client:only={'svelte'} />
   </div>
 </Layout>
