@@ -19,6 +19,11 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 3000
+          env:
+            - name: VITE_QA_API_BASE_URL
+              value: "http://127.0.0.1:7800/api"
+            - name: VITE_LLM_API_BASE_URL
+              value: "http://127.0.0.1:7800/llm/"
           resources:
             requests: 
               cpu: 100m

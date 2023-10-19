@@ -238,13 +238,16 @@ $ kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-
 # deploying database cluster
 $ kubectl apply -f kubernetes/qa-api-database-cluster.yaml
 
+# list all clusters
+$ kubectl get cluster
+
 # describe the DB secrets created automatically
 $ kubectl describe secret qa-api-database-cluster
 # describe the secret for automatic username default "app"
 $ kubectl describe secret qa-api-database-cluster-app
 
 # init database migrations and secrets/environment container injection
-$ cd flyway/ && minikube image build -t qa-api-database-migrations -f ./Dockerfile .
+$ cd flyway/ && minikube image build -t qa-api-database-migrations -f ./Dockerfile.k8s .
 
 # list images for database migrations
 $ minikube image list
@@ -256,11 +259,13 @@ $ kubectl apply -f kubernetes/qa-api-database-migration-job.yaml
 $ cd qa-api/ && minikube image build -t qa-api -f ./Dockerfile.k8s .
 $ cd qa-ui/ && minikube image build -t qa-ui -f ./Dockerfile.k8s .
 $ cd llm-api/ && minikube image build -t llm-api -f ./Dockerfile.k8s .
+$ cd reverse-proxy/ && minikube image build -t reverse-proxy -f ./Dockerfile.k8s .
 
 # deploying apps
 kubectl apply -f kubernetes/qa-api-deployment.yaml
 kubectl apply -f kubernetes/qa-ui-deployment.yaml
 kubectl apply -f kubernetes/llm-api-deployment.yaml
+kubectl apply -f kubernetes/reverse-proxy-deployment.yaml
 
 # check current deployment
 $ kubectl get deployments
@@ -276,6 +281,7 @@ $ kubectl logs <pod_name>
 $ kubectl apply -f kubernetes/qa-api-service.yaml
 $ kubectl apply -f kubernetes/llm-api-service.yaml
 $ kubectl apply -f kubernetes/qa-ui-service.yaml
+$ kubectl apply -f kubernetes/reverse-proxy-service.yaml
 
 # list services
 $ kubectl get services
@@ -305,9 +311,6 @@ $ minikube addons list
 # list cnpg-system
 $ kubectl get all -n cnpg-system
 
-# list all clusters
-$ kubectl get cluster
-
 # adding horizontal scale congiguration
 $ kubectl apply -f kubernetes/qa-api-deployment-hpa.yaml 
 $ kubectl apply -f kubernetes/llm-api-deployment-hpa.yaml 
@@ -325,6 +328,27 @@ $ minikube service qa-api-service --url
 $ minikube service qa-ui-service --url
 # e.g generated url http://127.0.0.1:52953
 
+```
+## Kubernetes Secrets
+```bash
+# Store the string 'redisurl' in the file 'redisurl.txt'
+echo -n 'your-redis-lab-url-string' > ./kubernetes/redisurl.txt
+
+# create secret with redisurl as key
+kubectl create secret generic redis-credentials --from-file=redisurl=./kubernetes/redisurl.txt
+# output: secret/redis-credentials created
+
+# verify secrets
+kubectl get secrets
+
+# describe secrets app-credentials
+kubectl describe secret redis-credentials
+
+# deleting specific secret
+kubectl delete secret redis-credentials
+
+# secret usage as environment variable
+# create a pod definition manifest
 
 
 ```

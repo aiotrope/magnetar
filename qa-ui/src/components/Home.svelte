@@ -25,6 +25,8 @@
     currentQuestionVotes,
     currentAnswerVotes;
 
+  export let sampleENV
+
   let isLoading = true;
 
   onMount(async () => {
@@ -132,8 +134,10 @@
   onDestroy(unsubscribeQuestionVotes);
 
   onDestroy(unsubscribeAnswerVotes);
+
 </script>
 
+<p>URI: {sampleENV}</p>
 <div class="container mt-3">
   {#if $courses?.length > 0}
     <h1 class="text-2xl font-bold leading-7 text-gray-700 mb-2">Courses</h1>

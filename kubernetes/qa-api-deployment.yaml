@@ -31,6 +31,11 @@ spec:
                   name: qa-api-database-cluster-app
                   key: pgpass
                   optional: false
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: redis-credentials
+                  key: redisurl
 
 
 # The following configuration adds a resource request for 200m CPU units per container (0.2 CPU units) and limits the

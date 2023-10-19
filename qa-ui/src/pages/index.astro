@@ -1,8 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Home from '../components/Home.svelte';
+const sampleENV = import.meta.env.LLM_API_BASE_URL
 ---
 
 <Layout>
-  <Home client:only={'svelte'} />
+  <Home sampleENV={sampleENV} client:only={'svelte'} />
 </Layout>
