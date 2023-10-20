@@ -15,6 +15,7 @@
   import questionService from '../services/questionService.js';
   import answerService from '../services/answerService.js';
   import voteService from '../services/voteService.js'; */
+  import courseService from '../services/courseService.js';
 
   import Loader from './Loader.svelte';
 
@@ -31,7 +32,7 @@
 
   //* ########################################################################################################################################################################
   const getAllCourses = async () => {
-  const response = await fetch(`${qa_url}/courses`);
+  const response = await courseService.getAll();
 
   const jsonData = await response.json();
 

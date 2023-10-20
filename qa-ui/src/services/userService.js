@@ -1,4 +1,5 @@
-const qa_url = 'http://127.0.0.1:7800/api';
+// const qa_url = 'http://127.0.0.1:7800/api';
+export const qa_url = import.meta.env.QA_URL;
 
 const getUser = async () => {
   const userQuestions = await fetch(`${qa_url}/questions`);

@@ -343,6 +343,7 @@ $ kubectl delete -f kubernetes/qa-ui-deployment.yaml
 $ kubectl delete pods --all -A
 $ kubectl delete deploy --all -A
 $ kubectl delete all --all -A # all resources
+$ minikube delete
 
 # check resources request
 $ kubectl top pod

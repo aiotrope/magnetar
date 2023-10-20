@@ -1,7 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Home from '../components/Home.svelte';
-let qa_url = import.meta.env.QA_URL;
+
+import { qa_url } from '../services/courseService';
+// let qa_url = import.meta.env.QA_URL;
+// let llm_url = import.meta.env.LLM_URL;
 ---
 
 <Layout>

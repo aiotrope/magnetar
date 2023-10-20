@@ -1,5 +1,5 @@
-
-const qa_url = 'http://127.0.0.1:7800/api';
+// const qa_url = 'http://127.0.0.1:7800/api';
+export const qa_url = import.meta.env.QA_URL;
 
 const createQuestionVote = async (questionId, user_uuid) => {
   const payload = {
@@ -15,7 +15,7 @@ const createQuestionVote = async (questionId, user_uuid) => {
     },
   };
 
-  const url = `${qa_url}/vote/question?question_id=${questionId}`; 
+  const url = `${qa_url}/vote/question?question_id=${questionId}`;
 
   const response = await fetch(url, options);
 
@@ -23,7 +23,7 @@ const createQuestionVote = async (questionId, user_uuid) => {
 };
 
 const getQuestionVotes = async () => {
-  const response = await fetch(`${qa_url}/votes/question`); 
+  const response = await fetch(`${qa_url}/votes/question`);
 
   const jsonData = await response.json();
 
@@ -47,7 +47,7 @@ const createAnswerVote = async (answerId, user_uuid) => {
     },
   };
 
-  const url = `${qa_url}/vote/answer?answer_id=${answerId}`; 
+  const url = `${qa_url}/vote/answer?answer_id=${answerId}`;
 
   const response = await fetch(url, options);
 
@@ -55,7 +55,7 @@ const createAnswerVote = async (answerId, user_uuid) => {
 };
 
 const getAnswerVotes = async () => {
-  const response = await fetch(`${qa_url}/votes/answer`); 
+  const response = await fetch(`${qa_url}/votes/answer`);
 
   const jsonData = await response.json();
 

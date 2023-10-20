@@ -1,6 +1,9 @@
-const qa_url = 'http://127.0.0.1:7800/api';
+// const qa_url = 'http://127.0.0.1:7800/api';
 
-const llm_url = 'http://127.0.0.1:7800/llm/';
+export const qa_url = import.meta.env.QA_URL;
+export const llm_url = import.meta.env.LLM_URL;
+
+// const llm_url = 'http://127.0.0.1:7800/llm/';
 
 const create = async (course_id, user_uuid, title, details) => {
   return await new Promise(async (resolve, reject) => {
