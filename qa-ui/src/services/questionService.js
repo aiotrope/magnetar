@@ -1,3 +1,7 @@
+const qa_url = 'http://127.0.0.1:7800/api';
+
+const llm_url = 'http://127.0.0.1:7800/llm/';
+
 const create = async (course_id, user_uuid, title, details) => {
   return await new Promise(async (resolve, reject) => {
     setTimeout(async () => {
@@ -16,7 +20,7 @@ const create = async (course_id, user_uuid, title, details) => {
         },
       };
       try {
-        const url = `/api/questions/${course_id}`;
+        const url = `${qa_url}/questions/${course_id}`;
 
         const response = await fetch(url, options);
 
@@ -38,7 +42,7 @@ const create = async (course_id, user_uuid, title, details) => {
 };
 
 const getAll = async () => {
-  const response = await fetch('/api/questions');
+  const response = await fetch(`${qa_url}/questions`);
 
   const jsonData = await response.json();
 
@@ -64,7 +68,7 @@ const postLLM = async (question) => {
         },
       };
       try {
-        const url = '/llm/';
+        const url = llm_url;
 
         const response = await fetch(url, options);
 
@@ -98,7 +102,7 @@ const updatedAutomatedAnswer = async (questionId, withautomatedanswer) => {
     },
   };
 
-  const url = `/api/question/${questionId}`;
+  const url = `${qa_url}/question/${questionId}`;
 
   const response = await fetch(url, options);
 
@@ -119,7 +123,7 @@ const updateVote = async (questionId, votes) => {
     },
   };
 
-  const url = `/api/question/votes/${questionId}`;
+  const url = `${qa_url}/question/votes/${questionId}`;
 
   const response = await fetch(url, options);
 

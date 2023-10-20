@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
         - name: qa-api-database-migrations
-          image: qa-api-database-migrations:latest
+          image: aiotrope/qa-api-database-migrations:latest
           imagePullPolicy: Never
           env:
             - name: FLYWAY_USER

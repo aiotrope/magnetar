@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: llm-api
-          image: llm-api:latest
+          image: aiotrope/llm-api:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 7000

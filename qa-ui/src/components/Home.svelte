@@ -10,13 +10,15 @@
     answerVotes,
   } from '../stores/stores.js';
 
-  import courseService from '../services/courseService.js';
+  /* import courseService from '../services/courseService.js';
   import userService from '../services/userService.js';
   import questionService from '../services/questionService.js';
   import answerService from '../services/answerService.js';
-  import voteService from '../services/voteService.js';
+  import voteService from '../services/voteService.js'; */
 
   import Loader from './Loader.svelte';
+
+  export let qa_url;
 
   let currentCourses,
     currentUserUuid,
@@ -26,7 +28,109 @@
     currentAnswerVotes;
 
   let isLoading = true;
-  
+
+  //* ########################################################################################################################################################################
+  const getAllCourses = async () => {
+  const response = await fetch(`${qa_url}/courses`);
+
+  const jsonData = await response.json();
+
+  if (jsonData.length > 0 || jsonData !== undefined) {
+    localStorage.setItem('courses', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
+const getUser = async () => {
+  const userQuestions = await fetch(`${qa_url}/questions`);
+
+  const userAnswers = await fetch(`${qa_url}/answers`);
+
+  const questionVotes = await fetch(`${qa_url}/votes/question`);
+
+  const answerVotes = await fetch(`${qa_url}/votes/answer`);
+
+  const uuid = await fetch(`${qa_url}/user/uuid`);
+
+  const jsonQuestions = await userQuestions.json();
+
+  const jsonAnswers = await userAnswers.json();
+
+  const jsonQuestionVotes = await questionVotes.json();
+
+  const jsonAnswerVotes = await answerVotes.json();
+
+  const jsonUuid = await uuid.json();
+
+  let user;
+  if (jsonQuestions?.length > 0 && jsonQuestions !== undefined) {
+    const userOnDbQ = jsonQuestions[0]?.user_uuid;
+    user = userOnDbQ;
+  } else if (jsonAnswers?.length > 0 && jsonAnswers !== undefined) {
+    const userOnDbA = jsonAnswers[0]?.user_uuid;
+    user = userOnDbA;
+  } else if (jsonQuestionVotes?.length > 0 && jsonQuestionVotes !== undefined) {
+    const userOnDbQV = jsonQuestionVotes[0]?.user_uuid;
+    user = userOnDbQV;
+  } else if (jsonAnswerVotes?.length > 0 && jsonAnswerVotes !== undefined) {
+    const userOnDbAV = jsonAnswerVotes[0]?.user_uuid;
+    user = userOnDbAV;
+  } else {
+    user = jsonUuid?.uuid;
+  }
+
+  localStorage.setItem('userUuid', JSON.stringify(user));
+
+  return user;
+};
+
+const getAllQuestions = async () => {
+  const response = await fetch(`${qa_url}/questions`);
+
+  const jsonData = await response.json();
+
+  if (jsonData.length || jsonData !== undefined) {
+    localStorage.setItem('questions', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
+const getAllAnswers = async () => {
+  const response = await fetch(`${qa_url}/answers`);
+
+  const jsonData = await response.json();
+
+  if (jsonData.length || jsonData !== undefined) {
+    localStorage.setItem('answers', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
+const getQuestionVotes = async () => {
+  const response = await fetch(`${qa_url}/votes/question`); 
+
+  const jsonData = await response.json();
+
+  if (jsonData.length || jsonData !== undefined) {
+    localStorage.setItem('questionVotes', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
+const getAnswerVotes = async () => {
+  const response = await fetch(`${qa_url}/votes/answer`); 
+
+  const jsonData = await response.json();
+
+  if (jsonData.length || jsonData !== undefined) {
+    localStorage.setItem('answerVotes', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
+
+
+  //* ########################################################################################################################################################################
 
   onMount(async () => {
     await fetchers();
@@ -34,17 +138,17 @@
 
   const fetchers = async () => {
     const interval = setInterval(async () => {
-      const allCourses = await courseService.getAll();
+      const allCourses = await  getAllCourses();
 
-      const setUserId = await userService.getUser();
+      const setUserId = await getUser();
 
-      const allQuestions = await questionService.getAll();
+      const allQuestions = await getAllQuestions();
 
-      const allAnswers = await answerService.getAll();
+      const allAnswers = await getAllAnswers();
 
-      const allQuestionVotes = await voteService.getQuestionVotes();
+      const allQuestionVotes = await getQuestionVotes();
 
-      const allAnswerVotes = await voteService.getAnswerVotes();
+      const allAnswerVotes = await getAnswerVotes();
 
       courses.set(allCourses);
 
@@ -133,7 +237,6 @@
   onDestroy(unsubscribeQuestionVotes);
 
   onDestroy(unsubscribeAnswerVotes);
-
 </script>
 
 <div class="container mt-3">

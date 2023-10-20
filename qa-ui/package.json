@@ -12,7 +12,6 @@
   "dependencies": {
     "@astrojs/svelte": "^4.0.2",
     "@astrojs/tailwind": "^5.0.0",
-    "@tanstack/svelte-query": "^5.0.0",
     "astro": "^3.2.0",
     "dotenv": "^16.3.1",
     "marked": "^9.1.0",

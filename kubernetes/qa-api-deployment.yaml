@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: qa-api
-          image: qa-api:latest
+          image: aiotrope/qa-api:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 7777

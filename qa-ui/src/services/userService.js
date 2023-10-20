@@ -1,13 +1,15 @@
+const qa_url = 'http://127.0.0.1:7800/api';
+
 const getUser = async () => {
-  const userQuestions = await fetch('/api/questions'); 
+  const userQuestions = await fetch(`${qa_url}/questions`);
 
-  const userAnswers = await fetch('/api/answers'); 
+  const userAnswers = await fetch(`${qa_url}/answers`);
 
-  const questionVotes = await fetch('/api/votes/question'); 
+  const questionVotes = await fetch(`${qa_url}/votes/question`);
 
-  const answerVotes = await fetch('/api/votes/answer'); 
+  const answerVotes = await fetch(`${qa_url}/votes/answer`);
 
-  const uuid = await fetch('/api/user/uuid'); 
+  const uuid = await fetch(`${qa_url}/user/uuid`);
 
   const jsonQuestions = await userQuestions.json();
 

@@ -1,3 +1,5 @@
+const qa_url = 'http://127.0.0.1:7800/api'
+
 const create = async (courseId, questionId, user_uuid, details) => {
   const payload = {
     user_uuid: user_uuid,
@@ -13,7 +15,7 @@ const create = async (courseId, questionId, user_uuid, details) => {
     },
   };
 
-  const url = `/api/answers/${courseId}?question_id=${questionId}`;
+  const url = `${qa_url}/answers/${courseId}?question_id=${questionId}`;
 
   const response = await fetch(url, options);
 
@@ -21,7 +23,7 @@ const create = async (courseId, questionId, user_uuid, details) => {
 };
 
 const getAll = async () => {
-  const response = await fetch('/api/answers');
+  const response = await fetch(`${qa_url}/answers`);
 
   const jsonData = await response.json();
 
@@ -45,7 +47,7 @@ const updateVote = async (answerId, votes) => {
     },
   };
 
-  const url = `/api/answer/votes/${answerId}`;
+  const url = `${qa_url}/answer/votes/${answerId}`;
 
   const response = await fetch(url, options);
 

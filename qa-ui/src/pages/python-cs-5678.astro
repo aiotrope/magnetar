@@ -3,12 +3,13 @@ import Layout from '../layouts/Layout.astro';
 import Course from '../components/Course.astro';
 import Questions from '../components/Questions.svelte';
 
-const title = "Python CS-5678"
+const title = 'Python CS-5678';
 const courseId = 4;
-const details = 'Python CS-5678 Course Section'
+const details = 'Python CS-5678 Course Section';
 const img =
- 'https://craftypixels.com/placeholder-image/200x80/0099cc/ffffff&text=Python+CS-5678'
+  'https://craftypixels.com/placeholder-image/200x80/0099cc/ffffff&text=Python+CS-5678';
 const slug = 'python-cs-5678';
+let qa_url = import.meta.env.QA_URL;
 ---
 
 <Layout title={`Questions & Answers | ${title}`}>
@@ -20,6 +21,11 @@ const slug = 'python-cs-5678';
       courseImg={img}
       courseSlug={slug}
     />
-    <Questions courseId={courseId} title={title} client:only={'svelte'} />
+    <Questions
+      courseId={courseId}
+      title={title}
+      qa_url={qa_url}
+      client:only={'svelte'}
+    />
   </div>
 </Layout>

@@ -13,13 +13,13 @@
     answerID,
   } from '../stores/stores';
 
-  import answerService from '../services/answerService';
+  /* import answerService from '../services/answerService';
   import questionService from '../services/questionService';
   import courseService from '../services/courseService.js';
   import userService from '../services/userService.js';
   import voteService from '../services/voteService.js';
-
-  export let questionId;
+ */
+  export let questionId, qa_url, llm_url;
 
   const limit = pLimit(3);
 
@@ -33,6 +33,269 @@
     currentAnswerID;
 
   let inputAnswerData = { details: '' };
+
+  //* ########################################################################################################################################################################
+  const updatedAutomatedAnswer = async (_questionId, _withautomatedanswer) => {
+  const payload = {
+    withautomatedanswer: _withautomatedanswer,
+  };
+
+  const options = {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${qa_url}/question/${_questionId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const getAllQuestions = async () => {
+  const response = await fetch(`${qa_url}/questions`);
+
+  const jsonData = await response.json();
+
+  if (jsonData.length || jsonData !== undefined) {
+    localStorage.setItem('questions', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
+const postLLM = async (_question) => {
+  return await new Promise(async (resolve, reject) => {
+    setTimeout(async () => {
+      const payload = {
+        question: _question,
+      };
+
+      const options = {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          Accept: 'application/json',
+          'Content-type': 'application/json',
+        },
+      };
+      try {
+        const url = llm_url;
+
+        const response = await fetch(url, options);
+
+        const jsonData = await response.json();
+
+        const result = await jsonData?.generated_text;
+
+        const replaceString = result.replace(_question, '');
+
+        resolve(replaceString.trim());
+
+        return result;
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }, 100);
+};
+
+const createNewAnswer = async (_courseId, _questionId, _user_uuid, _details) => {
+  const payload = {
+    user_uuid: _user_uuid,
+    details: _details,
+  };
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${qa_url}/answers/${_courseId}?question_id=${_questionId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const getAllAnswers = async () => {
+  const response = await fetch(`${qa_url}/answers`);
+
+  const jsonData = await response.json();
+
+  if (jsonData.length || jsonData !== undefined) {
+    localStorage.setItem('answers', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
+const getUser = async () => {
+  const userQuestions = await fetch(`${qa_url}/questions`);
+
+  const userAnswers = await fetch(`${qa_url}/answers`);
+
+  const questionVotes = await fetch(`${qa_url}/votes/question`);
+
+  const answerVotes = await fetch(`${qa_url}/votes/answer`);
+
+  const uuid = await fetch(`${qa_url}/user/uuid`);
+
+  const jsonQuestions = await userQuestions.json();
+
+  const jsonAnswers = await userAnswers.json();
+
+  const jsonQuestionVotes = await questionVotes.json();
+
+  const jsonAnswerVotes = await answerVotes.json();
+
+  const jsonUuid = await uuid.json();
+
+  let user;
+  if (jsonQuestions?.length > 0 && jsonQuestions !== undefined) {
+    const userOnDbQ = jsonQuestions[0]?.user_uuid;
+    user = userOnDbQ;
+  } else if (jsonAnswers?.length > 0 && jsonAnswers !== undefined) {
+    const userOnDbA = jsonAnswers[0]?.user_uuid;
+    user = userOnDbA;
+  } else if (jsonQuestionVotes?.length > 0 && jsonQuestionVotes !== undefined) {
+    const userOnDbQV = jsonQuestionVotes[0]?.user_uuid;
+    user = userOnDbQV;
+  } else if (jsonAnswerVotes?.length > 0 && jsonAnswerVotes !== undefined) {
+    const userOnDbAV = jsonAnswerVotes[0]?.user_uuid;
+    user = userOnDbAV;
+  } else {
+    user = jsonUuid?.uuid;
+  }
+
+  localStorage.setItem('userUuid', JSON.stringify(user));
+
+  return user;
+};
+
+const updateQuestionVote = async (_questionId, _votes) => {
+  const payload = {
+    votes: _votes,
+  };
+
+  const options = {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${qa_url}/question/votes/${_questionId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const createQuestionVote = async (_questionId, _user_uuid) => {
+  const payload = {
+    user_uuid: _user_uuid,
+  };
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${qa_url}/vote/question?question_id=${_questionId}`; 
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const getQuestionVotes = async () => {
+  const response = await fetch(`${qa_url}/votes/question`); 
+
+  const jsonData = await response.json();
+
+  if (jsonData.length || jsonData !== undefined) {
+    localStorage.setItem('questionVotes', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
+const getAnswerVotes = async () => {
+  const response = await fetch(`${qa_url}/votes/answer`); 
+
+  const jsonData = await response.json();
+
+  if (jsonData.length || jsonData !== undefined) {
+    localStorage.setItem('answerVotes', JSON.stringify(jsonData));
+  }
+  return jsonData;
+};
+
+const createAnswerVote = async (answerId, user_uuid) => {
+  const payload = {
+    user_uuid: user_uuid,
+  };
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${qa_url}/vote/answer?answer_id=${answerId}`; 
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const updateAnswerVote = async (_answerId, _votes) => {
+  const payload = {
+    votes: _votes,
+  };
+
+  const options = {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${qa_url}/answer/votes/${_answerId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const formatTimestamp = (dateData) => {
+  const today = new Date(dateData);
+  const formatted = new Intl.DateTimeFormat('fi').format(today);
+  return formatted;
+};
+
+
+
+
+
+  //* ########################################################################################################################################################################
 
   
   $: questionIndex = $questions.map((e) => e.id).indexOf(parseInt(questionId));
@@ -59,24 +322,24 @@
   }
 
   const updateQuestion = async () => {
-    const updated = await questionService.updatedAutomatedAnswer(
+    const updated = await updatedAutomatedAnswer(
       $questions[questionIndex]?.id,
       true
     );
 
-    const allQuestions = await questionService.getAll();
+    const allQuestions = await getAllQuestions();
 
     questions.set(allQuestions);
   };
 
   const startLLM = async () => {
-    const promise1 = await questionService.postLLM(
+    const promise1 = await postLLM(
       $questions[questionIndex]?.details
     );
-    const promise2 = await questionService.postLLM(
+    const promise2 = await postLLM(
       $questions[questionIndex]?.details
     );
-    const promise3 = await questionService.postLLM(
+    const promise3 = await postLLM(
       $questions[questionIndex]?.details
     );
 
@@ -87,7 +350,7 @@
     let promises = processQueue.map((llm) => {
       return limit(
         async () =>
-          await answerService.create(
+          await createNewAnswer(
             $questions[questionIndex]?.course_id,
             parseInt(questionId),
             'automated',
@@ -98,7 +361,7 @@
 
     const result = await Promise.allSettled(promises);
 
-    const allAnswers = await answerService.getAll();
+    const allAnswers = await getAllAnswers();
 
     answers.set(allAnswers);
 
@@ -110,7 +373,7 @@
   };
 
   const onSubmit = async () => {
-    const createAnswer = await answerService.create(
+    const createAnswer = await createNewAnswer(
       $questions[questionIndex]?.course_id,
       parseInt(questionId),
       $userUuid,
@@ -121,7 +384,7 @@
 
     $answers = [createAnswer, ...$answers];
 
-    const setUserId = await userService.getUser();
+    const setUserId = await getUser();
 
     userUuid.set(setUserId);
     inputAnswerData.details = '';
@@ -135,19 +398,19 @@
 
   const addQuestionVote = async () => {
     if (userVotedQuestionLen === 0) {
-      const add = await voteService.createQuestionVote(
+      const add = await createQuestionVote(
         parseInt(questionId),
         $userUuid
       );
 
-      const update = await questionService.updateVote(
+      const update = await updateQuestionVote(
         parseInt(questionId),
         userVotedQuestionLen
       );
       if (add) {
-        const setUserId = await userService.getUser();
-        const allQuestionVotes = await voteService.getQuestionVotes();
-        const allQuestions = await questionService.getAll();
+        const setUserId = await getUser();
+        const allQuestionVotes = await getQuestionVotes();
+        const allQuestions = await getAllQuestions();
         userUuid.set(setUserId);
         questionVotes.set(allQuestionVotes);
         questions.set(allQuestions);
@@ -169,20 +432,20 @@
     parseInt($answerID) > 0
   ) {
     (async () => {
-      const add = await voteService.createAnswerVote(parseInt($answerID), $userUuid);
+      const add = await createAnswerVote(parseInt($answerID), $userUuid);
 
-      const setUserId = await userService.getUser();
+      const setUserId = await getUser();
       userUuid.set(setUserId);
 
-      const allAnswerVotes = await voteService.getAnswerVotes();
+      const allAnswerVotes = await getAnswerVotes();
       answerVotes.set(allAnswerVotes);
 
-      const update = await answerService.updateVote(
+      const update = await updateAnswerVote(
         parseInt($answerID),
         userVotedAnswerLen
       );
       if (update) {
-        const allAnswers = await answerService.getAll();
+        const allAnswers = await getAllAnswers();
         answers.set(allAnswers);
         // window.location.reload(); //
       }
@@ -302,7 +565,7 @@
           ><br />
           <i class="fa fa-edit text-slate-400" />
           <small class="text-slate-400"
-            >{courseService.formatTimestamp(
+            >{formatTimestamp(
               $questions[questionIndex]?.timestamp
             )}</small
           >
@@ -353,7 +616,7 @@
               <small class="text-emerald-400">{answer?.user_uuid}</small><br />
               <i class="fa fa-edit text-slate-400" />
               <small class="text-slate-400"
-                >{courseService.formatTimestamp(answer?.timestamp)}</small
+                >{formatTimestamp(answer?.timestamp)}</small
               >
             </div>
             <div class="pl-20 pt-5">

@@ -1,5 +1,7 @@
+const qa_url = 'http://127.0.0.1:7800/api';
+
 const getAll = async () => {
-  const response = await fetch('/api/courses');
+  const response = await fetch(`${qa_url}/courses`);
 
   const jsonData = await response.json();
 
