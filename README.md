@@ -251,7 +251,7 @@ kubectl describe secret redis-credentials
 # deleting specific secret
 kubectl delete secret redis-credentials
 
-# list all the container images 
+# list all the container images
 $ docker images
 
 # deploying database cluster & generating db secrets
@@ -274,20 +274,20 @@ $ docker push aiotrope/qa-api-database-migrations
 $ minikube image list
 
 # start DB migrations
-$ kubectl apply -f kubernetes/qa-api-database-migration-job.yaml 
+$ kubectl apply -f kubernetes/qa-api-database-migration-job.yaml
 
 # build the app images
 $ cd qa-api/ && docker build -t aiotrope/qa-api -f ./Dockerfile.k8s . ##
 $ docker tag aiotrope/qa-api aiotrope/qa-api
-$ docker push aiotrope/qa-api 
+$ docker push aiotrope/qa-api
 
 $ cd llm-api/ && docker build -t aiotrope/llm-api -f ./Dockerfile.k8s .
 $ docker tag aiotrope/llm-api aiotrope/llm-api
-$ docker push aiotrope/llm-api 
+$ docker push aiotrope/llm-api
 
 $ cd qa-ui/ && docker build -t aiotrope/qa-ui -f ./Dockerfile.k8s .
 $ docker tag aiotrope/qa-ui aiotrope/qa-ui
-$ docker push aiotrope/qa-ui 
+$ docker push aiotrope/qa-ui
 
 $ cd reverse-proxy/ && docker build -t aiotrope/reverse-proxy -f ./Dockerfile.k8s .
 $ docker tag aiotrope/reverse-proxy aiotrope/reverse-proxy
@@ -296,19 +296,19 @@ $ docker push aiotrope/reverse-proxy
 # deploying apps
 kubectl apply -f kubernetes/qa-api-deployment.yaml
 kubectl apply -f kubernetes/qa-api-service.yaml
-kubectl apply -f kubernetes/qa-api-deployment-hpa.yaml 
+kubectl apply -f kubernetes/qa-api-deployment-hpa.yaml
 $ kubectl get services
 $ minikube service qa-api-service
 kubectl port-forward svc/qa-api-service 7777:7777 # port forwarding
 
 kubectl apply -f kubernetes/llm-api-deployment.yaml
 kubectl apply -f kubernetes/llm-api-service.yaml
-kubectl apply -f kubernetes/llm-api-deployment-hpa.yaml 
+kubectl apply -f kubernetes/llm-api-deployment-hpa.yaml
 kubectl port-forward aiotrope/llm-api 7000:7000
 
 kubectl apply -f kubernetes/qa-ui-deployment.yaml
 kubectl apply -f kubernetes/qa-ui-service.yaml
-kubectl apply -f kubernetes/qa-ui-deployment-hpa.yaml 
+kubectl apply -f kubernetes/qa-ui-deployment-hpa.yaml
 kubectl port-forward aiotrope/qa-ui 3000:3000
 
 kubectl apply -f kubernetes/reverse-proxy-deployment.yaml
@@ -328,7 +328,7 @@ $ kubectl logs <pod_name>
 # list services
 $ kubectl get services
 
-# access app 
+# access app
 $ minikube service qa-api-service --url # e.g.
 
 # delete and cleanup
@@ -339,7 +339,7 @@ $ kubectl delete -f kubernetes/qa-api-deployment.yaml
 $ kubectl delete -f kubernetes/llm-api-deployment.yaml
 $ kubectl delete -f kubernetes/qa-ui-deployment.yaml
 
-# delete all pods 
+# delete all pods
 $ kubectl delete pods --all -A
 $ kubectl delete deploy --all -A
 $ kubectl delete all --all -A # all resources
@@ -355,9 +355,9 @@ $ minikube addons list
 $ kubectl get all -n cnpg-system
 
 # adding horizontal scale congiguration
-$ kubectl apply -f kubernetes/qa-api-deployment-hpa.yaml 
-$ kubectl apply -f kubernetes/llm-api-deployment-hpa.yaml 
-$ kubectl apply -f kubernetes/qa-ui-deployment-hpa.yaml 
+$ kubectl apply -f kubernetes/qa-api-deployment-hpa.yaml
+$ kubectl apply -f kubernetes/llm-api-deployment-hpa.yaml
+$ kubectl apply -f kubernetes/qa-ui-deployment-hpa.yaml
 
 # check horizonal scaling
 $ kubectl get hpa
@@ -422,7 +422,7 @@ $ kubectl describe secret qa-api-database-cluster-app
 $ cd flyway/ && docker build -t docker_hub_username/qa-api-database-migrations -f ./Dockerfile.k8s .
 # login, tag and  the image
 $ cd to_app_dir && docker tag image_name:version docker_hub_username/image_name
-# list all the container images 
+# list all the container images
 $ docker images
 
 
