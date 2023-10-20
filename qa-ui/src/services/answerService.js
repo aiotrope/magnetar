@@ -1,6 +1,4 @@
-// const qa_url = 'http://127.0.0.1:7800/api'
-
-export const qa_url = import.meta.env.QA_URL;
+const qa_url = 'http://127.0.0.1:7800/api';
 
 const create = async (courseId, questionId, user_uuid, details) => {
   const payload = {
@@ -55,12 +53,11 @@ const updateVote = async (answerId, votes) => {
 
   return await response.json();
 };
- 
+
 const answerService = {
   create,
   getAll,
-  updateVote
- 
+  updateVote,
 };
 
 export default answerService;

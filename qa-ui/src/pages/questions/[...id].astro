@@ -3,15 +3,8 @@ import Layout from '../../layouts/Layout.astro';
 import Question from '../../components/Question.svelte';
 
 let questionId = Astro.params.id;
-let qa_url = import.meta.env.QA_URL;
-let llm_url = import.meta.env.LLM_URL;
 ---
 
 <Layout title={`Questions & Answers | Question ID: ${questionId}`}>
-  <Question
-    questionId={questionId}
-    qa_url={qa_url}
-    llm_url={llm_url}
-    client:only="svelte"
-  />
+  <Question questionId={questionId} client:only="svelte" />
 </Layout>

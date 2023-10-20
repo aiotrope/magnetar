@@ -1,6 +1,4 @@
-export const qa_url = import.meta.env.QA_URL;
-
-// const qa_url = 'http://127.0.0.1:7800/api';
+const qa_url = 'http://127.0.0.1:7800/api';
 
 const getAll = async () => {
   const response = await fetch(`${qa_url}/courses`);
@@ -10,8 +8,6 @@ const getAll = async () => {
   if (jsonData.length > 0 || jsonData !== undefined) {
     localStorage.setItem('courses', JSON.stringify(jsonData));
   }
-
-  console.log('BLAHHHHH', qa_url)
   return jsonData;
 };
 
@@ -24,7 +20,7 @@ const formatTimestamp = (dateData) => {
 const courseService = {
   getAll,
   formatTimestamp,
-  qa_url
+  qa_url,
 };
 
 export default courseService;

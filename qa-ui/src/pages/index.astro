@@ -1,13 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Home from '../components/Home.svelte';
-
-import { qa_url } from '../services/courseService';
-// let qa_url = import.meta.env.QA_URL;
-// let llm_url = import.meta.env.LLM_URL;
 ---
 
 <Layout>
-  <Home qa_url={qa_url} client:only={'svelte'} />
+  <Home client:only={'svelte'} />
 </Layout>
 
