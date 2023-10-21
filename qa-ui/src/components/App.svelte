@@ -1,7 +1,6 @@
 <script>
   import { QueryClientProvider, QueryClient } from '@tanstack/svelte-query';
-  import Courses from './Courses.svelte';
-  import { marked } from 'marked';
+  import Entry from './Entry.svelte';
 
   import pLimit from 'p-limit';
 
@@ -10,5 +9,5 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-  <Courses {qa_url} {marked} {pLimit}/>
+  <Entry {qa_url} {pLimit}/>
 </QueryClientProvider>

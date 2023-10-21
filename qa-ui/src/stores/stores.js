@@ -34,5 +34,5 @@ export {
   questionVotes,
   answerVotes,
   questionID,
-  courseID
+  courseID,
 };

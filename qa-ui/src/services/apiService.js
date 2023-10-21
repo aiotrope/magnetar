@@ -104,7 +104,7 @@ const apiService = {
   createNewQuestion,
   getUser,
   formatTimestamp,
-  getQuestions
+  getQuestions,
 };
 
 export default apiService;
