@@ -7,7 +7,7 @@ interface Props {
 const { title = 'Questions & Answers' } = Astro.props;
 ---
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -24,10 +24,8 @@ const { title = 'Questions & Answers' } = Astro.props;
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
     <script
-      defer
       src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"
     ></script>
-
     <title>{title}</title>
   </head>
   <body>
@@ -55,15 +53,8 @@ const { title = 'Questions & Answers' } = Astro.props;
 
   .code {
     font-size: 86%;
-    font-family:
-      Menlo,
-      Monaco,
-      Lucida Console,
-      Liberation Mono,
-      DejaVu Sans Mono,
-      Bitstream Vera Sans Mono,
-      Courier New,
-      monospace;
+    font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
+      DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
   }
 
   main {
@@ -74,3 +65,5 @@ const { title = 'Questions & Answers' } = Astro.props;
     line-height: 1.6;
   }
 </style>
+
+

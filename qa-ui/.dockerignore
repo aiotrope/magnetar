@@ -1,0 +1,15 @@
+node_modules
+build
+dist
+.git
+*.md
+.gitignore
+.DS_Store
+.vscode
+
+logs
+*.log
+
+Dockerfile
+Dockerfile.prod
+.dockerignore

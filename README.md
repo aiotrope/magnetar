@@ -139,6 +139,9 @@ $ cd qa-api && docker build -t qa-api .
 $ cd qa-ui && docker build -t qa-ui .
 $ cd e2e-playwright && docker build -t e2e-playwright .
 
+# running sing image on detach mode
+$ docker run --name <image_name> -p port_num:port_num -d <image_name>
+
 # PROD MODE
 # buid docker images based on docker-compose on production mode; running on port 7800
 # remove app-cache from previous debug mode before proceeding
