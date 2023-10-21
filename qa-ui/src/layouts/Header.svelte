@@ -1,3 +1,7 @@
+<script>
+  import { courseID } from '../stores/stores';
+</script>
+
 <nav class="border-gray-200 bg-indigo-900">
   <div
     class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2 text-white"
@@ -6,7 +10,7 @@
       <img
         src="https://img.logoipsum.com/223.svg"
         class="h-8 mr-3"
-        alt="Generic Logo"
+        alt="Logo ipsum placeholder"
       />
       <span
         class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
@@ -14,10 +18,11 @@
       >
     </a>
     <button
-      data-collapse-toggle="navbar-solid-bg"
+      id="dropdownDefaultButton"
+      data-dropdown-toggle="dropdown"
       type="button"
       class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-      aria-controls="navbar-solid-bg"
+      aria-controls="dropdown"
       aria-expanded="false"
     >
       <span class="sr-only">Open main menu</span>
@@ -37,61 +42,60 @@
         />
       </svg>
     </button>
-    <div class="hidden w-full md:block md:w-auto" id="navbar-solid-bg">
+    <div class="hidden w-full md:block md:w-auto" id="dropdown">
       <ul
         class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700"
       >
         <li>
-          <a
-            href="/"
+          <button
+            on:click={() => courseID.update((val) => 0)}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            aria-current="page">Home</a
+            aria-current="page">Home</button
           >
         </li>
         <li>
-          <a
-            href="/courses/fortran-cs-5758"
+          <button
+            on:click={() => courseID.update((val) => 1)}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >Fortran</a
+            >Fortran</button
           >
         </li>
         <li>
-          <a
-            href="/courses/java-cs-3456"
+          <button
+            on:click={() => courseID.update((val) => 2)}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >Java</a
+            >Java</button
           >
         </li>
         <li>
-          <a
-            href="/courses/go-cs-9012"
+          <button
+            on:click={() => courseID.update((val) => 3)}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >Go</a
+            >Go</button
           >
         </li>
         <li>
-          <a
-            href="/courses/python-cs-5678"
+          <button
+            on:click={() => courseID.update((val) => 4)}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >Python</a
+            >Python</button
           >
         </li>
         <li>
-          <a
-            href="/courses/sql-cs-6634"
+          <button
+            on:click={() => courseID.update((val) => 5)}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >SQL</a
+            >SQL</button
           >
         </li>
         <li>
-          <a
-            href="/courses/javascript-cs-1234"
+          <button
+            on:click={() => courseID.update((val) => 6)}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >Javascript</a
+            >Javascript</button
           >
         </li>
       </ul>
     </div>
   </div>
 </nav>
-<div id="nav-menu" />

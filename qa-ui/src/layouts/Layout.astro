@@ -23,9 +23,6 @@ const { title = 'Questions & Answers' } = Astro.props;
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"
-    ></script>
     <title>{title}</title>
   </head>
   <body>
@@ -33,6 +30,10 @@ const { title = 'Questions & Answers' } = Astro.props;
     <main>
       <slot />
     </main>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"
+    ></script>
   </body>
 </html>
 <style is:global>
@@ -65,5 +66,3 @@ const { title = 'Questions & Answers' } = Astro.props;
     line-height: 1.6;
   }
 </style>
-
-

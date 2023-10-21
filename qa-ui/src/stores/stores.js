@@ -7,17 +7,17 @@ let answerList = JSON.parse(localStorage.getItem('answers'));
 let questionVoteList = JSON.parse(localStorage.getItem('questionVotes'));
 let answerVoteList = JSON.parse(localStorage.getItem('answerVotes'));
 
-const userUuid = writable(user);
+const userUuid = writable('');
 
-const courses = writable(courseList);
+const courses = writable([]);
 
-let questions = writable(questionList);
+let questions = writable([]);
 
-let answers = writable(answerList);
+let answers = writable([]);
 
-let questionVotes = writable(questionVoteList);
+let questionVotes = writable([]);
 
-let answerVotes = writable(answerVoteList);
+let answerVotes = writable([]);
 
 let answerID = writable(0);
 

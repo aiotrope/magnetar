@@ -5,6 +5,7 @@
     createMutation,
     useQueryClient,
   } from '@tanstack/svelte-query';
+
   import {
     userUuid,
     courses,
@@ -13,11 +14,17 @@
     questionVotes,
     answerVotes,
     courseID,
+    questionID,
+    answerID,
   } from '../stores/stores.js';
 
   import apiService from '../services/apiService.js';
 
   import Loader from './Loader.svelte';
+
+  export let qa_url;
+  export let marked;
+  export let pLimit;
 
   let currentCourses,
     currentUserUuid,
@@ -27,10 +34,11 @@
     currentAnswerVotes,
     currentCourseID;
 
-  let title,
-    details = '';
+  let inputQuestionData = { title: '', details: '' };
 
-  export let qa_url;
+  const limit = pLimit(3);
+
+  let processQueue = [];
 
   const queryClient = useQueryClient();
 
@@ -39,11 +47,6 @@
     queryFn: async () => await fetch(`${qa_url}/courses`).then((r) => r.json()),
   });
 
-  const getUser = createQuery({
-    queryKey: ['user'],
-    queryFn: async () =>
-      await fetch(`${qa_url}/user/uuid`).then((r) => r.json()),
-  });
   const queryQuestions = createQuery({
     queryKey: ['questions'],
     queryFn: async () =>
@@ -64,13 +67,31 @@
       await fetch(`${qa_url}/votes/answer`).then((r) => r.json()),
   });
 
+  onMount(async () => {
+    await fetchers();
+  });
+
+  const fetchers = async () => {
+    const interval = setInterval(async () => {
+      const setUser = await apiService.getUser(qa_url);
+
+      userUuid.set(setUser);
+
+      if (setUser !== null) {
+        clearInterval(interval);
+        // console.clear();
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  };
+
   const createNewQuestion = async () => {
     await apiService.createNewQuestion(
       qa_url,
       $courseID,
       $userUuid,
-      title,
-      details
+      inputQuestionData.title,
+      inputQuestionData.details
     );
   };
 
@@ -79,23 +100,25 @@
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['questions'] });
       queryClient.invalidateQueries({ queryKey: ['answers'] });
-      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
 
   const onCreateQuestion = async () => {
-    await $questionMutation.mutateAsync(title, details);
+    await $questionMutation.mutateAsync(
+      inputQuestionData.title,
+      inputQuestionData.details
+    );
 
-    /*  $questions = [createQuestion, ...$questions];
-
-    const setUserId = await userService.getUser();
-
+    const getQuestions = await apiService.getQuestions(qa_url);
+    questions.set(getQuestions);
+    const setUserId = await apiService.getUser(qa_url);
     userUuid.set(setUserId);
+
     inputQuestionData.title = '';
-    inputQuestionData.details = ''; */
+    inputQuestionData.details = '';
   };
 
-  userUuid.subscribe((currentValue) => {
+  /* userUuid.subscribe((currentValue) => {
     localStorage.setItem('userUuid', JSON.stringify(currentValue));
   });
 
@@ -117,7 +140,7 @@
 
   answerVotes.subscribe((currentValue) => {
     localStorage.setItem('answerVotes', JSON.stringify(currentValue));
-  });
+  }); */
 
   const unsubscribeCourses = courses.subscribe((currentValue) => {
     currentCourses = currentValue;
@@ -144,9 +167,11 @@
     currentCourseID = currentValue;
   });
 
-  $: if ($queryCourses.isSuccess) courses.set($queryCourses?.data);
+  $: courseIndex = $courses?.map((e) => e?.id).indexOf($courseID);
 
-  $: if ($getUser.isSuccess) userUuid.set($getUser.data.uuid);
+  $: questionsByCourse = $questions.filter((e) => e?.course_id === $courseID);
+
+  $: if ($queryCourses.isSuccess) courses.set($queryCourses?.data);
 
   $: if ($queryQuestions.isSuccess) questions.set($queryQuestions.data);
 
@@ -164,9 +189,7 @@
   onDestroy(unsubscribeAnswerVotes);
   onDestroy(unsubscribeCourseID);
 
-  $: courseIndex = $courses?.map((e) => e?.id).indexOf($courseID);
-
-  $: console.log('COURSE ID', courseIndex);
+  // $: console.log('COURSE ID', $userUuid);
 </script>
 
 <div class="container mt-3">
@@ -203,11 +226,13 @@
     <div class="grid mb-3">
       <div class="mb-1">
         <p class="text-slate-400">Course ID: {$courses[courseIndex].id}</p>
-        <img
-          class="object-cover shadow-lg"
-          src={$courses[courseIndex]?.img}
-          alt={`Image for course ${$courses[courseIndex]?.title}`}
-        />
+        <a href="/">
+          <img
+            class="object-cover shadow-lg"
+            src={$courses[courseIndex]?.img}
+            alt={`Image for course ${$courses[courseIndex]?.title}`}
+          />
+        </a>
       </div>
       <div>
         <h2 class="text-l font-bold leading-7 text-gray-700">
@@ -231,7 +256,7 @@
               id="title"
               type="text"
               placeholder="Enter a question title"
-              bind:value={title}
+              bind:value={inputQuestionData.title}
               disabled={$questionMutation.status === 'loading'}
               required
             />
@@ -249,7 +274,7 @@
             rows="4"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3"
             placeholder="Write a question here"
-            bind:value={details}
+            bind:value={inputQuestionData.details}
             required
           />
           <button
@@ -263,12 +288,85 @@
       </div>
     </div>
     <div>
-      <!-- Question ist -->
+      <!-- Question list -->
       {#if $questions.length > 0}
-        {#each $questions as question}
-          <h3>{question.title}</h3>
-        {/each}
+        <div class="grid">
+          {#each questionsByCourse as question}
+            <div class="mb-1">
+              <p class="text-md font-bold">
+                Question: <a
+                  href={`/questions/${question?.id}`}
+                  class="text-sky-500 hover:text-sky-600 text-bold"
+                  >{question?.title}</a
+                >
+              </p>
+              <div class="grid grid-cols-2">
+                <div class="p-2">
+                  <button
+                    type="submit"
+                    class={`${
+                      $questionVotes.filter(
+                        (e) =>
+                          e?.question_id === question?.id &&
+                          e?.user_uuid === $userUuid
+                      )?.length < 1
+                        ? 'bg-transparent hover:bg-amber-300 text-sky-600 px-3 border border-zinc-100 rounded'
+                        : 'bg-transparent text-sky-600 px-3 border border-sky-600 rounded opacity-50 cursor-not-allowed'
+                    }`}
+                    disabled={$questionVotes.filter(
+                      (e) =>
+                        e?.question_id === question?.id &&
+                        e?.user_uuid === $userUuid
+                    )?.length > 0}
+                    on:click={() => questionID.update((val) => question?.id)}
+                  >
+                    <i
+                      class={`${
+                        $questionVotes.filter(
+                          (e) =>
+                            e?.question_id === question?.id &&
+                            e?.user_uuid === $userUuid
+                        )?.length < 1
+                          ? 'fa fa-thumbs-up text-sky-600 hover:text-red-400 text-lg'
+                          : 'fa fa-thumbs-up text-sky-600 opacity-50 cursor-not-allowed text-lg'
+                      } `}
+                    />
+                    <span
+                      class={`${
+                        $questionVotes.filter(
+                          (e) =>
+                            e?.question_id === question?.id &&
+                            e?.user_uuid === $userUuid
+                        )?.length < 1
+                          ? 'hover:text-red-400'
+                          : 'opacity-50 cursor-not-allowed'
+                      }`}
+                      >{$questionVotes.filter(
+                        (e) => e?.question_id === question?.id
+                      )?.length}</span
+                    >
+                  </button>
+                </div>
+                <div>
+                  <i class="fa fa-user text-slate-400" />
+                  <small class="text-indigo-400">{question?.user_uuid}</small
+                  ><br />
+                  <i class="fa fa-edit text-slate-400" />
+                  <small class="text-slate-400"
+                    >{apiService.formatTimestamp(question?.timestamp)}</small
+                  >
+                </div>
+              </div>
+              <div
+                class="code bg-zinc-50 p-3 my-1 border-l-4 border-l-indigo-500 text-slate-500"
+              >
+                {question?.details}
+              </div>
+            </div>
+          {/each}
+        </div>
       {/if}
     </div>
   {/if}
 </div>
+{location.hash}
