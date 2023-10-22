@@ -1,12 +1,19 @@
 <script>
-  import { courseID } from '../stores/stores';
+  import { courseID, questionID } from '../stores/stores';
+
+  const returnToCourseQuestionsPage = (event) => {
+    event.preventDefault();
+    const courseBtn = parseInt(event.currentTarget.value);
+    courseID.update((currentVal) => parseInt(courseBtn));
+    questionID.update((currentVal) => 0);
+  };
 </script>
 
 <nav class="border-gray-200 bg-indigo-900">
   <div
     class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2 text-white"
   >
-     <a href="/" class="flex items-center">
+    <a href="/" class="flex items-center">
       <img
         src="https://img.logoipsum.com/223.svg"
         class="h-8 mr-3"
@@ -47,27 +54,31 @@
       >
         <li>
           <button
-            on:click={() => courseID.update((val) => 0)}
+            value="0"
+            on:click={returnToCourseQuestionsPage}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             aria-current="page">Home</button
           >
         </li>
         <li>
           <button
-            on:click={() => courseID.update((val) => 1)}
+            value="1"
+            on:click={returnToCourseQuestionsPage}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Fortran</button
           >
         </li>
         <li>
           <button
-            on:click={() => courseID.update((val) => 2)}
+            value="2"
+            on:click={returnToCourseQuestionsPage}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Java</button
           >
         </li>
         <li>
           <button
+            value="3"
             on:click={() => courseID.update((val) => 3)}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Go</button
@@ -75,21 +86,24 @@
         </li>
         <li>
           <button
-            on:click={() => courseID.update((val) => 4)}
+            value="4"
+            on:click={returnToCourseQuestionsPage}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Python</button
           >
         </li>
         <li>
           <button
-            on:click={() => courseID.update((val) => 5)}
+            value="5"
+            on:click={returnToCourseQuestionsPage}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >SQL</button
           >
         </li>
         <li>
           <button
-            on:click={() => courseID.update((val) => 6)}
+            value="6"
+            on:click={returnToCourseQuestionsPage}
             class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-cyan-100 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Javascript</button
           >

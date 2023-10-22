@@ -2,8 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import App from '../components/App.svelte';
 let qa_url = import.meta.env.VITE_QA_URL;
+let llm_url = import.meta.env.VITE_LLM_URL;
 ---
 
 <Layout>
-  <App qa_url={qa_url} client:only={'svelte'} />
+  <App qa_url={qa_url} llm_url={llm_url} client:only={'svelte'} />
 </Layout>

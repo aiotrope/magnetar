@@ -2,19 +2,21 @@
   import apiService from '../services/apiService';
   import { userUuid, questionVotes, questionID } from '../stores/stores';
   export let question;
+  export let onCreateQuestionVote;
+  // console.log('VOTES', $questionVotes)
 </script>
 
 <div class="mb-1">
-  <p class="text-md font-bold">
-    Question: <a
-      href={`/questions/${question?.id}`}
-      class="text-sky-500 hover:text-sky-600 text-bold">{question?.title}</a
-    >
-  </p>
+  <button
+    class="text-sky-500 hover:text-sky-600 text-lg font-bold"
+    on:click={() => questionID.update((currentValue) => parseInt(question.id))}
+    >{question?.title}</button
+  >
   <div class="grid grid-cols-2">
-    <div class="p-2">
+    <form class="p-2">
       <button
         type="submit"
+        value={question?.id}
         class={`${
           $questionVotes.filter(
             (e) => e?.question_id === question?.id && e?.user_uuid === $userUuid
@@ -25,7 +27,7 @@
         disabled={$questionVotes.filter(
           (e) => e?.question_id === question?.id && e?.user_uuid === $userUuid
         )?.length > 0}
-        on:click={() => questionID.update((val) => question?.id)}
+        on:click={onCreateQuestionVote}
       >
         <i
           class={`${
@@ -50,7 +52,7 @@
             ?.length}</span
         >
       </button>
-    </div>
+    </form>
     <div>
       <i class="fa fa-user text-slate-400" />
       <small class="text-indigo-400">{question?.user_uuid}</small><br />

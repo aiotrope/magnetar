@@ -4,10 +4,10 @@
 
   import pLimit from 'p-limit';
 
-  export let qa_url;
+  export let qa_url, llm_url;
   const queryClient = new QueryClient();
 </script>
 
 <QueryClientProvider client={queryClient}>
-  <Entry {qa_url} {pLimit}/>
+  <Entry {qa_url} {llm_url} {pLimit}/>
 </QueryClientProvider>

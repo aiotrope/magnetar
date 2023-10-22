@@ -100,11 +100,219 @@ const getQuestions = async (url) => {
   return jsonData;
 };
 
+const createQuestionVote = async (baseUrl, questionId, user_uuid) => {
+  const payload = {
+    user_uuid: user_uuid,
+  };
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${baseUrl}/vote/question?question_id=${questionId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const getQuestionVotes = async (baseUrl) => {
+  const response = await fetch(`${baseUrl}/votes/question`);
+
+  const jsonData = await response.json();
+
+  return jsonData;
+};
+
+const createAnswerVote = async (baseUrl, answerId, user_uuid) => {
+  const payload = {
+    user_uuid: user_uuid,
+  };
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${baseUrl}/vote/answer?answer_id=${answerId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const getAnswerVotes = async (baseUrl) => {
+  const response = await fetch(`${baseUrl}/votes/answer`);
+
+  const jsonData = await response.json();
+
+  return jsonData;
+};
+
+const updateQuestionVote = async (baseUrl, questionId, votes) => {
+  const payload = {
+    votes: votes,
+  };
+
+  const options = {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${baseUrl}/question/votes/${questionId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const postLLM = async (baseUrl, question) => {
+  return await new Promise(async (resolve, reject) => {
+    setTimeout(async () => {
+      const payload = {
+        question: question,
+      };
+
+      const options = {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          Accept: 'application/json',
+          'Content-type': 'application/json',
+        },
+      };
+      try {
+        const url = baseUrl;
+
+        const response = await fetch(url, options);
+
+        const jsonData = await response.json();
+
+        const result = await jsonData?.generated_text;
+
+        const replaceString = result.replace(question, '');
+
+        resolve(replaceString.trim());
+
+        return result;
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }, 100);
+};
+
+const updatedAutomatedAnswer = async (
+  baseUrl,
+  questionId,
+  withautomatedanswer
+) => {
+  const payload = {
+    withautomatedanswer: withautomatedanswer,
+  };
+
+  const options = {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${baseUrl}/question/${questionId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const createNewAnswer = async (
+  baseUrl,
+  courseId,
+  questionId,
+  user_uuid,
+  details
+) => {
+  const payload = {
+    user_uuid: user_uuid,
+    details: details,
+  };
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${baseUrl}/answers/${courseId}?question_id=${questionId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
+const getAnswers = async (baseUrl) => {
+  const response = await fetch(`${baseUrl}/answers`);
+
+  const jsonData = await response.json();
+
+  return jsonData;
+};
+
+const updateAnswerVote = async (baseUrl, answerId, votes) => {
+  const payload = {
+    votes: votes,
+  };
+
+  const options = {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+  };
+
+  const url = `${baseUrl}/answer/votes/${answerId}`;
+
+  const response = await fetch(url, options);
+
+  return await response.json();
+};
+
 const apiService = {
   createNewQuestion,
   getUser,
   formatTimestamp,
   getQuestions,
+  createQuestionVote,
+  getQuestionVotes,
+  getAnswerVotes,
+  createAnswerVote,
+  updateQuestionVote,
+  updatedAutomatedAnswer,
+  postLLM,
+  createNewAnswer,
+  updateAnswerVote,
+  getAnswers,
+  createAnswerVote,
 };
 
 export default apiService;

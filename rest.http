@@ -8,6 +8,7 @@ GET http://localhost:7800/api/questions HTTP/1.1
 ### get answers
 GET http://localhost:7800/api/answers HTTP/1.1
 
+
 ### get all questions votes
 GET http://localhost:7800/api/votes/question HTTP/1.1
 
