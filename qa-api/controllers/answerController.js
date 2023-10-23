@@ -3,7 +3,7 @@ import { cacheMethodCalls } from '../util/cacheUtil.js';
 
 const cachedAnswerService = cacheMethodCalls(answerService, [
   'create',
-  'updateVote'
+  'updateVote',
 ]);
 
 const handleCreate = async ({ request, response, params }) => {
@@ -34,7 +34,6 @@ const handleFindAll = async ({ response }) => {
   response.body = answers;
   return;
 };
-
 
 const handleUpdateVotes = async ({ request, params, response }) => {
   const id = params.id;

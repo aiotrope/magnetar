@@ -1,7 +1,7 @@
 import { connect, parseURL } from '../deps.js';
 
-const url = Deno.env.get('REDIS_URL')
-const parsed = parseURL(url)
+const url = Deno.env.get('REDIS_URL');
+const parsed = parseURL(url);
 
 //* console.log('REDIS URL', parsed)
 
@@ -11,10 +11,8 @@ const redis = await connect({
   name: parsed?.name,
   password: parsed?.password,
   db: parsed?.db,
-  tls: parsed?.tls
+  tls: parsed?.tls,
 });
-
-
 
 const cacheMethodCalls = (object, methodsToFlushCacheWith = []) => {
   const handler = {

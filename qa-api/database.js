@@ -15,6 +15,6 @@ const sql = postgres({
   database,
   username,
   password,
-}); 
+});
 
 export { sql };

@@ -45,6 +45,8 @@ services:
       - 3000:80
     depends_on:
       - qa-api
+    env_file:
+      - project.env
     deploy:
       restart_policy:
         condition: on-failure

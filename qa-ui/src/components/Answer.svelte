@@ -2,7 +2,7 @@
   import { answerVotes, userUuid, answerID } from '../stores/stores';
   import apiService from '../services/apiService';
   export let answer;
-  export let onCreateAnswerVote
+  export let onCreateAnswerVote;
 </script>
 
 <div class="grid grid-cols-2">
@@ -28,7 +28,7 @@
       disabled={$answerVotes.filter(
         (e) => e?.answer_id === answer?.id && e?.user_uuid === $userUuid
       )?.length > 0}
-     on:click={onCreateAnswerVote}
+      on:click={onCreateAnswerVote}
     >
       <i
         class={`${

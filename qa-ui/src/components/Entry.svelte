@@ -78,6 +78,17 @@
       await fetch(`${qa_url}/votes/answer`).then((r) => r.json()),
   });
 
+  $: if ($queryCourses.isSuccess) courses.set($queryCourses.data);
+
+  $: if ($queryQuestions.isSuccess) questions.set($queryQuestions.data);
+
+  $: if ($queryAnswers.isSuccess) answers.set($queryAnswers.data);
+
+  $: if ($queryQuestionVotes.isSuccess)
+    questionVotes.set($queryQuestionVotes.data);
+
+  $: if ($queryAnswerVotes.isSuccess) answerVotes.set($queryAnswerVotes.data);
+
   onMount(async () => {
     await fetchers();
   });
@@ -106,15 +117,9 @@
 
   $: questionIndex = $questions.map((e) => e.id).indexOf($questionID);
 
-  $: targetQuestionIndex = $questions
-    .map((e) => e.id)
-    .indexOf(targetQuestionId);
-
   $: courseFinder = $courses.find(
     (e) => e?.id === $questions[questionIndex]?.course_id
   );
-
-  $: answerIndex = $answers.map((e) => e.id).indexOf($answerID);
 
   $: userVotedQuestion = $questionVotes?.filter(
     (e) => e?.question_id === targetQuestionId && e?.user_uuid === $userUuid
@@ -202,9 +207,7 @@
 
     targetQuestionId = btnValue;
     targetQuestionId = targetQuestionId;
-
     // console.log('BTN VALUE', btnValue);
-
     await $questionVoteMutation.mutateAsync(targetQuestionId, $userUuid);
   };
 
@@ -244,7 +247,7 @@
         async () =>
           await apiService.createNewAnswer(
             qa_url,
-            $questions[questionIndex]?.course_id,
+            $courseID,
             $questionID,
             'automated',
             llm
@@ -341,17 +344,6 @@
     await $answerVoteMutation.mutateAsync(targetAnswerId, $userUuid);
   };
 
-  $: if ($queryCourses.isSuccess) courses.set($queryCourses.data);
-
-  $: if ($queryQuestions.isSuccess) questions.set($queryQuestions.data);
-
-  $: if ($queryAnswers.isSuccess) answers.set($queryAnswers.data);
-
-  $: if ($queryQuestionVotes.isSuccess)
-    questionVotes.set($queryQuestionVotes.data);
-
-  $: if ($queryAnswerVotes.isSuccess) answerVotes.set($queryAnswerVotes.data);
-
   $: if ($questions[questionIndex]?.withautomatedanswer === false) {
     (async () => await updateQuestion())();
   }
@@ -404,7 +396,7 @@
   onDestroy(unsubscribeQuestionID);
   onDestroy(unsubscribeAnswerID);
 
-  // $: console.log('question ID', targetQuestionId);
+  // $: console.log('Answers', $queryAnswers?.data);
 </script>
 
 <div class="container mt-3 mb-10">

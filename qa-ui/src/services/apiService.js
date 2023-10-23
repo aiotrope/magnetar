@@ -179,7 +179,7 @@ const updateQuestionVote = async (baseUrl, questionId, votes) => {
   return await response.json();
 };
 
-const postLLM = async (baseUrl, question) => {
+const postLLM = async (llmUrl, question) => {
   return await new Promise(async (resolve, reject) => {
     setTimeout(async () => {
       const payload = {
@@ -195,7 +195,7 @@ const postLLM = async (baseUrl, question) => {
         },
       };
       try {
-        const url = baseUrl;
+        const url = llmUrl;
 
         const response = await fetch(url, options);
 

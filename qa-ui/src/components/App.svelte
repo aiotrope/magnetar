@@ -9,5 +9,5 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-  <Entry {qa_url} {llm_url} {pLimit}/>
+  <Entry {qa_url} {llm_url} {pLimit} />
 </QueryClientProvider>
