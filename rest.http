@@ -88,9 +88,16 @@ Content-Type: application/json
     
 }
 
-####
+#### all courses dockerize
 GET http://localhost:7777/courses HTTP/1.1
 
+### generate LLM answers dockerize
+POST http://localhost:7001/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "question": "How to write Hello, world! in Fortran?"
+}
 
 
 

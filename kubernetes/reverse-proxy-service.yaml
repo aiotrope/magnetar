@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: reverse-proxy
-  type: ClusterIP
+  type: LoadBalancer
   ports:
   - port: 7800
     targetPort: 7800

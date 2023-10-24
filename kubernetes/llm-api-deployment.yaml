@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: llm-api
-          image: aiotrope/llm-api:latest
+          image: llm-api:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 7000
@@ -23,5 +23,5 @@ spec:
             requests: 
               cpu: 100m
             limits: 
-              memory: "356Mi"
+              memory: "128Mi"
               cpu: 200m

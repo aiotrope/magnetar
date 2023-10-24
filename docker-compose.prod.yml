@@ -75,7 +75,7 @@ services:
       dockerfile: Dockerfile.prod
     image: llm-api-prod
     expose:
-      - 7000
+      - 7001
     volumes:
       - ./llm-api/:/app
       - ./app-cache/:/app-cache

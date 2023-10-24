@@ -140,7 +140,7 @@ $ cd qa-ui && docker build -t qa-ui .
 $ cd e2e-playwright && docker build -t e2e-playwright .
 
 # running sing image on detach mode
-$ docker run --name <image_name> -p port_num:port_num -d <image_name>
+$ docker run -p port_num:port_num <docker_hub_username/image_name>
 
 # PROD MODE
 # buid docker images based on docker-compose on production mode; running on port 7800
@@ -269,7 +269,9 @@ $ kubectl describe secret qa-api-database-cluster
 $ kubectl describe secret qa-api-database-cluster-app
 
 # init database migrations and secrets/environment container injection
-$ cd flyway/ && docker build -t aiotrope/qa-api-database-migrations -f ./Dockerfile.k8s .
+$ cd flyway/ && docker build -t aiotrope/qa-api-database-migrations -f ./Dockerfile .
+
+# $ cd flyway/ && minikube image build -t qa-api-database-migrations -f ./Dockerfile . 
 $ docker tag aiotrope/qa-api-database-migrations aiotrope/qa-api-database-migrations
 $ docker push aiotrope/qa-api-database-migrations
 
@@ -280,19 +282,24 @@ $ minikube image list
 $ kubectl apply -f kubernetes/qa-api-database-migration-job.yaml
 
 # build the app images
-$ cd qa-api/ && docker build -t aiotrope/qa-api -f ./Dockerfile.k8s . ##
+# cd qa-api/ && minikube image build -t qa-api -f ./Dockerfile .
+$ cd qa-api/ && docker build -t aiotrope/qa-api -f ./Dockerfile .
 $ docker tag aiotrope/qa-api aiotrope/qa-api
 $ docker push aiotrope/qa-api
 
-$ cd llm-api/ && docker build -t aiotrope/llm-api -f ./Dockerfile.k8s .
+$ cd llm-api/ && docker build -t aiotrope/llm-api -f ./Dockerfile .
+# $ cd llm-api/ && minikube image build -t llm-api -f ./Dockerfile .
 $ docker tag aiotrope/llm-api aiotrope/llm-api
 $ docker push aiotrope/llm-api
 
-$ cd qa-ui/ && docker build -t aiotrope/qa-ui -f ./Dockerfile.k8s .
+###
+# $ cd qa-ui/ && minikube image build -t qa-ui -f ./Dockerfile.prod .
+$ cd qa-ui/ && docker build -t aiotrope/qa-ui -f ./Dockerfile .
 $ docker tag aiotrope/qa-ui aiotrope/qa-ui
 $ docker push aiotrope/qa-ui
 
-$ cd reverse-proxy/ && docker build -t aiotrope/reverse-proxy -f ./Dockerfile.k8s .
+# $ cd nginx/ && minikube image build -t reverse-proxy -f ./Dockerfile .
+$ cd nginx/ && docker build -t aiotrope/reverse-proxy -f ./Dockerfile .
 $ docker tag aiotrope/reverse-proxy aiotrope/reverse-proxy
 $ docker push aiotrope/reverse-proxy
 
