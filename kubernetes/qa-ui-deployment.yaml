@@ -15,16 +15,21 @@ spec:
     spec:
       containers:
         - name: qa-ui
-          image: qa-ui:latest
-          imagePullPolicy: Never
+          image: aiotrope/qa-ui:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           resources:
             requests: 
               cpu: 100m
             limits: 
-              memory: "356Mi"
               cpu: 200m
+          env:
+            - name: VITE_QA_URL
+              value: "http://127.0.0.1:7777"
+            - name: VITE_LLM_URL
+              value: "http://127.0.0.1:7001"
+
          
 
 # The following configuration adds a resource request for 100m CPU units per container (0.1 CPU units) and limits the

@@ -8,7 +8,7 @@ spec:
     kind: Deployment
     name: qa-api-deployment
   minReplicas: 1
-  maxReplicas: 7
+  maxReplicas: 5
   targetCPUUtilizationPercentage: 10
 
 

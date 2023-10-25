@@ -3,22 +3,22 @@ kind: Deployment
 metadata:
   name: reverse-proxy-deployment
   labels:
-    app: reverse-proxy
+    app: reverse-proxy-deployment
 spec:
   selector:
     matchLabels:
-      app: reverse-proxy
+      app: reverse-proxy-deployment
   template:
     metadata:
       labels:
-        app: reverse-proxy
+        app: reverse-proxy-deployment
     spec:
       containers:
-      - name: reverse-proxy
-        image: reverse-proxy:latest
+      - name: reverse-proxy-deployment
+        image: aiotrope/reverse-proxy:latest
         resources:
           limits:
             memory: "128Mi"
-            cpu: "200m"
+            cpu: 200m
         ports:
         - containerPort: 7800

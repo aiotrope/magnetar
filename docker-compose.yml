@@ -80,7 +80,7 @@ services:
     image: llm-api
     restart: 'no'
     expose:
-      - 7001
+      - 7000
     volumes:
       - ./llm-api/:/app
       - ./app-cache/:/app-cache

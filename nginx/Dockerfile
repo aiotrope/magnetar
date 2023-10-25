@@ -1,2 +1,2 @@
 FROM nginx
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.k8s.conf /etc/nginx/nginx.k8s.conf

@@ -16,26 +16,51 @@ spec:
       containers:
         - name: qa-api
           image: aiotrope/qa-api:latest
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: 7777
           resources:
             requests: 
               cpu: 100m
             limits: 
-              cpu: 500m
+              cpu: 200m
           env:
-            - name: PGPASS
+            - name: PGHOST
               valueFrom:
                 secretKeyRef:
-                  name: qa-api-database-cluster-app
-                  key: pgpass
+                  name: app-credentials
+                  key: pghost
+                  optional: false
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: app-credentials
+                  key: pguser
+                  optional: false
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-credentials
+                  key: pgpassword
+                  optional: false
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: app-credentials
+                  key: pgdatabase
+                  optional: false
+            - name: PGPORT
+              valueFrom:
+                secretKeyRef:
+                  name: app-credentials
+                  key: pgport
                   optional: false
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:
-                  name: redis-credentials
+                  name: app-credentials
                   key: redisurl
+                  optional: false
 
 
 # The following configuration adds a resource request for 200m CPU units per container (0.2 CPU units) and limits the

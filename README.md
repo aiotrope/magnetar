@@ -242,14 +242,14 @@ $ kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-
 echo -n 'your-redis-lab-url-string' > ./kubernetes/redisurl.txt
 
 # create secret with redisurl as key
-kubectl create secret generic redis-credentials --from-file=redisurl=./kubernetes/redisurl.txt
+kubectl create secret generic app-credentials --from-file=redisurl=./kubernetes/redisurl.txt --from-file=pghost=./kubernetes/pghost.txt --from-file=pguser=./kubernetes/pguser.txt --from-file=pgpassword=./kubernetes/pgpassword.txt --from-file=pgdatabase=./kubernetes/pgdatabase.txt --from-file=pgport=./kubernetes/pgport.txt 
 # output: secret/redis-credentials created
 
 # verify secrets
 kubectl get secrets
 
 # describe secrets app-credentials
-kubectl describe secret redis-credentials
+kubectl describe secret app-credentials
 
 # deleting specific secret
 kubectl delete secret redis-credentials
@@ -415,7 +415,7 @@ kubectl create secret generic redis-credentials --from-file=redisurl=./kubernete
 kubectl get secrets
 
 # describe secrets app-credentials
-kubectl describe secret redis-credentials
+kubectl describe secret app-credentials
 
 # deploying database cluster & generating db secrets
 $ kubectl apply -f kubernetes/qa-api-database-cluster.yaml
@@ -434,6 +434,79 @@ $ cd flyway/ && docker build -t docker_hub_username/qa-api-database-migrations -
 $ cd to_app_dir && docker tag image_name:version docker_hub_username/image_name
 # list all the container images
 $ docker images
+```
 
+## New
+
+```bash
+# build the app images
+# cd qa-api/ && minikube image build -t qa-api -f ./Dockerfile .
+$ cd qa-api/ && docker build -t aiotrope/qa-api -f ./Dockerfile .
+$ docker tag aiotrope/qa-api aiotrope/qa-api
+$ docker push aiotrope/qa-api
+# check the if it run on docker container
+$ docker run -d -p 7777:7777 aiotrope/qa-api:latest
+# stop the app
+$ docker stop $(docker ps -a -q)
+
+$ cd llm-api/ && docker build -t aiotrope/llm-api -f ./Dockerfile .
+# $ cd llm-api/ && minikube image build -t llm-api -f ./Dockerfile .
+$ docker tag aiotrope/llm-api aiotrope/llm-api
+$ docker push aiotrope/llm-api
+
+###
+# $ cd qa-ui/ && minikube image build -t qa-ui -f ./Dockerfile.prod .
+$ cd qa-ui/ && docker build -t aiotrope/qa-ui -f ./Dockerfile .
+$ docker tag aiotrope/qa-ui aiotrope/qa-ui
+$ docker push aiotrope/qa-ui
+
+# $ cd nginx/ && minikube image build -t reverse-proxy -f ./Dockerfile .
+$ cd nginx/ && docker build -t aiotrope/reverse-proxy -f ./Dockerfile .
+$ docker tag aiotrope/reverse-proxy aiotrope/reverse-proxy
+$ docker push aiotrope/reverse-proxy
+
+# start a cluster
+$ minikube start
+# start a new terminal, and leave this running
+$ minikube dashboard
+# stop cluster but no deletion
+$ minikube stop
+
+# enable metric server
+$ minikube addons enable metrics-server
+
+# create secrets app-credentials with the ff. keys
+kubectl create secret generic app-credentials --from-file=redisurl=./kubernetes/redisurl.txt --from-file=pghost=./kubernetes/pghost.txt --from-file=pguser=./kubernetes/pguser.txt --from-file=pgpassword=./kubernetes/pgpassword.txt --from-file=pgdatabase=./kubernetes/pgdatabase.txt --from-file=pgport=./kubernetes/pgport.txt 
+# output: secret/redis-credentials created
+
+# verify secrets
+kubectl get secrets
+
+# describe secrets app-credentials
+kubectl describe secret app-credentials
+
+# deploy and activate service in K8s
+# deploying apps
+
+kubectl apply -f kubernetes/qa-api-deployment.yaml
+kubectl apply -f kubernetes/qa-api-service.yaml
+kubectl apply -f kubernetes/qa-api-deployment-hpa.yaml
+$ kubectl get services
+$ minikube service qa-api-service
+kubectl port-forward svc/qa-api-service 7777:7777 # port forwarding
+
+kubectl apply -f kubernetes/llm-api-deployment.yaml
+kubectl apply -f kubernetes/llm-api-service.yaml
+kubectl apply -f kubernetes/llm-api-deployment-hpa.yaml
+kubectl port-forward svc/llm-api-service 7000:7000
+
+kubectl apply -f kubernetes/qa-ui-deployment.yaml
+kubectl apply -f kubernetes/qa-ui-service.yaml
+kubectl apply -f kubernetes/qa-ui-deployment-hpa.yaml
+kubectl port-forward svc/qa-ui-service 3000:3000
+
+kubectl apply -f kubernetes/reverse-proxy-deployment.yaml
+kubectl apply -f kubernetes/reverse-proxy-service.yaml
+kubectl port-forward svc/reverse-proxy-service 7800:7800
 
 ```
