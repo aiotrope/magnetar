@@ -14,13 +14,13 @@ spec:
         app: llm-api
     spec:
       containers:
-        - name: llm-api
-          image: aiotrope/llm-api:latest
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 7000
-          resources:
-            requests: 
-              cpu: 100m
-            limits: 
-              cpu: 200m
+      - name: llm-api
+        image: aiotrope/llm-api:latest
+        imagePullPolicy: Always
+        resources:
+          requests: 
+            cpu: 100m
+          limits: 
+            cpu: 200m
+        ports:
+        - containerPort: 7001
