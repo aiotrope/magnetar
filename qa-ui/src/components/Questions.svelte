@@ -17,6 +17,7 @@
     <form class="p-2">
       <button
         type="submit"
+        data-testid={`question-vote-${question?.id}`}
         value={question?.id}
         class={`${
           $questionVotes.filter(
@@ -41,6 +42,7 @@
           } `}
         />
         <span
+          id={`question-vote-span-${question?.id}`}
           class={`${
             $questionVotes.filter(
               (e) =>

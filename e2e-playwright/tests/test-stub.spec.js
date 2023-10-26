@@ -60,14 +60,13 @@ test('Test add answer to Fortran CS-5758 course section Hello Fortran question',
   ).toBeVisible();
 });
 
-test('Test add question vote to Fortran CS-5758 course section Hello Fortran question', async ({
+test('Test add question vote for Fortran CS-5758 course section Hello Fortran question', async ({
   page,
 }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /Link to Fortran CS-5758/i }).click();
   await expect(page.getByText('Hello Fortran', { exact: true })).toBeVisible();
-  await expect(page.getByTitle('Question Vote')).toHaveText('1');
+  await expect(page.locator('#question-vote-span-1')).toHaveText('1');
   await page.getByTestId('question-vote-1').click();
-  await page.getByTestId('question-vote-1').toBeDisabled();
-  await expect(page.getByTitle('Question Vote')).toHaveText('2');
+  await expect(page.locator('#question-vote-span-1')).toHaveText('2');
 });

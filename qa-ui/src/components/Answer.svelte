@@ -53,6 +53,6 @@
   </form>
 </div>
 
-<div class="code bg-emerald-50 p-3 my-2 border-l-4 border-l-emerald-600">
+<div class="code bg-emerald-50 p-3 my-2 border-l-4 border-l-emerald-600" id={`answer-${answer?.id}`}>
   {answer?.details}
 </div>

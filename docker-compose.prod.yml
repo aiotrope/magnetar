@@ -131,6 +131,16 @@ services:
       - 6379
     networks:
       - backnet
+  
+  e2e-playwright:
+    entrypoint: "/bin/true"
+    build: e2e-playwright
+    image: e2e-playwright
+    network_mode: host
+    depends_on:
+      - nginx
+    volumes:
+      - ./e2e-playwright/tests:/e2e-playwright/tests
       
 
 volumes:

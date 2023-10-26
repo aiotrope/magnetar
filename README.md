@@ -6,126 +6,97 @@ The online Q&A platform is intended for coursework-related queries and responses
 
 Please refer to the RUNNING.md file on how to run the app in debug and production mode as well as how to run the e2e test and K6 performance test.
 
-## Phasing
+## API Reference and Examples
 
-- Branch stage1 - tage8: stage 8, the last dev branch before starting developing the app in Kubernetes
+```bash
+# get courses
+GET http://localhost:7800/api/courses HTTP/1.1
 
-- stage9: start K8s app development
+# get questions
+GET http://localhost:7800/api/questions HTTP/1.1
 
-## API Reference
+# get answers
+GET http://localhost:7800/api/answers HTTP/1.1
 
-### Fetch all course
+# get all questions votes
+GET http://localhost:7800/api/votes/question HTTP/1.1
 
-```http
-  GET /api/courses
-```
+# get all answers votes
+GET http://localhost:7800/api/votes/answer HTTP/1.1
 
-### Get course by id
+# get/generate user uuid
+GET http://localhost:7800/api/user/uuid HTTP/1.1
 
-```http
-  GET /api/course?courseId=
-```
+# post new question with courseId params
+POST http://localhost:7800/api/questions/3 HTTP/1.1
+Content-Type: application/json
 
-| Query Params | Type     | Description   |
-| :----------- | :------- | :------------ |
-| `courseId`   | `string` | **Required**. |
+{
+    "user_uuid": "c6fdc5f4-afda-4cf4-b9e9-95b7f2951e42",
+    "title": "Sample Question Fortran",
+    "details": "Sample details fortran"
+}
 
-### Add submission
+# post new answer with courseId params and question_id search params
+POST http://localhost:7800/api/answers/2?question_id=1 HTTP/1.1
+Content-Type: application/json
 
-```http
-  POST /api/assignments/${id}. Id params correspond to the assignment id
-```
+{
+    "user_uuid": "c6fdc5f4-afda-4cf4-b9e9-95b7f2951e42",
+    "details": "Sample details fortran"
+}
 
-| Param | Type     | Description   |
-| :---- | :------- | :------------ |
-| `id`  | `string` | **Required**. |
+# add new question vote
+POST http://localhost:7800/api/vote/question?question_id=1 HTTP/1.1
+Content-Type: application/json
 
-| Body        | Type     | Description  |
-| :---------- | :------- | :----------- |
-| `code`      | `string` | **Required** |
-| `user_uuid` | `string` | **Required** |
+{
+    "user_uuid": "c6fdc5f4-afda-4cf4-b9e9-95b7f2951e42"
+}
 
-### Grade a submission
+# add new answer vote
+POST http://localhost:7800/api/vote/answer?answer_id=1 HTTP/1.1
+Content-Type: application/json
 
-```http
-  POST /api/assignments/grading/${id}. Id params correspond to the assignment id
-```
+{
+    "user_uuid": "c6fdc5f4-afda-4cf4-b9e9-95b7f2951e42"
+}
 
-| Param | Type     | Description   |
-| :---- | :------- | :------------ |
-| `id`  | `string` | **Required**. |
+# generate LLM answers
+POST http://localhost:7800/llm/ HTTP/1.1
+Content-Type: application/json
 
-| Body   | Type     | Description  |
-| :----- | :------- | :----------- |
-| `code` | `string` | **Required** |
+{
+    "question": "How to write Hello, world! in Fortran?"
+}
 
-### Update a submission
+# update question withautomatedanswer with questionId param
+PATCH http://localhost:7800/api/question/2 HTTP/1.1
+Content-Type: application/json
 
-```http
-PATCH /api/assignments/submissions/${id}. Id params correspond to the submission id
-```
+{
+    "withautomatedanswer": true
+    
+}
 
-| Param | Type     | Description   |
-| :---- | :------- | :------------ |
-| `id`  | `string` | **Required**. |
+# update question vote with questionId params
+PATCH http://localhost:7800/api/question/votes/2 HTTP/1.1
+Content-Type: application/json
 
-|       Body        | Type      | Description  |
-| :---------------: | :-------- | ------------ |
-| `grader_feedback` | `string`  | **Required** |
-|     `status`      | `string`  | **Required** |
-|     `correct`     | `boolean` | **Required** |
+{
+    "votes": 3
+    
+}
 
-### Fetch all submissions
+# update answer vote with answerId params
+PATCH http://localhost:7800/api/answer/votes/2 HTTP/1.1
+Content-Type: application/json
 
-```http
-  GET /api/answers
-```
+{
+    "votes": 2
+    
+}
 
-### Fetch all submission by user
-
-```http
-GET /assignments/submissions/user/all/${user_uuid}
-```
-
-| Param       | Type     | Description   |
-| :---------- | :------- | :------------ |
-| `user_uuid` | `string` | **Required**. |
-
-### Get submission by id
-
-```http
-  GET /api/assignments/submissions/${id}
-```
-
-| Param | Type     | Description   |
-| :---- | :------- | :------------ |
-| `id`  | `string` | **Required**. |
-
-### Get user latest submission
-
-```http
-  GET /api/assignments/submissions/latest-submission/${programming_assignment_id}/${user_uuid}
-```
-
-| Param                       | Type     | Description   |
-| :-------------------------- | :------- | :------------ |
-| `programming_assignment_id` | `string` | **Required**. |
-| `user_uuid`                 | `string` | **Required**. |
-
-### Check user exists
-
-```http
-GET /api/user/${user_uuid}
-```
-
-| Param       | Type     | Description   |
-| :---------- | :------- | :------------ |
-| `user_uuid` | `string` | **Required**. |
-
-### Generate user id
-
-```http
-GET/api/assignments/user/uuid
 ```
 
 ### CLI Commands
@@ -156,7 +127,7 @@ cd magnetar && docker compose up --build
 # to restart on debug mode on port 7800
 cd magnetar && docker compose up
 # on detach mode
-docker compose -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.yml up -d
 
 # stop running app all modes
 $ docker compose down # dev
