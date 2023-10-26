@@ -75,7 +75,7 @@ services:
       dockerfile: Dockerfile.prod
     image: llm-api-prod
     expose:
-      - 7001
+      - 7000
     volumes:
       - ./llm-api/:/app
       - ./app-cache/:/app-cache
@@ -131,6 +131,7 @@ services:
       - 6379
     networks:
       - backnet
+      
 
 volumes:
   astro_node_modules:

@@ -40,6 +40,7 @@
       <button
         type="button"
         value={$questions[questionIndex]?.id}
+        data-testid={`question-vote-${$questions[questionIndex]?.id}`}
         class={`${
           $questionVotes.filter(
             (e) =>
@@ -67,10 +68,11 @@
               : 'fa fa-thumbs-up text-lg opacity-50 cursor-not-allowed'
           }`}
         />
-
-        {$questionVotes.filter(
-          (e) => e?.question_id === $questions[questionIndex]?.id
-        )?.length}
+        <span title={`Question Vote`}>
+          {$questionVotes.filter(
+            (e) => e?.question_id === $questions[questionIndex]?.id
+          )?.length}</span
+        >
       </button>
     </div>
     <div>

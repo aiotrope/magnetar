@@ -11,7 +11,9 @@ module.exports = {
   projects: [
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: {
+        browserName: 'webkit',
+      },
     },
   ],
 };

@@ -80,12 +80,24 @@ services:
     image: llm-api
     restart: 'no'
     expose:
-      - 7001
+      - 7000
     volumes:
       - ./llm-api/:/app
       - ./app-cache/:/app-cache
     deploy:
       replicas: 5
+  
+  e2e-playwright:
+    build:
+      context: e2e-playwright
+      dockerfile: Dockerfile
+    image: e2e-playwright
+    entrypoint: "/bin/true"
+    network_mode: host
+    depends_on:
+      - nginx
+    volumes:
+      - ./e2e-playwright/tests:/e2e-playwright/tests
    
 volumes:
   astro_node_modules:

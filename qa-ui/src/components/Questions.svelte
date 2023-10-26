@@ -9,6 +9,7 @@
 <div class="mb-1">
   <button
     class="text-sky-500 hover:text-sky-600 text-lg font-bold"
+    title={question.title}
     on:click={() => questionID.update((currentValue) => parseInt(question.id))}
     >{question?.title}</button
   >
