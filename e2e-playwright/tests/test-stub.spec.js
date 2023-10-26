@@ -21,7 +21,7 @@ test('Test page course links: Java CS-3456, Python CS-5678 and Home', async ({
   await expect(page.locator('h1')).toHaveText('Courses');
 });
 
-test('Test add question to SQL CS-6634 course section', async ({ page }) => {
+test('Test to add question to SQL CS-6634 course section', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /Link to SQL CS-6634/i }).click();
   await page.getByLabel('Title').fill('SQL CHAR and VARCHAR2');
@@ -40,7 +40,7 @@ test('Test add question to SQL CS-6634 course section', async ({ page }) => {
   ).toBeVisible();
 });
 
-test('Test add answer to Fortran CS-5758 course section Hello Fortran question', async ({
+test('Test to add answer to Fortran CS-5758 course section Hello Fortran question', async ({
   page,
 }) => {
   await page.goto('/');
@@ -60,7 +60,7 @@ test('Test add answer to Fortran CS-5758 course section Hello Fortran question',
   ).toBeVisible();
 });
 
-test('Test add question vote for Fortran CS-5758 course section Hello Fortran question', async ({
+test('Test to add question vote for Fortran CS-5758 course section Hello Fortran question', async ({
   page,
 }) => {
   await page.goto('/');
