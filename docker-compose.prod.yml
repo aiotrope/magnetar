@@ -141,7 +141,6 @@ services:
       - nginx
     volumes:
       - ./e2e-playwright/tests:/e2e-playwright/tests
-      
 
 volumes:
   astro_node_modules:
