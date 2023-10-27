@@ -6,6 +6,20 @@ The online Q&A platform is intended for coursework-related queries and responses
 
 Please refer to the RUNNING.md file on how to run the app in debug and production mode as well as how to run the e2e test and K6 performance test.
 
+## Features
+
+### Required
+
+| Feautures                                        | Status |
+| :----------------------------------------------- | :----- |
+| `*Basic Q&A functionality`                       | `done` |
+| `Generating answers with a large language model` | `done` |
+| `Authentication`                                 | `done` |
+| `Development and Production Configuration`       | `done` |
+| `Database, schema and indexes`                   | `done` |
+| `E2E Testing`                                    | `done` |
+| `Documentation`                                  | `done` |
+
 ## API Reference and Examples
 
 ```bash
@@ -76,7 +90,7 @@ Content-Type: application/json
 
 {
     "withautomatedanswer": true
-    
+
 }
 
 # update question vote with questionId params
@@ -85,7 +99,7 @@ Content-Type: application/json
 
 {
     "votes": 3
-    
+
 }
 
 # update answer vote with answerId params
@@ -94,7 +108,7 @@ Content-Type: application/json
 
 {
     "votes": 2
-    
+
 }
 
 ```
