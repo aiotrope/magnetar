@@ -38,6 +38,14 @@ http_req_duration - median: 75.05ms
 
 http_req_duration - 99th percentile: 212.84ms
 
+### Loading home page
+
+http_reqs: 1023
+
+http_req_duration - median: 996.66ms
+
+http_req_duration - 99th percentile: 4.3s  
+
 ### Results
 
 #### Load questions
@@ -158,6 +166,36 @@ execution: local
 
 
 running (10.1s), 00/99 VUs, 13197 complete and 0 interrupted iterations
+
+## Load Index page
+
+  execution: local
+     script: performance-test-load-index-page.js
+     output: -
+
+  scenarios: (100.00%) 1 scenario, 99 max VUs, 40s max duration (incl. graceful stop):
+           * default: 99 looping VUs for 10s (gracefulStop: 30s)
+
+
+     data_received..................: 28 MB 2.7 MB/s
+     data_sent......................: 82 kB 7.6 kB/s
+     http_req_blocked...............: avg=1.02ms   p(99)=11.1ms  
+     http_req_connecting............: avg=365.04µs p(99)=4.25ms  
+     http_req_duration..............: avg=996.66ms p(99)=4.3s    
+       { expected_response:true }...: avg=996.66ms p(99)=4.3s    
+     http_req_failed................: 0.00% ✓ 0         ✗ 1023
+     http_req_receiving.............: avg=1.84ms   p(99)=17.73ms 
+     http_req_sending...............: avg=29.61µs  p(99)=253.63µs
+     http_req_tls_handshaking.......: avg=0s       p(99)=0s      
+     http_req_waiting...............: avg=994.78ms p(99)=4.29s   
+     http_reqs......................: 1023  95.505857/s
+     iteration_duration.............: avg=997.78ms p(99)=4.31s   
+     iterations.....................: 1023  95.505857/s
+     vus............................: 99    min=99      max=99
+     vus_max........................: 99    min=99      max=99
+
+
+running (10.7s), 00/99 VUs, 1023 complete and 0 interrupted iterations
 
 
 
